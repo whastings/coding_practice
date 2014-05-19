@@ -1,0 +1,21 @@
+{
+  "name": "stream_adventure",
+  "version": "0.0.0",
+  "description": "My runthrough of Substack's Stream Adventure.",
+  "main": "beep_boop.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "through": "~2.3.4",
+    "split": "~0.3.0",
+    "concat-stream": "~1.4.5",
+    "request": "~2.35.0",
+    "websocket-stream": "~0.5.1",
+    "trumpet": "~1.6.3",
+    "duplexer": "~0.1.1",
+    "stream-combiner": "~0.2.0"
+  }
+}

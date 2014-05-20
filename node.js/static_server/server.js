@@ -19,6 +19,7 @@ console.log('Static server listening on port ' + port);
 
 
 var sendFile = function(file, res) {
+  res.statusCode = 200;
   var fileStream = fs.createReadStream(file);
   fileStream.pipe(res);
   fileStream.on('error', sendNotFound.bind(null, res));
@@ -36,7 +37,7 @@ var sendFileMeta = function(file, res, next) {
 };
 
 var sendNotFound = function(res) {
-  res.writeHead(404);
+  res.statusCode = 404;
   res.end('File not found.');
 };
 

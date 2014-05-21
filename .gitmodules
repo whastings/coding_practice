@@ -1,0 +1,3 @@
+[submodule "ruby/test_first_ruby"]
+	path = ruby/test_first_ruby
+	url = git@github.com:whastings-practice/learn_ruby.git

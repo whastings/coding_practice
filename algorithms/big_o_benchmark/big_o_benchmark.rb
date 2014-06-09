@@ -15,10 +15,10 @@ class BigOBenchmark
   def run(iterations)
     iterations.times do
       input = self.input_generator.call(self.current_num)
-      bm_times = Benchmark.benchmark do |bm|
-        bm.report { REPEAT_NUM.times { self.runner.call(input) } }
+      bm_times = Benchmark.measure do
+        REPEAT_NUM.times { self.runner.call(input) }
       end
-      puts bm_times.first.real
+      puts bm_times.real / REPEAT_NUM
       self.current_num *= INCREASE_FACTOR
     end
   end

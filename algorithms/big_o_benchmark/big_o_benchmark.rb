@@ -26,10 +26,12 @@ class BigOBenchmark
   def run(iterations)
     iterations.times do |i|
       input = self.input_generator.call(self.current_num)
-      bm_times = Benchmark.measure do
-        REPEAT_NUM.times { self.runner.call(input) }
+      times = []
+      REPEAT_NUM.times do
+        times << Benchmark.measure { self.runner.call(input) }
       end
-      average = bm_times.real / REPEAT_NUM
+      total_time = times.inject(0) { |total, time| total + time.real }
+      average = total_time / REPEAT_NUM
       self.run_results << BigOResult.new(average, i, self.current_num, input)
       self.current_num *= INCREASE_FACTOR
     end
@@ -63,10 +65,10 @@ class BigOResult
   end
 
   def render
-    rendered_time = self.time.round(4)
+    rendered_time = (self.time * 1000).round(4)
     [
       "\##{self.iteration + 1}",
-      "Time: #{rendered_time}",
+      "Time: #{rendered_time}ms",
       "Num Inputs: #{self.num_inputs}"
     ].join(' - ')
   end

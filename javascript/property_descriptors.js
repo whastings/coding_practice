@@ -34,3 +34,19 @@ var person = new Person('Bob');
 assert.strictEqual(person.name, 'Bob');
 person.name = 'Joe';
 assert.strictEqual(person.name, 'JOE');
+
+
+Object.defineProperties(Person.prototype, {
+  email: {
+    get: function() {
+      return this._email.toLowerCase();
+    },
+    set: function(newEmail) {
+      this._email = newEmail;
+    }
+  }
+});
+
+person.email = 'Will@Something.com';
+assert.strictEqual(person.email, 'will@something.com');
+assert.strictEqual(Person.prototype._email, undefined);

@@ -50,3 +50,15 @@ Object.defineProperties(Person.prototype, {
 person.email = 'Will@Something.com';
 assert.strictEqual(person.email, 'will@something.com');
 assert.strictEqual(Person.prototype._email, undefined);
+
+var anotherObj = {
+  get name () {
+    return this._name;
+  },
+  set name (value) {
+    this._name = value;
+  }
+};
+
+anotherObj.name = 'Persephone';
+assert.strictEqual(anotherObj.name, 'Persephone');

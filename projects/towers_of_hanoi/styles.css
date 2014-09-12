@@ -48,3 +48,37 @@
   width: 5%;
   z-index: 50;
 }
+
+.disc {
+  background-color: blue;
+  border: 1px #000 solid;
+  height: 3%;
+  position: absolute;
+}
+
+.disc3 {
+  transform: translateX(-35%);
+  width: 300%;
+}
+
+.disc2 {
+  transform: translateX(-40%);
+  width: 500%;
+}
+
+.disc1 {
+  transform: translateX(-42%);
+  width: 700%;
+}
+
+.ord3 {
+  bottom: 6.25%;
+}
+
+.ord2 {
+  bottom: 3%;
+}
+
+.ord1 {
+  bottom: 0;
+}

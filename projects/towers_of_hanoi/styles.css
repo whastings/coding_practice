@@ -1,0 +1,50 @@
+.towers-container {
+  bottom: 0;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.towers-base {
+  background-color: green;
+  bottom: 0;
+  height: 10%;
+  left: 2.5%;
+  position: absolute;
+  width: 95%;
+}
+
+.tower {
+  background-color: brown;
+  height: 90%;
+  position: absolute;
+  top: 6.5%;
+  width: 1%;
+  z-index: 100;
+}
+
+.tower1,
+.tower-shadow-1 {
+  left: 30%;
+}
+
+.tower2,
+.tower-shadow-2 {
+  left: 50%;
+}
+
+.tower3,
+.tower-shadow-3 {
+  left: 70%;
+}
+
+.tower-shadow {
+  background-color: black;
+  border-radius: 50%;
+  height: 3%;
+  position: absolute;
+  top: 93.5%;
+  width: 5%;
+  z-index: 50;
+}

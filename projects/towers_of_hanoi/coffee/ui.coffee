@@ -9,6 +9,7 @@ UI.init = (element, game) ->
   @game = game
   @selectedIndex = null
   @towers = []
+  @clickHandlers = []
 
 UI.play = ->
   addElements.call(@, @element)
@@ -46,11 +47,17 @@ bindHandlers = ->
   towers = @element.querySelectorAll('.tower')
   for tower, index in towers
     ((selectedTower, selectedIndex) =>
-      tower.addEventListener('click', selectTower.bind(@, selectedIndex))
+      handler = selectTower.bind(@, selectedIndex)
+      @clickHandlers.push(handler)
+      tower.addEventListener('click', handler)
     )(tower, index)
   true
 
-endGame = ->
+checkGameOver = ->
+  return unless @game.isWon()
+  alert('You won!')
+  for tower, i in @towers
+    tower.removeEventListener('click', @clickHandlers[i])
 
 moveDisc = (startIndex, endIndex) ->
   startTower = @towers[startIndex]
@@ -62,10 +69,13 @@ moveDisc = (startIndex, endIndex) ->
   disc.classList.add("ord#{newOrd}")
   disc.parentNode.removeChild(disc)
   endTower.appendChild(disc)
+  checkGameOver.call(@)
 
 selectTower = (index) ->
   if @selectedIndex == null
     @selectedIndex = index
+    @towers[index].classList.add('selected')
   else
     moveDisc.call(@, @selectedIndex, index) if @game.makeMove(@selectedIndex, index)
+    @towers[@selectedIndex].classList.remove('selected')
     @selectedIndex = null

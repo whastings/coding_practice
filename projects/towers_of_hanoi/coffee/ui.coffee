@@ -21,6 +21,7 @@ addDiscs = (tower) ->
     for className in ['disc', "disc#{i}", "ord#{i}"]
       disc.classList.add(className)
     tower.appendChild(disc)
+  true
 
 addElements = (element) ->
   content = document.createDocumentFragment()
@@ -58,6 +59,7 @@ checkGameOver = ->
   alert('You won!')
   for tower, i in @towers
     tower.removeEventListener('click', @clickHandlers[i])
+  true
 
 moveDisc = (startIndex, endIndex) ->
   startTower = @towers[startIndex]

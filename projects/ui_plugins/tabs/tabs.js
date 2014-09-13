@@ -20,6 +20,22 @@
     ui.init(element);
   };
 
+  var animateTransition = function(oldPane, newPane) {
+    var oldClasses = oldPane.classList,
+        newClasses = newPane.classList;
+
+    oldClasses.remove('tabs-active');
+    oldClasses.add('tabs-transitioning');
+
+    setTimeout(function() {
+      oldClasses.remove('tabs-transitioning');
+      newClasses.add('tabs-transitioning');
+      newPane.offsetWidth; // Force relayout.
+      newClasses.add('tabs-active');
+      newClasses.remove('tabs-transitioning');
+    }, 500);
+  };
+
   var bindEvents = function() {
     this.element.addEventListener('click', handleLinkClick.bind(this));
   };
@@ -31,16 +47,15 @@
     }
     event.preventDefault();
 
-    [this.activeLink, this.activePane].forEach(function(element) {
-      element && element.classList.remove('tabs-active');
-    });
+    this.activeLink.classList.remove('tabs-active');
 
+    var oldPane = this.activePane;
     this.activeLink = clickedLink;
     this.activePane = document.getElementById(
       clickedLink.getAttribute('href').substring(1)
     );
-    [this.activeLink, this.activePane].forEach(function(element) {
-      element && element.classList.add('tabs-active');
-    });
+    clickedLink.classList.add('tabs-active');
+
+    animateTransition(oldPane, this.activePane);
   };
 })();

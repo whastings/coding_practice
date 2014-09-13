@@ -22,11 +22,20 @@ a.tabs-active {
 }
 
 .tabs-pane {
-  clip: rect(1px, 1px, 1px, 1px);
+  opacity: 0;
   position: absolute;
+  transition: opacity 0.5s ease-in;
+}
+
+.tabs-transitioning,
+.tabs-pane.tabs-active {
+  position: static;
+}
+
+.tabs-transitioning {
+  opacity: 0;
 }
 
 .tabs-pane.tabs-active {
-  clip: none;
-  position: static;
+  opacity: 1;
 }

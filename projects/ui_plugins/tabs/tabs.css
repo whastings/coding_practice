@@ -1,6 +1,7 @@
 .tabs-links {
+  border-bottom: 1px #ddd solid;
   list-style: none;
-  padding: 0;
+  padding: 0 0 0 15px;
 }
 
 .tabs-links:after {
@@ -11,14 +12,26 @@
 
 .tabs-links li {
   float: left;
+  margin-right: 20px;
+}
+
+.tabs-links a {
+  border: 1px #ddd solid;
+  border-bottom: 0;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  color: #0791d6;
+  display: block;
+  letter-spacing: 0.04em;
+  padding: 10px;
+  text-decoration: none;
 }
 
 a.tabs-active {
+  color: #444;
+  cursor: default;
   font-weight: bold;
-}
-
-.tabs-container {
-
+  letter-spacing: normal;
 }
 
 .tabs-pane {

@@ -41,11 +41,12 @@
   };
 
   var handleLinkClick = function(event) {
-    var clickedLink = event.target;
-    if (clickedLink.nodeName.toLowerCase() !== 'a') {
+    var clickedLink = event.target,
+        isNotLink = clickedLink.nodeName.toLowerCase() !== 'a';
+    event.preventDefault();
+    if (isNotLink || clickedLink.classList.contains('tabs-active')) {
       return;
     }
-    event.preventDefault();
 
     this.activeLink.classList.remove('tabs-active');
 

@@ -1,0 +1,32 @@
+.tabs-links {
+  list-style: none;
+  padding: 0;
+}
+
+.tabs-links:after {
+  clear: both;
+  content: "";
+  display: block;
+}
+
+.tabs-links li {
+  float: left;
+}
+
+a.tabs-active {
+  font-weight: bold;
+}
+
+.tabs-container {
+
+}
+
+.tabs-pane {
+  clip: rect(1px, 1px, 1px, 1px);
+  position: absolute;
+}
+
+.tabs-pane.tabs-active {
+  clip: none;
+  position: static;
+}

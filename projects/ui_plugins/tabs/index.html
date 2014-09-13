@@ -3,22 +3,31 @@
   <head>
     <meta charset="utf-8">
     <title>Tabs Plugin</title>
+    <link rel="stylesheet" href="tabs.css">
   </head>
   <body>
     <ul id="tabs-nav" data-tabs-content="#tabs-content">
-      <li><a href="#backbone">Backbone</a></li>
+      <li><a href="#backbone" class="tabs-active">Backbone</a></li>
       <li><a href="#angular">Angular</a></li>
       <li><a href="#ember">Ember</a></li>
     </ul>
     <div id="tabs-content">
-      <div class="tabs-pane">
-
+      <div id="backbone" class="tabs-pane tabs-active">
+        Backbone.js gives structure to web applications by providing models
+        with key-value binding and custom events, collections with a rich API
+        of enumerable functions, views with declarative event handling, and
+        connects it all to your existing API over a RESTful JSON interface.
       </div>
-      <div class="tabs-pane">
-
+      <div id="angular" class="tabs-pane">
+        HTML is great for declaring static documents, but it falters when we
+        try to use it for declaring dynamic views in web-applications.
+        AngularJS lets you extend HTML vocabulary for your application. The
+        resulting environment is extraordinarily expressive, readable, and
+        quick to develop.
       </div>
-      <div class="tabs-pane">
-
+      <div id="ember" class="tabs-pane">
+        Ember.js is built for productivity. Designed with developer ergonomics
+        in mind, its friendly APIs help you get your job done—fast.
       </div>
     </div>
 

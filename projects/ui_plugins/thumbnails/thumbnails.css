@@ -1,0 +1,7 @@
+.thumbnails-ui img {
+  display: none;
+}
+
+.thumbnails-ui .thumbs-active {
+  display: block;
+}

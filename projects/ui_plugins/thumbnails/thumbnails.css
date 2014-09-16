@@ -1,7 +1,25 @@
-.thumbnails-ui img {
+.thumbs-ui {
+  overflow-x: hidden;
+}
+
+.thumbs-image {
   display: none;
 }
 
-.thumbnails-ui .thumbs-active {
+.thumbs-ui .thumbs-active {
+  display: block;
+}
+
+.thumbs-list {
+  list-style: none;
+  padding: 0;
+}
+
+.thumbs-list li {
+  float: left;
+  margin-right: 10px;
+}
+
+.thumbs-thumb-image {
   display: block;
 }

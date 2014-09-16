@@ -8,12 +8,13 @@
     element.classList.add('thumbs-ui');
     this.images = Array.prototype.slice.call(element.querySelectorAll('img'));
     this.activeIndex = 0;
+    this.tempActiveIndex = null;
     this.images[0].classList.add('thumbs-active');
     this.thumbImages = [];
 
     processImages.call(this);
     createThumbs.call(this);
-    bindEvents.call(this);
+    bindEvents.call(this, element);
   };
 
   window.thumbnails = function(element) {
@@ -22,8 +23,15 @@
     return ui;
   };
 
-  var bindEvents = function() {
-    this.element.addEventListener('click', setActive.bind(this));
+  var bindEvents = function(element) {
+    element.addEventListener('click', setActive.bind(this));
+    var mouseOverHandler = setTempActive.bind(this),
+        mouseOutHandler = unsetTempActive.bind(this);
+
+    this.thumbImages.forEach(function(thumbImage) {
+      thumbImage.addEventListener('mouseover', mouseOverHandler);
+      thumbImage.addEventListener('mouseleave', mouseOutHandler);
+    }, this);
   };
 
   var calculateThumbWidth = function() {
@@ -78,18 +86,41 @@
     }
 
     var newIndex = thumbImage.getAttribute('data-index'),
-        oldIndex = this.activeIndex,
-        oldImages = [this.images[oldIndex], this.thumbImages[oldIndex]],
-        newImages = [this.images[newIndex], this.thumbImages[newIndex]];
+        oldIndex = this.activeIndex;
+    unsetOldImage.call(this, oldIndex);
 
-    oldImages.forEach(function(image) {
-      image.classList.remove('thumbs-active');
-    });
+    setActiveImage.call(this, newIndex);
+    this.activeIndex = newIndex;
+  };
+
+  var setActiveImage = function(newIndex) {
+    var newImages = [this.images[newIndex], this.thumbImages[newIndex]];
     newImages.forEach(function(image) {
       image.classList.add('thumbs-active');
     });
+  };
 
-    this.activeIndex = newIndex;
+  var setTempActive = function(event) {
+    var thumbImage = event.target,
+        tempIndex = thumbImage.getAttribute('data-index');
+    unsetOldImage.call(this, this.activeIndex);
+    setActiveImage.call(this, tempIndex);
+
+    this.tempActiveIndex = tempIndex;
+  };
+
+  var unsetOldImage = function(oldIndex) {
+    var oldImages = [this.images[oldIndex], this.thumbImages[oldIndex]];
+    oldImages.forEach(function(image) {
+      image.classList.remove('thumbs-active');
+    });
+  };
+
+  var unsetTempActive = function(event) {
+    unsetOldImage.call(this, this.tempActiveIndex);
+    this.tempActiveIndex = null;
+
+    setActiveImage.call(this, this.activeIndex);
   };
 
 })(document);

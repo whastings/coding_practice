@@ -1,6 +1,9 @@
 (function(document) {
   'use strict';
 
+  var ACTIVE_CLASS = 'thumbs-active',
+      THUMB_CLASS = 'thumbs-thumb-image';
+
   var ThumbnailsUI = {};
 
   ThumbnailsUI.init = function(element) {
@@ -9,7 +12,7 @@
     this.images = Array.prototype.slice.call(element.querySelectorAll('img'));
     this.activeIndex = 0;
     this.tempActiveIndex = null;
-    this.images[0].classList.add('thumbs-active');
+    this.images[0].classList.add(ACTIVE_CLASS);
     this.thumbImages = [];
 
     processImages.call(this);
@@ -48,9 +51,9 @@
   var createThumb = function(image, index, thumbWidth) {
     var thumbImage = copyImage(image);
     if (index === 0) {
-      thumbImage.classList.add('thumbs-active');
+      thumbImage.classList.add(ACTIVE_CLASS);
     }
-    thumbImage.classList.add('thumbs-thumb-img');
+    thumbImage.classList.add(THUMB_CLASS);
     thumbImage.style.width = thumbWidth + 'px';
     thumbImage.setAttribute('data-index', index);
     this.thumbImages.push(thumbImage);
@@ -81,7 +84,7 @@
 
   var setActive = function(event) {
     var thumbImage = event.target;
-    if (!thumbImage.classList.contains('thumbs-thumb-img')) {
+    if (!thumbImage.classList.contains(THUMB_CLASS)) {
       return;
     }
 
@@ -96,7 +99,7 @@
   var setActiveImage = function(newIndex) {
     var newImages = [this.images[newIndex], this.thumbImages[newIndex]];
     newImages.forEach(function(image) {
-      image.classList.add('thumbs-active');
+      image.classList.add(ACTIVE_CLASS);
     });
   };
 
@@ -112,7 +115,7 @@
   var unsetOldImage = function(oldIndex) {
     var oldImages = [this.images[oldIndex], this.thumbImages[oldIndex]];
     oldImages.forEach(function(image) {
-      image.classList.remove('thumbs-active');
+      image.classList.remove(ACTIVE_CLASS);
     });
   };
 

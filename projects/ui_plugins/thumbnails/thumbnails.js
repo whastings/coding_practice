@@ -14,9 +14,15 @@
     this.tempActiveIndex = null;
     this.images[0].classList.add(ACTIVE_CLASS);
     this.thumbImages = [];
+    this.imageWidth = this.images[0].offsetWidth;
+    this.element.style.width = (this.imageWidth + 70) + 'px';
+    this.lastShownThumb = 4;
 
     processImages.call(this);
     createThumbs.call(this);
+    if (this.images.length > 4) {
+      addNavLinks.call(this);
+    }
     bindEvents.call(this, element);
   };
 
@@ -24,6 +30,27 @@
     var ui = Object.create(ThumbnailsUI);
     ui.init(element);
     return ui;
+  };
+
+  var addNavLinks = function() {
+    var link,
+        span,
+        listWrapper = this.element.querySelector('.thumbs-list-wrapper');
+
+    for (var i = 0; i < 2; i++) {
+      link = document.createElement('a');
+      span = document.createElement('span');
+      span.classList.add((i === 0) ? 'icon-chevron-left' : 'icon-chevron-right');
+      link.appendChild(span);
+      link.classList.add((i === 0) ? 'thumbs-nav-left' : 'thumbs-nav-right');
+      link.setAttribute('href', 'javascript:void(0)');
+      if (i === 0) {
+        listWrapper.parentNode.insertBefore(link, listWrapper);
+        link.classList.add('thumbs-nav-disabled');
+      } else {
+        this.element.appendChild(link);
+      }
+    }
   };
 
   var bindEvents = function(element) {
@@ -35,11 +62,16 @@
       thumbImage.addEventListener('mouseover', mouseOverHandler);
       thumbImage.addEventListener('mouseleave', mouseOutHandler);
     }, this);
+
+    element.addEventListener('click', slideThumbs.bind(this));
   };
 
   var calculateThumbWidth = function() {
-    var imageWidth = this.images[0].offsetWidth;
-    return Math.floor(imageWidth / 4 - (30 / 4));
+    if (!this.thumbWidth) {
+      var imageWidth = this.images[0].offsetWidth;
+      this.thumbWidth = Math.floor(imageWidth / 4 - (30 / 4));
+    }
+    return this.thumbWidth;
   };
 
   var copyImage = function(image) {
@@ -72,8 +104,13 @@
       listEl.appendChild(li);
     }, this);
     listEl.style.width = (this.images.length * (thumbWidth + 10)) + 'px';
+    this.listEl = listEl;
 
-    this.element.appendChild(listEl);
+    var listElWrapper = document.createElement('div');
+    listElWrapper.classList.add('thumbs-list-wrapper');
+    listElWrapper.style.width = this.imageWidth + 'px';
+    listElWrapper.appendChild(listEl);
+    this.element.appendChild(listElWrapper);
   };
 
   var processImages = function() {
@@ -110,6 +147,45 @@
     setActiveImage.call(this, tempIndex);
 
     this.tempActiveIndex = tempIndex;
+  };
+
+  var slideThumbs = function(event) {
+    var link = event.target.parentNode,
+        targetClassList = link.classList;
+    if (!targetClassList.contains('thumbs-nav-left') &&
+        !targetClassList.contains('thumbs-nav-right')) {
+      return;
+    }
+    if (targetClassList.contains('thumbs-nav-disabled')) {
+      return;
+    }
+
+    var direction = (targetClassList.contains('thumbs-nav-right')) ? 1 : -1;
+    transitionThumbs.call(this, direction);
+    this.lastShownThumb += direction;
+    toggleNavsDisabled.call(this);
+  };
+
+  var toggleNavsDisabled = function() {
+    this.leftNav = this.leftNav || this.element.querySelector('.thumbs-nav-left');
+    this.rightNav = this.rightNav || this.element.querySelector('.thumbs-nav-right');
+
+    [[this.leftNav, 4], [this.rightNav, this.images.length]].forEach(function(combo) {
+      var nav = combo[0],
+          lastShown = combo[1];
+      if (this.lastShownThumb === lastShown) {
+        nav.classList.add('thumbs-nav-disabled');
+      } else {
+        nav.classList.remove('thumbs-nav-disabled');
+      }
+    }, this);
+  };
+
+  var transitionThumbs = function(direction) {
+    var thumbWidth = calculateThumbWidth.call(this);
+    this.slideOffest = this.slideOffest || 0;
+    this.slideOffest += (thumbWidth + 10) * direction * -1;
+    this.listEl.style.transform = 'translateX(' + this.slideOffest + 'px)';
   };
 
   var unsetOldImage = function(oldIndex) {

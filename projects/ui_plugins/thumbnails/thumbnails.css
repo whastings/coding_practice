@@ -40,6 +40,11 @@
 
 .thumbs-thumb-image {
   display: block;
+  opacity: 0.75;
+}
+
+.thumbs-thumb-image.thumbs-active {
+  opacity: 1;
 }
 
 .thumbs-nav-left,

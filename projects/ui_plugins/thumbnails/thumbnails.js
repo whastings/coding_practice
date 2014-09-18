@@ -14,10 +14,10 @@
     this.tempActiveIndex = null;
     this.images[0].classList.add(ACTIVE_CLASS);
     this.thumbImages = [];
-    this.imageWidth = this.images[0].offsetWidth;
-    this.element.style.width = (this.imageWidth + 70) + 'px';
     this.lastShownThumb = 4;
 
+    setDimensions.call(this);
+    addImageHolder.call(this);
     processImages.call(this);
     createThumbs.call(this);
     if (this.images.length > 4) {
@@ -30,6 +30,20 @@
     var ui = Object.create(ThumbnailsUI);
     ui.init(element);
     return ui;
+  };
+
+  var addImageHolder = function() {
+    var holder = document.createElement('div');
+    holder.classList.add('thumbs-image-holder');
+
+    this.images.forEach(function(image) {
+      image.parentNode.removeChild(image);
+      holder.appendChild(image);
+    });
+
+    holder.style.width = this.imageWidth + 'px';
+    holder.style.height = this.imageHeight + 'px';
+    this.element.appendChild(holder);
   };
 
   var addNavLinks = function() {
@@ -138,6 +152,23 @@
     newImages.forEach(function(image) {
       image.classList.add(ACTIVE_CLASS);
     });
+  };
+
+  var setDimensions = function() {
+    var minWidth = 0,
+        minHeight = 0;
+    this.images.forEach(function(image) {
+      if (minWidth === 0 || image.offsetWidth < minWidth) {
+        minWidth = image.offsetWidth;
+      }
+      if (minHeight === 0 || image.offsetHeight < minHeight) {
+        minHeight = image.offsetHeight;
+      }
+    });
+
+    this.imageWidth = minWidth;
+    this.imageHeight = minHeight;
+    this.element.style.width = (this.imageWidth + 70) + 'px';
   };
 
   var setTempActive = function(event) {

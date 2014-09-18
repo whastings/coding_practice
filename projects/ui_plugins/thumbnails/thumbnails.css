@@ -2,9 +2,13 @@
   position: relative;
 }
 
+.thumbs-image-holder {
+  margin: 0 auto;
+  overflow: hidden;
+}
+
 .thumbs-image {
   display: none;
-  margin: 0 auto;
 }
 
 .thumbs-ui .thumbs-active {
@@ -58,6 +62,7 @@
 }
 
 .thumbs-nav-disabled {
+  cursor: default;
   color: #999;
 }
 

@@ -1,0 +1,33 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Zoomable Plugin</title>
+    <link rel="stylesheet" href="zoomable.css">
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <section class="container">
+      <div class="img-container">
+        <img src="http://apod.nasa.gov/apod/image/1212/M33-Subaru-Gendler-LL.jpg"
+             alt="M33: Triangulum Galaxy (Robert Gendler, Subaru Telescope, NAOJ)"
+             id="zoom-img" />
+      </div>
+      <div class="content-container" id="zoom-area">
+      </div>
+    </section>
+
+    <script src="zoomable.js"></script>
+    <script>
+      (function() {
+        'use strict';
+
+        var image = document.getElementById('zoom-img'),
+            zoomArea = document.getElementById('zoom-area');
+        var zoomInstance = zoomable(image, zoomArea);
+
+        zoomInstance.attachEventListeners();
+      })();
+    </script>
+  </body>
+</html>

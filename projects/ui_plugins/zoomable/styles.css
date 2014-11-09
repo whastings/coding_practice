@@ -1,0 +1,21 @@
+.container {
+  margin: 0 auto;
+  width: 70%;
+}
+
+.img-container {
+  width: 30%;
+}
+
+.content-container {
+  width: 80%;
+}
+
+.img-container,
+.content-container {
+  float: left;
+}
+
+.img-container img {
+  max-width: 100%;
+}

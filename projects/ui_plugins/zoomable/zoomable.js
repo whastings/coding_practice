@@ -3,7 +3,9 @@
 
   var CLASS_ZOOM_BOX = 'zoomable-zoom-box',
       CLASS_IMAGE_CONTAINER = 'zoomable-image-container',
-      CLASS_ZOOMING = 'zoomable-zooming';
+      CLASS_ZOOMING = 'zoomable-zooming',
+      CLASS_ZOOMED_IMG = 'zoomable-zoomed-img',
+      CLASS_ZOOM_AREA = 'zoomable-zoom-area';
 
   var BOUND_FUNCTIONS = {
     moveZoom: moveZoom,
@@ -24,6 +26,7 @@
 
     this.container.classList.add(CLASS_IMAGE_CONTAINER);
     image.addEventListener('load', addZoomBox.bind(this));
+    image.addEventListener('load', setZoomArea.bind(this));
   };
 
   window.zoomable = function(image, zoomArea) {
@@ -41,6 +44,20 @@
 
   /* Event Listeners */
 
+  function addZoomBox() {
+    var image = this.image,
+        height = Math.floor(image.clientHeight * 0.25),
+        width = Math.floor(image.clientWidth * 0.25),
+        zoomBox = this.zoomBox = document.createElement('div');
+
+    zoomBox.classList.add(CLASS_ZOOM_BOX);
+    zoomBox.style.height = height + 'px';
+    zoomBox.style.width = width + 'px';
+
+    this.image.parentNode.appendChild(zoomBox);
+    this.imgRect = this.image.getBoundingClientRect();
+  }
+
   function moveZoom(event) {
     if (this.isBoxMoving) {
       return;
@@ -56,6 +73,25 @@
     container.classList.remove(CLASS_ZOOMING);
     container.removeEventListener('mousemove', this.boundFunctions.moveZoom);
     container.removeEventListener('mouseleave', this.boundFunctions.removeZoom);
+
+    this.zoomedImage.classList.remove(CLASS_ZOOMING);
+  }
+
+  function setZoomArea() {
+    var image = this.image,
+        zoomedImage = document.createElement('img'),
+        zoomArea = this.zoomArea,
+        zoomedImgWidth = zoomArea.offsetWidth * 4;
+
+    zoomedImage.setAttribute('src', this.image.getAttribute('src'));
+    zoomedImage.style.width = zoomedImgWidth + 'px';
+    zoomedImage.classList.add(CLASS_ZOOMED_IMG);
+    zoomArea.appendChild(zoomedImage);
+    zoomArea.classList.add(CLASS_ZOOM_AREA);
+    zoomArea.style.height =
+      (zoomArea.offsetWidth / image.offsetWidth * image.offsetHeight) + 'px';
+
+    this.zoomedImage = zoomedImage;
   }
 
   function zoomImage(event) {
@@ -64,23 +100,11 @@
     container.classList.add(CLASS_ZOOMING);
     container.addEventListener('mousemove', this.boundFunctions.moveZoom);
     container.addEventListener('mouseleave', this.boundFunctions.removeZoom);
+
+    this.zoomedImage.classList.add(CLASS_ZOOMING);
   }
 
   /* Helpers */
-
-  function addZoomBox() {
-    var image = this.image,
-        height = Math.floor(image.clientHeight * 0.25),
-        width = Math.floor(image.clientWidth * 0.25),
-        zoomBox = this.zoomBox = document.createElement('div');
-
-    zoomBox.classList.add(CLASS_ZOOM_BOX);
-    zoomBox.style.height = height + 'px';
-    zoomBox.style.width = width + 'px';
-
-    this.image.parentNode.appendChild(zoomBox);
-    this.imgRect = this.image.getBoundingClientRect();
-  }
 
   function bindFunctions() {
     var boundFunctions = {};
@@ -123,8 +147,8 @@
       leftDelta = imgRect.left;
     }
 
-    this.deltas.top = topDelta - boxOrigPos.top;
-    this.deltas.left = leftDelta - boxOrigPos.left;
+    this.deltas.top = topDelta;
+    this.deltas.left = leftDelta;
     return this.deltas;
   }
 
@@ -137,7 +161,10 @@
 
   function setBoxPosition() {
     var event = this.lastEvent,
-        deltas;
+        boxOrigPos,
+        deltas,
+        leftDelta,
+        topDelta;
 
     this.isBoxMoving = false;
     if (isOutsideImage.call(this, event.clientX, event.clientY)) {
@@ -145,9 +172,27 @@
     }
 
     setBoxData.call(this);
+    boxOrigPos = this.boxOrigPos;
     deltas = setDeltas.call(this);
+    leftDelta = deltas.left - boxOrigPos.left;
+    topDelta = deltas.top - boxOrigPos.top;
     this.zoomBox.style.transform =
-      'translate3d(' + deltas.left + 'px, ' + deltas.top + 'px, 0)';
+      'translate3d(' + leftDelta + 'px, ' + topDelta + 'px, 0)';
+
+    setZoomedPosition.call(this);
+  }
+
+  function setZoomedPosition() {
+    var deltas = this.deltas,
+        imgRect = this.imgRect,
+        zoomedImage = this.zoomedImage,
+        heightRatio = zoomedImage.offsetHeight / imgRect.height,
+        widthRatio = zoomedImage.offsetWidth / imgRect.width,
+        leftOffset = (deltas.left - imgRect.left) * -1 * widthRatio,
+        topOffset = (deltas.top - imgRect.top) * -1 * heightRatio;
+
+    zoomedImage.style.transform =
+      'translate3d(' + leftOffset + 'px, ' + topOffset + 'px, 0)';
   }
 
 })(document);

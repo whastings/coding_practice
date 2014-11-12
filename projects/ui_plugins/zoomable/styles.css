@@ -4,11 +4,12 @@
 }
 
 .img-container {
-  width: 30%;
+  margin-right: 4%;
+  width: 28%;
 }
 
 .content-container {
-  width: 80%;
+  width: 68%;
 }
 
 .img-container,

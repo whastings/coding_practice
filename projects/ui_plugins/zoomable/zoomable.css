@@ -11,3 +11,15 @@
 .zoomable-zooming .zoomable-zoom-box {
   display: block;
 }
+
+.zoomable-zoom-area {
+  overflow: hidden;
+}
+
+.zoomable-zoomed-img {
+  opacity: 0;
+}
+
+.zoomable-zoomed-img.zoomable-zooming {
+  opacity: 1;
+}

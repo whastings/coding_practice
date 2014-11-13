@@ -1,4 +1,4 @@
-(function(document) {
+(function(window, document) {
   //'use strict';
 
   var CLASS_ZOOM_BOX = 'zoomable-zoom-box',
@@ -55,14 +55,17 @@
     zoomBox.style.width = width + 'px';
 
     this.image.parentNode.appendChild(zoomBox);
-    this.imgRect = this.image.getBoundingClientRect();
+    this.imgRect = getRect(this.image);
   }
 
   function moveZoom(event) {
     if (this.isBoxMoving) {
       return;
     }
-    this.lastEvent = event;
+    this.lastEvent = {
+      clientX: event.clientX,
+      clientY: event.clientY
+    };
     window.requestAnimationFrame(this.boundFunctions.setBoxPosition);
     this.isBoxMoving = true;
   }
@@ -114,8 +117,31 @@
     return boundFunctions;
   }
 
+  function getRect(element) {
+    var rect = {},
+        boundingRect = element.getBoundingClientRect(),
+        xOffset = window.scrollX,
+        yOffset = window.scrollY;
+
+    Object.keys(boundingRect).forEach(function(key) {
+      rect[key] = boundingRect[key];
+    });
+
+    rect.top += yOffset;
+    rect.bottom += yOffset;
+    rect.left += xOffset;
+    rect.right += xOffset;
+
+    return rect;
+  }
+
+  function normalizeEventCoords(event) {
+    event.clientX += window.scrollX;
+    event.clientY += window.scrollY;
+  }
+
   function setBoxData() {
-    this.boxOrigPos = this.boxOrigPos || this.zoomBox.getBoundingClientRect();
+    this.boxOrigPos = this.boxOrigPos || getRect(this.zoomBox);
     this.boxOffset = this.boxOffset || {
       height: this.boxOrigPos.height / 2,
       width: this.boxOrigPos.width / 2
@@ -167,6 +193,7 @@
         topDelta;
 
     this.isBoxMoving = false;
+    normalizeEventCoords(event);
     if (isOutsideImage.call(this, event.clientX, event.clientY)) {
       return removeZoom.call(this);
     }
@@ -195,4 +222,4 @@
       'translate3d(' + leftOffset + 'px, ' + topOffset + 'px, 0)';
   }
 
-})(document);
+})(window, document);

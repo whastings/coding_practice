@@ -4,10 +4,24 @@
       stringsKey = 'tweet_filter_allowed_strings',
       allowedUsers = storage.getItem(usersKey) || [],
       allowedStrings = storage.getItem(stringsKey) || [],
-      ITEM_SELECTOR = '.tweet',
-      CONTENT_SELECTOR = '.tweet-text',
-      USERNAME_ATTR = 'data-screen-name',
+      isMobile = window.location.host === 'mobile.twitter.com',
+      ITEM_SELECTOR,
+      CONTENT_SELECTOR,
+      LIST_SELECTOR,
+      USERNAME_ATTR,
       observer;
+
+  if (isMobile) {
+    ITEM_SELECTOR = '.stream-tweet';
+    CONTENT_SELECTOR = '.tweet-text-inner > div';
+    LIST_SELECTOR = '.stream-items';
+    USERNAME_ATTR = 'screen_name';
+  } else {
+    ITEM_SELECTOR = '.tweet';
+    CONTENT_SELECTOR = '.tweet-text';
+    LIST_SELECTOR = '#stream-items-id';
+    USERNAME_ATTR = 'data-screen-name';
+  }
 
   if (typeof allowedUsers === 'string') {
     allowedUsers = JSON.parse(allowedUsers);
@@ -27,7 +41,7 @@
   }
 
   function attachObserver() {
-    var stream = document.getElementById('stream-items-id');
+    var stream = document.querySelector(LIST_SELECTOR);
     observer = new MutationObserver(processNewTweets);
     observer.observe(stream, {childList: true});
   }
@@ -60,14 +74,14 @@
     if (isByAllowedUser(tweet) || hasAllowedString(tweet)) {
       return;
     }
-    tweet.parentNode.style.display = 'none';
+    tweet.style.display = 'none';
   }
 
   function processNewTweets(observerRecords) {
     var tweets = observerRecords[0].addedNodes;
 
     tweets = Array.prototype.map.call(tweets, function(tweet) {
-      return tweet.querySelector(ITEM_SELECTOR);
+      return tweet.querySelector(ITEM_SELECTOR) || tweet;
     });
 
     filterTweets(tweets);

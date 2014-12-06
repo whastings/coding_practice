@@ -1,9 +1,9 @@
 (function() {
   var storage = window.localStorage,
       usersKey = 'tweet_filter_allowed_users',
-      stringsKey = 'tweet_filter_allowed_strings',
+      topicsKey = 'tweet_filter_allowed_topics',
       allowedUsers = storage.getItem(usersKey) || [],
-      allowedStrings = storage.getItem(stringsKey) || [],
+      allowedTopics = storage.getItem(topicsKey) || [],
       isMobile = window.location.host === 'mobile.twitter.com',
       ITEM_SELECTOR,
       CONTENT_SELECTOR,
@@ -26,13 +26,12 @@
   if (typeof allowedUsers === 'string') {
     allowedUsers = JSON.parse(allowedUsers);
   }
-  if (typeof allowedStrings === 'string') {
-    allowedStrings = JSON.parse(allowedStrings);
+  if (typeof allowedTopics === 'string') {
+    allowedTopics = JSON.parse(allowedTopics);
   }
 
-  function addAllowedString(string) {
-    allowedStrings.push(string);
-    storage.setItem(stringsKey, JSON.stringify(allowedStrings));
+  function addAllowedTopic(topic) {
+    setAllowedTopics(allowedTopics.concat([topic]));
   }
 
   function addAllowedUser(user) {
@@ -57,8 +56,16 @@
     }
   }
 
-  function hasAllowedString(tweet) {
-    return allowedStrings.some(function(string) {
+  function getAllowedTopics() {
+    return allowedTopics;
+  }
+
+  function getAllowedUsers() {
+    return allowedUsers;
+  }
+
+  function hasAllowedTopic(tweet) {
+    return allowedTopics.some(function(string) {
       var content = tweet.querySelector(CONTENT_SELECTOR).textContent;
       content = content.toLowerCase();
       return content.indexOf(string.toLowerCase()) > -1;
@@ -71,7 +78,7 @@
   }
 
   function processTweet(tweet) {
-    if (isByAllowedUser(tweet) || hasAllowedString(tweet)) {
+    if (isByAllowedUser(tweet) || hasAllowedTopic(tweet)) {
       return;
     }
     tweet.style.display = 'none';
@@ -93,9 +100,32 @@
     attachObserver();
   }
 
+  function setAllowedTopics(topics) {
+    sortInsensitive(topics);
+    allowedTopics = topics;
+    storage.setItem(topicsKey, JSON.stringify(allowedTopics));
+  }
+
+  function setAllowedUsers(users) {
+    sortInsensitive(users);
+    allowedUsers = users;
+    storage.setItem(usersKey, JSON.stringify(allowedUsers));
+  }
+
+  function sortInsensitive(array) {
+    return array.sort(function(string1, string2) {
+      var lowerSorted = [string1.toLowerCase(), string2.toLowerCase()].sort();
+      return string1.toLowerCase() === lowerSorted[0] ? -1 : 1;
+    });
+  }
+
   window.tweetFilter = {
-    addString: addAllowedString,
+    addTopic: addAllowedTopic,
     addUser: addAllowedUser,
-    run: run
+    getTopics: getAllowedTopics,
+    getUsers: getAllowedUsers,
+    run: run,
+    setTopics: setAllowedTopics,
+    setUsers: setAllowedUsers
   };
 })();

@@ -4,7 +4,7 @@ module.exports = function(grunt) {
     uglify: {
       build: {
         files: {
-          'build/bookmarklet.js': ['tweet_filter.js']
+          'build/bookmarklet.js': ['tweet_filter.js', 'filter_ui.js']
         }
       }
     },

@@ -1,1 +1,1 @@
-window.tweetFilter.run();
+window.tweetFilterUI.init(window.tweetFilter);window.tweetFilterUI.create();window.tweetFilter.run();

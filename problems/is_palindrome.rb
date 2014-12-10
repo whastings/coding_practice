@@ -7,3 +7,9 @@ def is_palindrome?(string)
   end
   true
 end
+
+def is_palindrome_rec?(string)
+  return true if string.length <= 1
+  return false if string[0] != string[-1]
+  is_palindrome_rec?(string[1...-1])
+end

@@ -65,9 +65,14 @@
   }
 
   function hasAllowedTopic(tweet) {
+    var contentEl = tweet.querySelector(CONTENT_SELECTOR),
+        content;
+    if (!contentEl) {
+      return false;
+    }
+    content = contentEl.textContent.toLowerCase();
+
     return allowedTopics.some(function(string) {
-      var content = tweet.querySelector(CONTENT_SELECTOR).textContent;
-      content = content.toLowerCase();
       return content.indexOf(string.toLowerCase()) > -1;
     });
   }

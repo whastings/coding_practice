@@ -2,7 +2,7 @@ object Functions extends App {
   def factorial(num: Int): Int = {
     if (num == 1) 1 else num * factorial(num - 1)
   }
-  println("Factorial: " + factorial(5))
+  println("Factorial: " + factorial(5) + "\n")
 
   def fib(amount: Int): Array[Int] = {
     if (amount <= 2) {
@@ -12,9 +12,8 @@ object Functions extends App {
       prevFibs :+ prevFibs.takeRight(2).reduceLeft(_ + _)
     }
   }
-  println("Fibs: " + fib(5).mkString(", "))
+  println("Fibs: " + fib(5).mkString(", ") + "\n")
 
-  // TODO: transpose array
   def transpose(array: Array[Array[Int]]) = {
     val transposed = new Array[Array[Int]](array.length)
     for (col <- 0 until array.length) {
@@ -28,9 +27,34 @@ object Functions extends App {
       Array(4, 5, 6),
       Array(7, 8, 9)
     )
-  ).map(_.mkString(", ")).mkString("\n"))
+  ).map(_.mkString(", ")).mkString("\n") + "\n")
 
-  // TODO: Stock picker
+  def stockPicker(prices: Array[Int]) = {
+    (0 until prices.length - 1)
+      .foldLeft((-1, -1, Double.NegativeInfinity)) { (currentBest, startIndex) =>
+        val startPrice = prices(startIndex)
+        val endIndex = ((startIndex + 1) until prices.length)
+          .reduceLeft { (bestEnd, nextEnd) =>
+            if (prices(nextEnd) - startPrice > prices(bestEnd) - startPrice)
+              nextEnd else bestEnd
+          }
+        val possibleBestPrice = prices(endIndex) - startPrice
+        if (possibleBestPrice > currentBest._3)
+          (startIndex, endIndex, possibleBestPrice) else currentBest
+      }
+  }
+  println("Stock Picker: " + stockPicker(Array(23, 56, 100, 12, 35, 79, 44, 90)))
+  println
 
-  // TODO: Caesar Cipher
+  def caesarCipher(text: String, shift: Int) = {
+    text.map { (letter) =>
+      if (letter.isLetter) {
+        val startCode = if (letter.isUpper) 65 else 97
+        ((letter.toInt - startCode + shift) % 26 + startCode).toChar
+      } else {
+        letter
+      }
+    }
+  }
+  println("Caesar Cipher: " + caesarCipher("Hello Worldz!", 3))
 }

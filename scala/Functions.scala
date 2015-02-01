@@ -57,4 +57,12 @@ object Functions extends App {
     }
   }
   println("Caesar Cipher: " + caesarCipher("Hello Worldz!", 3))
+
+  // TODO: Bubble Sort
+
+  // TODO: Substrings
+
+  // TODO: Binary Search
+
+  // TODO: Make change
 }

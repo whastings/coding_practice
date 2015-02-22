@@ -1,0 +1,39 @@
+<template id="social-links-template">
+  <style>
+    a {
+      color: #0791D6;
+    }
+
+    h2 {
+      color: #31708F;
+      margin: 15px 0;
+    }
+
+    ul {
+      background-color: #fff;
+      list-style: none;
+      margin: 0 0 15px;
+      padding: 5px;
+    }
+
+    .social-links {
+      background-color: #B0E0F8;
+      border-radius: 20px;
+      display: inline-block;
+      padding: 0 15px 15px;
+    }
+  </style>
+
+  <div class="social-links">
+    <header>
+      <h2><content select=".header-content">My Links</content></h2>
+    </header>
+    <main>
+      <ul class="social-links-list">
+      </ul>
+      <content></content>
+    </main>
+  </div>
+</template>
+
+<script src="social-links.js"></script>

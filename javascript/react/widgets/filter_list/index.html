@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Filter List</title>
+  </head>
+  <body>
+    <h1>Filter List</h1>
+
+    <main id="output"></main>
+
+    <script src="http://fb.me/react-0.12.2.js"></script>
+    <script src="http://fb.me/JSXTransformer-0.12.2.js"></script>
+    <script type="text/jsx" src="filter_list.jsx"></script>
+    <script type="text/jsx">
+      var names = ['Kyle Simpson', 'Eric Elliott', 'Axel Rauschmayer', 'Philip Roberts'];
+
+      React.render(
+        <FilterList list={names}/>,
+        document.querySelector('#output')
+      );
+    </script>
+  </body>
+</html>

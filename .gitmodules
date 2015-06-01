@@ -1,3 +1,6 @@
 [submodule "ruby/test_first_ruby"]
 	path = ruby/test_first_ruby
 	url = git@github.com:whastings-practice/learn_ruby.git
+[submodule "projects/flux_todo_app"]
+	path = projects/flux_todo_app
+	url = git@github.com:whastings-practice/flux_todo_app.git

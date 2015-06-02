@@ -1,18 +1,19 @@
 (function() {
   'use strict';
 
-  var dragEl = document.querySelector('.drag-el'),
+  var body = document.body,
+      dragEl = document.querySelector('.drag-el'),
       dragElOffsetX = dragEl.clientWidth / 2,
       dragElOffsetY = dragEl.clientHeight / 2,
       isMovePending = false,
       parentPos = dragEl.parentNode.getBoundingClientRect();
 
   function addMouseListeners() {
-    dragEl.addEventListener('mousemove', scheduleMove);
+    body.addEventListener('mousemove', scheduleMove);
   }
 
   function removeMouseListeners() {
-    dragEl.removeEventListener('mousemove', scheduleMove);
+    body.removeEventListener('mousemove', scheduleMove);
   }
 
   function scheduleMove(event) {
@@ -33,5 +34,5 @@
   }
 
   dragEl.addEventListener('mousedown', addMouseListeners);
-  document.body.addEventListener('mouseup', removeMouseListeners);
+  body.addEventListener('mouseup', removeMouseListeners);
 })();

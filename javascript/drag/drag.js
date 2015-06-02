@@ -23,8 +23,8 @@
   }
 
   function moveEl(event) {
-    var mouseX = event.clientX,
-        mouseY = event.clientY,
+    var mouseX = event.clientX + window.scrollX,
+        mouseY = event.clientY + window.scrollY,
         offsetX = mouseX - parentPos.left - dragElOffsetX,
         offsetY = mouseY - parentPos.top - dragElOffsetY;
 

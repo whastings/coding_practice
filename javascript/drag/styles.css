@@ -1,0 +1,14 @@
+.drag-container {
+  border: 1px #000 solid;
+  height: 500px;
+  margin: 50px 0 0 50px;
+  position: relative;
+  width: 500px;
+}
+
+.drag-el {
+  background-color: #0033cc;
+  height: 100px;
+  position: absolute;
+  width: 100px;
+}

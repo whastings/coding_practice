@@ -1,0 +1,20 @@
+h2 {
+  text-align: center;
+}
+
+.demo-container {
+  border: 1px #333 solid;
+  margin: 20px auto 0;
+  width: 600px;
+}
+
+.demo-box {
+  border: 1px #333 dashed;
+  height: 200px;
+  margin: 10px auto 15px;
+  width: 95%;
+}
+
+.box-new-context {
+  overflow: hidden; /* Creates new block formatting context */
+}

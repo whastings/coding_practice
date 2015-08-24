@@ -1,0 +1,25 @@
+.square-fixed-container {
+  width: 300px;
+}
+
+.square {
+  height: 0;
+  position: relative;
+}
+
+.square-fixed {
+  padding-bottom: 100%;
+  width: 100%;
+}
+
+.square-percentage {
+  padding-bottom: 80%;
+  width: 80%;
+}
+
+.stretch {
+  background-color: #0033cc;
+  height: 100%;
+  position: absolute;
+  width: 100%;
+}

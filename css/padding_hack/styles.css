@@ -3,7 +3,6 @@
 }
 
 .square {
-  height: 0;
   position: relative;
 }
 
@@ -20,6 +19,19 @@
 .stretch {
   background-color: #0033cc;
   height: 100%;
+  left: 0;
   position: absolute;
+  top: 0;
   width: 100%;
+}
+
+.square-percentage-pseudo {
+  overflow: hidden;
+  width: 50%;
+}
+
+.square-percentage-pseudo::before {
+  content: "";
+  display: block;
+  margin-bottom: 100%;
 }

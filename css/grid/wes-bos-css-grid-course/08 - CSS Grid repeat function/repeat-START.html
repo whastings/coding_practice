@@ -6,6 +6,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="../assets/style.css">
   <title>CSS Grid repeat Function!</title>
+  <style>
+    .container {
+      display: grid;
+      grid-gap: 20px;
+      grid-template-columns: 100px repeat(2, 1fr auto) 200px repeat(2, 5fr);
+    }
+  </style>
 </head>
 
 <body>
@@ -27,12 +34,6 @@
     <div class="item">15</div>
   </div>
 
-  <style>
-    .container {
-      display: grid;
-      grid-gap: 20px;
-    }
-  </style>
 </body>
 
 </html>

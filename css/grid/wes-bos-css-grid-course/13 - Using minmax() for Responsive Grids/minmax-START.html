@@ -6,6 +6,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="../assets/style.css">
   <title>Using minmax() for Responsive Grids!</title>
+  <style>
+    .container {
+      display: grid;
+      grid-gap: 20px;
+      border: 10px solid var(--yellow);
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    }
+  </style>
 </head>
 
 <body>
@@ -16,14 +24,6 @@
     <div class="item item4">Item 04</div>
   </div>
 
-  <style>
-    .container {
-      display: grid;
-      grid-gap: 20px;
-      border: 10px solid var(--yellow);
-      grid-template-columns: repeat(auto-fill, 150px);
-    }
-  </style>
 </body>
 
 </html>

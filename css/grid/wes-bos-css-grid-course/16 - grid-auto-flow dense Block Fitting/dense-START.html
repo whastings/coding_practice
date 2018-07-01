@@ -6,6 +6,28 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="../assets/style.css">
   <title>grid-auto-flow dense Block Fitting!</title>
+  <style>
+    .container {
+      display: grid;
+      grid-gap: 20px;
+      grid-template-columns: repeat(10, 1fr);
+      grid-auto-flow: dense;
+    }
+
+    .item:nth-child(6n) {
+      background: cornflowerblue;
+      grid-column: span 6;
+    }
+
+    .item:nth-child(8n) {
+      background: tomato;
+      grid-column: span 2;
+    }
+
+    .item:nth-child(9n) {
+      grid-row: span 2;
+    }
+  </style>
 </head>
 
 <body>
@@ -82,12 +104,6 @@
     <div class="item item70">70</div>
   </div>
 
-  <style>
-    .container {
-      display: grid;
-      grid-gap: 20px;
-    }
-  </style>
 </body>
 
 </html>

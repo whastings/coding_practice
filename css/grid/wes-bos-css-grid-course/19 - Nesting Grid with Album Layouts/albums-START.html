@@ -6,6 +6,30 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="../assets/style.css">
   <title>Nesting Grid with Album Layouts!</title>
+  <style>
+    .albums {
+      display: grid;
+      grid-gap: 20px;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    }
+
+    .album {
+      align-items: center;
+      background-color: rgba(255, 255, 255, 0.2);
+      display: grid;
+      grid-gap: 10px;
+      grid-template-columns: 1fr 1fr;
+      padding: 20px;
+    }
+
+    .album__artwork {
+      width: 100%;
+    }
+
+    .album__details {
+      color: white;
+    }
+  </style>
 </head>
 
 <body>
@@ -96,8 +120,6 @@
   </div>
 
 
-  <style>
-  </style>
 </body>
 
 </html>

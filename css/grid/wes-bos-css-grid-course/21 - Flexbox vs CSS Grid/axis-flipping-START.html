@@ -6,6 +6,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="../assets/style.css">
   <title>Flexbox vs CSS Grid: Axis Flipping!</title>
+  <style>
+    .flipper {
+      display: grid;
+      grid-gap: 20px;
+      grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
+    }
+
+    .flipper.flip {
+      grid-template-columns: 1fr;
+    }
+  </style>
 </head>
 
 <body>
@@ -34,8 +45,6 @@
 
   </div>
 
-  <style>
-  </style>
 </body>
 
 </html>

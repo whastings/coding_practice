@@ -6,6 +6,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="../assets/style.css">
   <title>Flexbox vs CSS Grid: Flex on Item!</title>
+  <style>
+    .controls {
+      margin: 200px 0;
+      /* display: flex; */
+      /* align-items: center; */
+      display: grid;
+      grid-template-columns: auto auto auto 1fr auto auto;
+    }
+
+    .scrubber {
+      background: #BADA55;
+      height: 10px;
+      min-width: 100px;
+      border-radius: 10px;
+      /* flex: 1; */
+    }
+  </style>
 </head>
 
 <body>
@@ -19,18 +36,6 @@
     <button>🔽</button>
   </div>
 
-  <style>
-    .controls {
-      margin: 200px 0;
-    }
-
-    .scrubber {
-      background: #BADA55;
-      height: 10px;
-      min-width: 100px;
-      border-radius: 10px;
-    }
-  </style>
 
 </body>
 

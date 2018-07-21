@@ -6,6 +6,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="../assets/style.css">
   <title>Flexbox vs CSS Grid: Controls on Right!</title>
+  <style>
+    .track {
+      background: white;
+      padding: 10px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+      display: grid;
+      grid-template-columns: 1fr;
+      grid-auto-flow: column;
+    }
+  </style>
 </head>
 
 <body>
@@ -50,13 +60,6 @@
       <button>❌</button>
     </div>
   </div>
-  <style>
-    .track {
-      background: white;
-      padding: 10px;
-      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-    }
-  </style>
 </body>
 
 </html>

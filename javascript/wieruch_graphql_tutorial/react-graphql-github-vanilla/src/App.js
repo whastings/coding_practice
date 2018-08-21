@@ -5,11 +5,24 @@ import Organization from './components/Organization';
 
 const TITLE = 'React GraphQL GitHub Client';
 
-const ORGANIZATION_QUERY = `
+const ORGANIZATION_REPO_QUERY = `
   query {
     organization(login: "facebook") {
       name
       url
+      repository(name: "react") {
+        name
+        url
+        issues(last: 5) {
+          edges {
+            node {
+              id
+              title
+              url
+            }
+          }
+        }
+      }
     }
   }
 `;
@@ -33,7 +46,7 @@ class App extends Component {
   }
 
   fetchFromGitHub() {
-    api.post('', { query: ORGANIZATION_QUERY })
+    api.post('', { query: ORGANIZATION_REPO_QUERY })
       .then((result) => {
         this.setState({
           organization: result.data.data && result.data.data.organization,

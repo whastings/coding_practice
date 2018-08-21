@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 
+import Organization from './components/Organization';
+
 const TITLE = 'React GraphQL GitHub Client';
 
 const ORGANIZATION_QUERY = `
@@ -21,6 +23,8 @@ const api = axios.create({
 
 class App extends Component {
   state = {
+    errors: null,
+    organization: null,
     repoPath: 'facebook/react',
   }
 
@@ -30,7 +34,12 @@ class App extends Component {
 
   fetchFromGitHub() {
     api.post('', { query: ORGANIZATION_QUERY })
-      .then(result => console.log(result));
+      .then((result) => {
+        this.setState({
+          organization: result.data.data && result.data.data.organization,
+          errors: result.data.errors,
+        });
+      });
   }
 
   handleRepoPathChange = (event) => {
@@ -41,8 +50,33 @@ class App extends Component {
     event.preventDefault();
   }
 
+  renderErrors() {
+    const { errors } = this.state;
+
+    return (
+      <div>
+        <h2>Something Went Wrong:</h2>
+        <ul>
+          {errors.map(error => <li key={error.message}>{error.message}</li>)}
+        </ul>
+      </div>
+    );
+  }
+
+  renderOrganization() {
+    const { organization } = this.state;
+
+    if (organization) {
+      return <Organization organization={organization} />
+    }
+
+    return (
+      <div>No information yet...</div>
+    );
+  }
+
   render() {
-    const { repoPath } = this.state;
+    const { errors, repoPath } = this.state;
 
     return (
       <div>
@@ -59,6 +93,10 @@ class App extends Component {
           />
           <button>Submit</button>
         </form>
+
+        <hr />
+
+        {errors ? this.renderErrors() : this.renderOrganization()}
       </div>
     );
   }

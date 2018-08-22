@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import mergeWith from 'lodash.mergewith';
 
 import Organization from './components/Organization';
 
@@ -46,6 +47,10 @@ const api = axios.create({
   }
 });
 
+const mergeArrays = (value1, value2) => {
+  return Array.isArray(value1) ? value1.concat(value2) : undefined;
+};
+
 class App extends Component {
   state = {
     errors: null,
@@ -66,8 +71,11 @@ class App extends Component {
       variables: { orgName, repoName, cursor },
     })
       .then((result) => {
+        const newData = result.data.data && result.data.data.organization;
+        const organization = (newData && this.state.organization) ?
+          mergeWith({}, this.state.organization, newData, mergeArrays) : newData;
         this.setState({
-          organization: result.data.data && result.data.data.organization,
+          organization,
           errors: result.data.errors,
         });
       });

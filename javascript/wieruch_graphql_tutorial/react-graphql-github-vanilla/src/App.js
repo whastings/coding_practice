@@ -6,20 +6,32 @@ import Organization from './components/Organization';
 const TITLE = 'React GraphQL GitHub Client';
 
 const ORGANIZATION_REPO_QUERY = `
-  query ($orgName: String!, $repoName: String!) {
+  query ($orgName: String!, $repoName: String!, $cursor: String) {
     organization(login: $orgName) {
       name
       url
       repository(name: $repoName) {
         name
         url
-        issues(last: 5) {
+        issues(first: 5, after: $cursor, states: [OPEN]) {
           edges {
             node {
               id
               title
               url
+              reactions(last: 3) {
+                edges {
+                  node {
+                    id
+                    content
+                  }
+                }
+              }
             }
+          }
+          pageInfo {
+            endCursor
+            hasNextPage
           }
         }
       }
@@ -45,13 +57,13 @@ class App extends Component {
     this.fetchFromGitHub();
   }
 
-  fetchFromGitHub() {
+  fetchFromGitHub = (cursor = null) => {
     const { repoPath } = this.state;
     const [orgName, repoName] = repoPath.split('/');
 
     api.post('', {
       query: ORGANIZATION_REPO_QUERY,
-      variables: { orgName, repoName },
+      variables: { orgName, repoName, cursor },
     })
       .then((result) => {
         this.setState({
@@ -87,7 +99,7 @@ class App extends Component {
     const { organization } = this.state;
 
     if (organization) {
-      return <Organization organization={organization} />
+      return <Organization organization={organization} onFetchMoreIssues={this.fetchFromGitHub} />
     }
 
     return (

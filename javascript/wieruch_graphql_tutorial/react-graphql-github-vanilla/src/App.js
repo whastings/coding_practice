@@ -71,8 +71,9 @@ class App extends Component {
       variables: { orgName, repoName, cursor },
     })
       .then((result) => {
+        const currentOrg = this.state.organization;
         const newData = result.data.data && result.data.data.organization;
-        const organization = (newData && this.state.organization) ?
+        const organization = (newData && currentOrg && currentOrg.repository.url === newData.repository.url) ?
           mergeWith({}, this.state.organization, newData, mergeArrays) : newData;
         this.setState({
           organization,

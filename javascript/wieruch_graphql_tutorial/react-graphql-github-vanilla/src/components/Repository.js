@@ -3,7 +3,7 @@ import Reactions from './Reactions';
 
 const Repository = ({ onFetchMoreIssues, repository }) => {
   const issueEdges = repository.issues.edges;
-  const { endCursor } = repository.issues.pageInfo;
+  const { endCursor, hasNextPage } = repository.issues.pageInfo;
 
   return (
     <div>
@@ -22,7 +22,7 @@ const Repository = ({ onFetchMoreIssues, repository }) => {
         ))}
       </ul>
       <hr />
-      <button onClick={() => onFetchMoreIssues(endCursor)}>More</button>
+      {hasNextPage && <button onClick={() => onFetchMoreIssues(endCursor)}>More</button>}
     </div>
   );
 };

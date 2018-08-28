@@ -52,6 +52,16 @@ const ADD_STAR_MUTATION = `
   }
 `;
 
+const REMOVE_STAR_MUTATION = `
+  mutation ($repositoryId: ID!) {
+    removeStar(input: { starrableId: $repositoryId }) {
+      starrable {
+        viewerHasStarred
+      }
+    }
+  }
+`;
+
 const api = axios.create({
   baseURL: 'https://api.github.com/graphql',
   headers: {
@@ -103,6 +113,15 @@ class App extends Component {
     this.fetchFromGitHub();
   }
 
+  processMutationResult(mutationName, result) {
+    const currentOrg = this.state.organization;
+    const updatedRepo = result.data.data[mutationName].starrable;
+    if (updatedRepo) {
+      currentOrg.repository.viewerHasStarred = updatedRepo.viewerHasStarred;
+      this.setState({ organization: currentOrg });
+    }
+  }
+
   starRepo = () => {
     const repositoryId = this.state.organization.repository.id;
 
@@ -110,14 +129,17 @@ class App extends Component {
       query: ADD_STAR_MUTATION,
       variables: { repositoryId },
     })
-      .then((result) => {
-        const currentOrg = this.state.organization;
-        const updatedRepo = result.data.data.addStar.starrable;
-        if (updatedRepo) {
-          currentOrg.repository.viewerHasStarred = updatedRepo.viewerHasStarred;
-          this.setState({ organization: currentOrg });
-        }
-      });
+      .then((result) => this.processMutationResult('addStar', result));
+  }
+
+  unstarRepo = () => {
+    const repositoryId = this.state.organization.repository.id;
+
+    api.post('', {
+      query: REMOVE_STAR_MUTATION,
+      variables: { repositoryId },
+    })
+      .then((result) => this.processMutationResult('removeStar', result));
   }
 
   renderErrors() {
@@ -142,6 +164,7 @@ class App extends Component {
           organization={organization}
           onFetchMoreIssues={this.fetchFromGitHub}
           onStarRepo={this.starRepo}
+          onUnstarRepo={this.unstarRepo}
         />
       );
     }

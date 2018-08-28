@@ -1,7 +1,7 @@
 import React from 'react';
 import Reactions from './Reactions';
 
-const Repository = ({ onFetchMoreIssues, onStar, repository }) => {
+const Repository = ({ onFetchMoreIssues, onStar, onUnstar, repository }) => {
   const issueEdges = repository.issues.edges;
   const { endCursor, hasNextPage } = repository.issues.pageInfo;
   const { viewerHasStarred } = repository;
@@ -11,7 +11,8 @@ const Repository = ({ onFetchMoreIssues, onStar, repository }) => {
       <h3>In Repository:</h3>
       <a href={repository.url}>{repository.name}</a>
       <div>
-        {!viewerHasStarred && <button onClick={onStar}>Star</button> || 'Starred'}
+        {viewerHasStarred ?
+          <button onClick={onUnstar}>Unstar</button> : <button onClick={onStar}>Star</button>}
       </div>
 
       <ul>

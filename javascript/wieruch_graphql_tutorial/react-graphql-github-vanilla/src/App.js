@@ -2,65 +2,12 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import mergeWith from 'lodash.mergewith';
 
+import Errors from './components/Errors';
 import Organization from './components/Organization';
+import RepoPathForm from './components/RepoPathForm';
+import { ADD_STAR_MUTATION, ORGANIZATION_REPO_QUERY, REMOVE_STAR_MUTATION } from './graphql';
 
 const TITLE = 'React GraphQL GitHub Client';
-
-const ORGANIZATION_REPO_QUERY = `
-  query ($orgName: String!, $repoName: String!, $cursor: String) {
-    organization(login: $orgName) {
-      name
-      url
-      repository(name: $repoName) {
-        id
-        name
-        url
-        viewerHasStarred
-        issues(first: 5, after: $cursor, states: [OPEN]) {
-          edges {
-            node {
-              id
-              title
-              url
-              reactions(last: 3) {
-                edges {
-                  node {
-                    id
-                    content
-                  }
-                }
-              }
-            }
-          }
-          pageInfo {
-            endCursor
-            hasNextPage
-          }
-        }
-      }
-    }
-  }
-`;
-
-const ADD_STAR_MUTATION = `
-  mutation ($repositoryId: ID!) {
-    addStar(input: { starrableId: $repositoryId }) {
-      starrable {
-        viewerHasStarred
-      }
-    }
-  }
-`;
-
-const REMOVE_STAR_MUTATION = `
-  mutation ($repositoryId: ID!) {
-    removeStar(input: { starrableId: $repositoryId }) {
-      starrable {
-        viewerHasStarred
-      }
-    }
-  }
-`;
 
 const api = axios.create({
   baseURL: 'https://api.github.com/graphql',
@@ -121,13 +68,8 @@ class App extends Component {
       });
   }
 
-  handleRepoPathChange = (event) => {
-    this.setState({ repoPath: event.target.value });
-  }
-
-  handleSubmit = (event) => {
-    event.preventDefault();
-    this.fetchFromGitHub();
+  handleRepoPathChange = (newValue) => {
+    this.setState({ repoPath: newValue });
   }
 
   processMutationResult(mutationName, result) {
@@ -159,19 +101,6 @@ class App extends Component {
       .then((result) => this.processMutationResult('removeStar', result));
   }
 
-  renderErrors() {
-    const { errors } = this.state;
-
-    return (
-      <div>
-        <h2>Something Went Wrong:</h2>
-        <ul>
-          {errors.map(error => <li key={error.message}>{error.message}</li>)}
-        </ul>
-      </div>
-    );
-  }
-
   renderOrganization() {
     const { organization } = this.state;
 
@@ -198,21 +127,15 @@ class App extends Component {
       <div>
         <h1>{TITLE}</h1>
 
-        <form onSubmit={this.handleSubmit}>
-          <label htmlFor="repo-path">
-            Show open issues for repo:
-          </label>
-          <input
-            id="repo-path"
-            onChange={this.handleRepoPathChange}
-            value={repoPath}
-          />
-          <button>Submit</button>
-        </form>
+        <RepoPathForm
+          onChange={this.handleRepoPathChange}
+          onSubmit={this.fetchFromGitHub}
+          repoPath={repoPath}
+        />
 
         <hr />
 
-        {errors ? this.renderErrors() : this.renderOrganization()}
+        {errors ? <Errors errors={errors} /> : this.renderOrganization()}
       </div>
     );
   }

@@ -93,13 +93,30 @@ class App extends Component {
       variables: { orgName, repoName, cursor },
     })
       .then((result) => {
+        if (result.data.errors) {
+          this.setState({
+            organization: null,
+            errors: result.data.errors,
+          });
+          return;
+        }
+
         const currentOrg = this.state.organization;
-        const newData = result.data.data && result.data.data.organization;
-        const organization = (newData && currentOrg && currentOrg.repository.url === newData.repository.url) ?
+        const newData = result.data.data.organization;
+
+        if (!newData.repository) {
+          this.setState({
+            organization: null,
+            errors: [{ message: 'Repo not found' }],
+          });
+          return;
+        }
+
+        const organization = (currentOrg && currentOrg.repository.url === newData.repository.url) ?
           mergeWith({}, this.state.organization, newData, mergeArrays) : newData;
         this.setState({
           organization,
-          errors: result.data.errors,
+          errors: null,
         });
       });
   }

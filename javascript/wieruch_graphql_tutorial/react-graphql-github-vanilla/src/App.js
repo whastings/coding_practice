@@ -12,8 +12,10 @@ const ORGANIZATION_REPO_QUERY = `
       name
       url
       repository(name: $repoName) {
+        id
         name
         url
+        viewerHasStarred
         issues(first: 5, after: $cursor, states: [OPEN]) {
           edges {
             node {
@@ -35,6 +37,16 @@ const ORGANIZATION_REPO_QUERY = `
             hasNextPage
           }
         }
+      }
+    }
+  }
+`;
+
+const ADD_STAR_MUTATION = `
+  mutation ($repositoryId: ID!) {
+    addStar(input: { starrableId: $repositoryId }) {
+      starrable {
+        viewerHasStarred
       }
     }
   }
@@ -91,6 +103,23 @@ class App extends Component {
     this.fetchFromGitHub();
   }
 
+  starRepo = () => {
+    const repositoryId = this.state.organization.repository.id;
+
+    api.post('', {
+      query: ADD_STAR_MUTATION,
+      variables: { repositoryId },
+    })
+      .then((result) => {
+        const currentOrg = this.state.organization;
+        const updatedRepo = result.data.data.addStar.starrable;
+        if (updatedRepo) {
+          currentOrg.repository.viewerHasStarred = updatedRepo.viewerHasStarred;
+          this.setState({ organization: currentOrg });
+        }
+      });
+  }
+
   renderErrors() {
     const { errors } = this.state;
 
@@ -108,7 +137,13 @@ class App extends Component {
     const { organization } = this.state;
 
     if (organization) {
-      return <Organization organization={organization} onFetchMoreIssues={this.fetchFromGitHub} />
+      return (
+        <Organization
+          organization={organization}
+          onFetchMoreIssues={this.fetchFromGitHub}
+          onStarRepo={this.starRepo}
+        />
+      );
     }
 
     return (

@@ -3,12 +3,32 @@ import gql from 'graphql-tag';
 import { Query } from 'react-apollo';
 
 import Loading from './Loading';
+import RepoList from './RepoList';
 
 const CURRENT_USER_QUERY = gql`
   {
     viewer {
       login
       name
+      repositories(
+        first: 5,
+        orderBy: { field: STARGAZERS, direction: DESC }
+      ) {
+        edges {
+          node {
+            id
+            name
+            url
+            descriptionHTML
+            primaryLanguage {
+              name
+            }
+            stargazers {
+              totalCount
+            }
+          }
+        }
+      }
     }
   }
 `;
@@ -26,10 +46,12 @@ const Profile = () => {
         }
 
         const { viewer } = data;
+        const repos = viewer.repositories.edges.map(edge => edge.node);
 
         return (
           <div>
-            {viewer.name} {viewer.login}
+            <strong>User:</strong> {viewer.name} {viewer.login}
+            <RepoList repos={repos} />
           </div>
         );
       }}

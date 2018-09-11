@@ -41,8 +41,7 @@ const Profile = () => {
           return <Loading />;
         }
         if (error) {
-          console.log(error);
-          return null;
+          return <div>Error fetching profile</div>;
         }
 
         const { viewer } = data;

@@ -20,6 +20,7 @@ const CURRENT_USER_QUERY = gql`
             name
             url
             descriptionHTML
+            viewerHasStarred
             primaryLanguage {
               name
             }

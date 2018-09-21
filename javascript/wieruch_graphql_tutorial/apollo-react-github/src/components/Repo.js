@@ -28,6 +28,20 @@ const REMOVE_STAR_MUTATION = gql`
   }
 `;
 
+const starOptimisticResponse = (id, newViewerHasStarred) => {
+  const mutationName = newViewerHasStarred ? 'addStar' : 'removeStar';
+  return {
+    [mutationName]: {
+      __typename: 'Mutation',
+      starrable: {
+        __typename: 'Repository',
+        id,
+        viewerHasStarred: newViewerHasStarred,
+      },
+    },
+  };
+};
+
 const updateRepoStarCount = (id, viewerHadStarred, client, mutationResult) => {
   const cacheId = `Repository:${id}`;
   const repo = client.readFragment({
@@ -54,6 +68,7 @@ const renderStarButton = (id, viewerHasStarred) => {
         mutation={mutation}
         variables={{ id }}
         update={(...args) => updateRepoStarCount(id, viewerHasStarred, ...args)}
+        optimisticResponse={starOptimisticResponse(id, !viewerHasStarred)}
       >
         {(runMutation, { loading }) => {
           return (

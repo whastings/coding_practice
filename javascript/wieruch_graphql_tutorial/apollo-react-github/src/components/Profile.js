@@ -4,6 +4,7 @@ import { Query } from 'react-apollo';
 
 import Loading from './Loading';
 import RepoList from './RepoList';
+import { REPOSITORY_FRAGMENT } from '../graphql';
 
 const CURRENT_USER_QUERY = gql`
   {
@@ -16,22 +17,14 @@ const CURRENT_USER_QUERY = gql`
       ) {
         edges {
           node {
-            id
-            name
-            url
-            descriptionHTML
-            viewerHasStarred
-            primaryLanguage {
-              name
-            }
-            stargazers {
-              totalCount
-            }
+            ...repository
           }
         }
       }
     }
   }
+  
+  ${REPOSITORY_FRAGMENT}
 `;
 
 const Profile = () => {

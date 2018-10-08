@@ -1,10 +1,9 @@
 import React from 'react';
 import gql from 'graphql-tag';
 import { Query } from 'react-apollo';
-import immutable from 'object-path-immutable';
 
 import Loading from './Loading';
-import RepoList from './RepoList';
+import ReposLoader from './ReposLoader';
 import { REPOSITORY_FRAGMENT } from '../graphql';
 
 const CURRENT_USER_QUERY = gql`
@@ -33,26 +32,6 @@ const CURRENT_USER_QUERY = gql`
   ${REPOSITORY_FRAGMENT}
 `;
 
-const handleFetchMoreRepos = (fetchMore, lastEndCursor) => {
-  fetchMore({
-    variables: {
-      cursor: lastEndCursor,
-    },
-    updateQuery(prevResult, { fetchMoreResult }) {
-      if (!fetchMoreResult) {
-        return prevResult;
-      }
-      return immutable.assign(prevResult, 'viewer.repositories', {
-        ...fetchMoreResult.viewer.repositories,
-        edges: [
-          ...prevResult.viewer.repositories.edges,
-          ...fetchMoreResult.viewer.repositories.edges,
-        ],
-      })
-    },
-  })
-};
-
 const Profile = () => {
   return (
     <Query
@@ -64,23 +43,20 @@ const Profile = () => {
           return <Loading />;
         }
         if (error) {
-          return <div>Error fetching profile</div>;
+          return <div>Error fetching viewer</div>;
         }
 
         const { viewer } = data;
-        const { endCursor, hasNextPage } = viewer.repositories.pageInfo;
-        const repos = viewer.repositories.edges.map(edge => edge.node);
 
         return (
           <div>
             <strong>User:</strong> {viewer.name} {viewer.login}
-            <RepoList repos={repos} />
-            {hasNextPage && (
-              <button type="button" onClick={() => handleFetchMoreRepos(fetchMore, endCursor)}>
-                Load More Repos
-              </button>
-            )}
-            {loading && <Loading />}
+            <ReposLoader
+              data={data}
+              queryRoot="viewer"
+              fetchMore={fetchMore}
+              loading={loading}
+            />
           </div>
         );
       }}

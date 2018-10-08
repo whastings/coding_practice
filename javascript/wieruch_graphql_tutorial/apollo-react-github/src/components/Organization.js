@@ -3,6 +3,7 @@ import gql from 'graphql-tag';
 import { Query } from 'react-apollo';
 
 import Loading from './Loading';
+import OrgNameForm from './OrgNameForm';
 import ReposLoader from './ReposLoader';
 import { REPOSITORY_FRAGMENT } from '../graphql';
 
@@ -25,32 +26,46 @@ const ORG_REPOS_QUERY = gql`
   ${REPOSITORY_FRAGMENT}
 `;
 
-const Organization = () => {
-  return (
-    <Query
-      query={ORG_REPOS_QUERY}
-      variables={{ orgName: 'facebook' }}
-      notifyOnNetworkStatusChange={true}
-    >
-      {({ data, loading, error, fetchMore }) => {
-        if (loading && (!data ||!data.organization)) {
-          return <Loading />;
-        }
-        if (error) {
-          return <div>Error fetching organization</div>;
-        }
+class Organization extends React.Component {
+  state = {
+    orgName: 'facebook',
+  }
 
-        return (
-          <ReposLoader
-            data={data}
-            queryRoot="organization"
-            fetchMore={fetchMore}
-            loading={loading}
-          />
-        );
-      }}
-    </Query>
-  );
-};
+  updateOrgName = (orgName) => {
+    this.setState({ orgName });
+  }
+
+  render() {
+    const { orgName } = this.state;
+    return (
+      <React.Fragment>
+        <OrgNameForm defaultValue={orgName} onSubmit={this.updateOrgName} />
+        <Query
+          query={ORG_REPOS_QUERY}
+          variables={{ orgName }}
+          notifyOnNetworkStatusChange={true}
+        >
+          {({ data, loading, error, fetchMore }) => {
+            if (loading && (!data ||!data.organization)) {
+              return <Loading />;
+            }
+            if (error) {
+              return <div>Error fetching organization</div>;
+            }
+
+            return (
+              <ReposLoader
+                data={data}
+                queryRoot="organization"
+                fetchMore={fetchMore}
+                loading={loading}
+              />
+            );
+          }}
+        </Query>
+      </React.Fragment>
+    );
+  }
+}
 
 export default Organization;

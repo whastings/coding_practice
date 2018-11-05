@@ -15,3 +15,29 @@ export const REPOSITORY_FRAGMENT = gql`
     }
   }
 `;
+
+export const CURRENT_USER_QUERY = gql`
+  query($cursor: String) {
+    viewer {
+      login
+      name
+      repositories(
+        first: 5,
+        orderBy: { field: STARGAZERS, direction: DESC },
+        after: $cursor
+      ) {
+        edges {
+          node {
+            ...repository
+          }
+        }
+        pageInfo {
+          endCursor
+          hasNextPage
+        }
+      }
+    }
+  }
+
+  ${REPOSITORY_FRAGMENT}
+`;

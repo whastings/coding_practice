@@ -1,0 +1,3 @@
+secrets.auto.tfvars
+.terraform
+ip_address.txt

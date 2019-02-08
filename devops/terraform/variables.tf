@@ -10,3 +10,6 @@ variable "amis" {
     "us-west-1" = "ami-693d4009"
   }
 }
+variable "ssh_public_key_path" {
+  default = "~/.ssh/id_rsa.pub"
+}

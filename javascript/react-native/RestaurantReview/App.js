@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 
 const restaurants = [
   { name: 'React Cafe', address: '123 Anywhere St' },
@@ -15,13 +15,7 @@ export default class App extends Component {
           flex: 1,
         }}
       >
-        <Text style={{
-          padding: 40,
-          fontSize: 30,
-          textAlign: 'center',
-          color: '#0066CC',
-          fontWeight: '300',
-        }}>
+        <Text style={styles.header}>
           Restaurant Review!
         </Text>
 
@@ -29,41 +23,21 @@ export default class App extends Component {
           return (
             <View
               key={place.name}
-              style={{
-                flexDirection: 'row',
-              }}
+              style={[
+                styles.row,
+                { backgroundColor: index % 2 === 0 ? 'white' : '#F3F3F7' },
+              ]}
             >
-              <View
-                style={{
-                  flex: 1,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-              >
+              <View style={styles.edges}>
                 <Text>{index + 1}</Text>
               </View>
-              <View
-                style={{
-                  flexDirection: 'column',
-                  flex: 8,
-                }}
-              >
+              <View style={styles.nameAndAddress}>
                 <Text>{place.name}</Text>
-                <Text
-                  style={{
-                    color: 'grey'
-                  }}
-                >
+                <Text style={styles.addressText}>
                   {place.address}
                 </Text>
               </View>
-              <View
-                style={{
-                  flex: 1,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-              >
+              <View style={styles.edges}>
                 <Text>Info</Text>
               </View>
             </View>
@@ -73,3 +47,31 @@ export default class App extends Component {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  header: {
+    padding: 40,
+    fontSize: 30,
+    textAlign: 'center',
+    color: '#0066CC',
+    fontWeight: '300',
+  },
+  row: {
+    flexDirection: 'row',
+    marginBottom: 10,
+    paddingBottom: 5,
+    paddingTop: 5,
+  },
+  edges: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  nameAndAddress: {
+    flexDirection: 'column',
+    flex: 8,
+  },
+  addressText: {
+    color: 'grey'
+  },
+});

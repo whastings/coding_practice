@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, TextInput, View } from 'react-native';
 
+import Header from './src/components/Header';
+
 const restaurants = [
   { name: 'React Cafe', address: '123 Anywhere St' },
   { name: 'Fancy Restaurant', address: '799 Main St' },
@@ -36,9 +38,7 @@ export default class App extends Component {
           flex: 1,
         }}
       >
-        <Text style={styles.header}>
-          Restaurant Review!
-        </Text>
+        <Header />
 
         <TextInput
           style={styles.input}

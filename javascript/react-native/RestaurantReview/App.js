@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, TextInput, View } from 'react-native';
 
 const restaurants = [
   { name: 'React Cafe', address: '123 Anywhere St' },
@@ -8,7 +8,28 @@ const restaurants = [
 ];
 
 export default class App extends Component {
+  state = {
+    search: '',
+  };
+
+  updateSearch = (text) => {
+    this.setState({ search: text });
+  };
+
+  restaurantsToRender() {
+    const { search } = this.state;
+
+    if (!search) {
+      return restaurants;
+    }
+
+    const lowerCaseSearch = search.toLowerCase();
+    return restaurants.filter((restaurant) => restaurant.name.toLowerCase().includes(lowerCaseSearch));
+  }
+
   render() {
+    const { search } = this.state;
+
     return (
       <View
         style={{
@@ -19,7 +40,14 @@ export default class App extends Component {
           Restaurant Review!
         </Text>
 
-        {restaurants.map((place, index) => {
+        <TextInput
+          style={styles.input}
+          placeholder={'Live Search'}
+          onChangeText={this.updateSearch}
+          value={search}
+        />
+
+        {this.restaurantsToRender().map((place, index) => {
           return (
             <View
               key={place.name}
@@ -73,5 +101,15 @@ const styles = StyleSheet.create({
   },
   addressText: {
     color: 'grey'
+  },
+  input: {
+    marginBottom: 30,
+    padding: 10,
+    paddingHorizontal: 20,
+    fontSize: 16,
+    color: '#444',
+    borderBottomWidth: 1,
+    borderColor: '#ddd',
+    backgroundColor: '#F5F5F5',
   },
 });

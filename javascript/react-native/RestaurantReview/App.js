@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { FlatList, StyleSheet, TextInput, View } from 'react-native';
 
 import Header from './src/components/Header';
+import RestaurantRow from './src/components/RestaurantRow';
 
 const restaurants = [
   { name: 'React Cafe', address: '123 Anywhere St' },
@@ -64,32 +65,12 @@ export default class App extends Component {
           value={search}
         />
 
-        <ScrollView contentContainerStyle={styles.scrollViewContainer}>
-          {this.restaurantsToRender().map((place, index) => {
-            return (
-              <View
-                key={place.name}
-                style={[
-                  styles.row,
-                  { backgroundColor: index % 2 === 0 ? 'white' : '#F3F3F7' },
-                ]}
-              >
-                <View style={styles.edges}>
-                  <Text>{index + 1}</Text>
-                </View>
-                <View style={styles.nameAndAddress}>
-                  <Text>{place.name}</Text>
-                  <Text style={styles.addressText}>
-                    {place.address}
-                  </Text>
-                </View>
-                <View style={styles.edges}>
-                  <Text>Info</Text>
-                </View>
-              </View>
-            );
-          })}
-        </ScrollView>
+        <FlatList
+          data={this.restaurantsToRender()}
+          renderItem={({ item, index }) => <RestaurantRow restaurant={item} index={index} />}
+          keyExtractor={(item) => item.name}
+          initialNumToRender={15}
+        />
       </View>
     );
   }
@@ -103,24 +84,6 @@ const styles = StyleSheet.create({
     color: '#0066CC',
     fontWeight: '300',
   },
-  row: {
-    flexDirection: 'row',
-    marginBottom: 10,
-    paddingBottom: 5,
-    paddingTop: 5,
-  },
-  edges: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  nameAndAddress: {
-    flexDirection: 'column',
-    flex: 8,
-  },
-  addressText: {
-    color: 'grey'
-  },
   input: {
     padding: 10,
     paddingHorizontal: 20,
@@ -129,8 +92,5 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderColor: '#ddd',
     backgroundColor: '#F5F5F5',
-  },
-  scrollViewContainer: {
-    paddingTop: 30,
   },
 });

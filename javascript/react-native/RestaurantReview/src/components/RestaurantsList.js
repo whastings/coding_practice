@@ -11,6 +11,10 @@ const RESTAURANTS_URL = Platform.select({
 });
 
 export default class RestaurantsList extends Component {
+  static navigationOptions = {
+    header: null,
+  };
+
   state = {
     restaurants: [],
     search: '',
@@ -50,6 +54,7 @@ export default class RestaurantsList extends Component {
     return (
       <View
         style={{
+          backgroundColor: '#fff',
           flex: 1,
         }}
       >

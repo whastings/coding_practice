@@ -22,4 +22,8 @@ const styles = StyleSheet.create({
   },
 });
 
+RestaurantInfo.navigationOptions = {
+  title: 'Restaurant Info',
+};
+
 export default RestaurantInfo;

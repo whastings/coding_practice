@@ -1,15 +1,9 @@
-import React, { useState } from 'react';
-import { Image, StyleSheet, Text, TouchableHighlight, View } from 'react-native';
+import React from 'react';
+import { StyleSheet, Text, TouchableHighlight, View } from 'react-native';
 
 import Stars from './Stars';
 
-const RestaurantRow = ({ restaurant, index }) => {
-  const [showInfo, setShowInfo] = useState(false);
-
-  const handleInfoButtonPress = () => {
-    setShowInfo(!showInfo);
-  };
-
+const RestaurantRow = ({ restaurant, index, onInfoClick }) => {
   return (
     <View
       key={restaurant.name}
@@ -27,7 +21,7 @@ const RestaurantRow = ({ restaurant, index }) => {
         </View>
         <View style={[styles.edges, styles.infoButtonContainer]}>
           <TouchableHighlight
-            onPress={handleInfoButtonPress}
+            onPress={onInfoClick}
             style={styles.infoButton}
             underlayColor='#5398DC'
           >
@@ -35,18 +29,6 @@ const RestaurantRow = ({ restaurant, index }) => {
           </TouchableHighlight>
         </View>
       </View>
-      {showInfo && (
-        <View style={styles.info}>
-          <Text>Restaurant Info</Text>
-          <Image
-            source={{
-              uri: `http://localhost:3000/images/${restaurant.image}`,
-              width: 100,
-              height: 100,
-            }}
-          />
-        </View>
-      )}
     </View>
   );
 };
@@ -88,11 +70,6 @@ const styles = StyleSheet.create({
   infoButtonText: {
     color: '#0066CC',
     fontSize: 12,
-  },
-  info: {
-    marginLeft: 85,
-    marginVertical: 5,
-    marginBottom: 20,
   },
 });
 

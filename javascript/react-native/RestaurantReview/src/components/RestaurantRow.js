@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Image, StyleSheet, Text, TouchableHighlight, View } from 'react-native';
 
+import Stars from './Stars';
+
 const RestaurantRow = ({ restaurant, index }) => {
   const [showInfo, setShowInfo] = useState(false);
 
@@ -14,8 +16,8 @@ const RestaurantRow = ({ restaurant, index }) => {
       style={{ backgroundColor: index % 2 === 0 ? 'white' : '#F3F3F7' }}
     >
       <View style={styles.row}>
-        <View style={[styles.edges, styles.numberContainer]}>
-          <Text>{index + 1}</Text>
+        <View style={[styles.edges, styles.starsContainer]}>
+          <Stars rating={restaurant.rating} />
         </View>
         <View style={styles.nameAndAddress}>
           <Text>{restaurant.name}</Text>
@@ -56,8 +58,10 @@ const styles = StyleSheet.create({
     paddingBottom: 5,
     paddingTop: 5,
   },
-  numberContainer: {
-    minWidth: 40,
+  starsContainer: {
+    alignItems: 'flex-start',
+    minWidth: 85,
+    paddingLeft: 15,
   },
   edges: {
     alignItems: 'center',
@@ -86,7 +90,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   info: {
-    marginHorizontal: 40,
+    marginLeft: 85,
     marginVertical: 5,
     marginBottom: 20,
   },

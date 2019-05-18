@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import AsyncStorage from '@react-native-community/async-storage';
 
 import { API_ROOT } from '../constants';
 
@@ -15,18 +16,40 @@ const AddReview = ({ navigation }) => {
     navigation.goBack();
   };
 
-  const submitReview = () => {
-    setIsSubmitting(true);
-    fetch(`${API_ROOT}/reviews`, {
-      method: 'POST',
-      body: JSON.stringify({
-        name: nameValue,
-        rating: ratingValue,
-        comment: commentValue,
-      }),
-    })
-      .then(handleClose, () => setIsSubmitting(false));
+  const loadCachedName = async () => {
+    const name = await AsyncStorage.getItem('reviewer_name');
+
+    if (typeof name === 'string') {
+      setNameValue(name);
+    }
   };
+
+  const submitReview = async () => {
+    setIsSubmitting(true);
+
+    if (typeof nameValue === 'string') {
+      AsyncStorage.setItem('reviewer_name', nameValue);
+    }
+
+    try {
+      await fetch(`${API_ROOT}/reviews`, {
+        method: 'POST',
+        body: JSON.stringify({
+          name: nameValue,
+          rating: ratingValue,
+          comment: commentValue,
+        }),
+      });
+      handleClose();
+    } catch(_e) {
+      setIsSubmitting(false);
+    }
+  };
+
+  useEffect(() => {
+    loadCachedName();
+    return undefined;
+  }, []);
 
   return (
     <KeyboardAwareScrollView style={styles.scrollView}>

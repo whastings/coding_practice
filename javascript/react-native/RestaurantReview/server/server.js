@@ -31,4 +31,10 @@ app.get('/images/:image', (req, res) => {
   res.sendFile(__dirname + '/images/' + req.params.image);
 });
 
+app.post('/reviews', (req, res) =>{
+  setTimeout(() => {
+    res.json({ success: 'OK' });
+  }, 2000);
+});
+
 app.listen(port, () => console.log(`Restaurant server listening on port ${port}!`));

@@ -1,15 +1,31 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
+import { API_ROOT } from '../constants';
+
 const AddReview = ({ navigation }) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [nameValue, setNameValue] = useState('');
   const [ratingValue, setRatingValue] = useState(0);
   const [commentValue, setCommentValue] = useState('');
 
   const handleClose = () => {
     navigation.goBack();
+  };
+
+  const submitReview = () => {
+    setIsSubmitting(true);
+    fetch(`${API_ROOT}/reviews`, {
+      method: 'POST',
+      body: JSON.stringify({
+        name: nameValue,
+        rating: ratingValue,
+        comment: commentValue,
+      }),
+    })
+      .then(handleClose, () => setIsSubmitting(false));
   };
 
   return (
@@ -59,7 +75,11 @@ const AddReview = ({ navigation }) => {
           multiline
         />
 
-        <TouchableOpacity style={styles.submitButton}>
+        {isSubmitting && (
+          <ActivityIndicator size='large' color='#0066cc' style={styles.loadingIndicator} />
+        )}
+
+        <TouchableOpacity style={styles.submitButton} onPress={submitReview} disabled={isSubmitting}>
           <Text style={styles.submitButtonText}>Submit Review</Text>
         </TouchableOpacity>
       </View>
@@ -120,6 +140,9 @@ const styles = StyleSheet.create({
   scrollView: {
     backgroundColor: '#fff',
     flex: 1,
+  },
+  loadingIndicator: {
+    padding: 10,
   },
 });
 

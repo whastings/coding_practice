@@ -1,14 +1,10 @@
 import React, { Component } from 'react';
-import { FlatList, Image, Platform, StyleSheet, TextInput, View } from 'react-native';
+import { FlatList, Image, StyleSheet, TextInput, View } from 'react-native';
 
+import { API_ROOT } from '../constants';
 import Header from './Header';
 import RestaurantRow from './RestaurantRow';
 import PizzaImage from '../images/pizza.png';
-
-const RESTAURANTS_URL = Platform.select({
-  ios: 'http://localhost:3000/restaurants',
-  android: 'http://10.0.2.2:3000/restaurants',
-});
 
 export default class RestaurantsList extends Component {
   static navigationOptions = {
@@ -21,16 +17,16 @@ export default class RestaurantsList extends Component {
   };
 
   componentDidMount() {
-    fetch(RESTAURANTS_URL)
+    fetch(`${API_ROOT}/restaurants`)
       .then(response => response.json())
       .then((restaurants) => {
         this.setState({ restaurants });
       });
   }
 
-  handleRestaurantInfoClick = () => {
+  handleRestaurantInfoClick = (restaurant) => {
     const { navigation } = this.props;
-    navigation.navigate('Info');
+    navigation.navigate('Info', { restaurant });
   }
 
   updateSearch = (text) => {

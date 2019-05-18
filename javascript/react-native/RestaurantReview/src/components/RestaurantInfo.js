@@ -1,23 +1,50 @@
 import React from 'react';
-import { Image, StyleSheet, Text, View } from 'react-native';
+import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
 
-const RestaurantInfo = () => {
+import { API_ROOT } from '../constants';
+import Stars from './Stars';
+
+const RestaurantInfo = ({ navigation }) => {
+  const restaurant = navigation.getParam('restaurant');
+
   return (
-    <View style={styles.info}>
-      <Text>Restaurant Info</Text>
-      <Image
-        source={{
-          uri: `http://localhost:3000/images/circle.png`,
-          width: 100,
-          height: 100,
-        }}
-      />
-    </View>
+    <ScrollView style={styles.root}>
+      <View style={styles.infoContainer}>
+        <Image
+          source={{ uri: `${API_ROOT}/images/${restaurant.image}` }}
+          style={styles.image}
+        />
+        <View style={styles.info}>
+          <Text style={styles.name}>{restaurant.name}</Text>
+          <Text style={styles.address}>{restaurant.address}</Text>
+          <Stars rating={restaurant.rating} />
+        </View>
+      </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
+  root: {
+    backgroundColor: '#fff',
+    flex: 1,
+  },
+  infoContainer: {
+    flexDirection: 'row',
+  },
   info: {
+    marginTop: 20,
+  },
+  name: {
+    fontSize: 24,
+  },
+  address: {
+    color: 'grey',
+    marginBottom: 5,
+  },
+  image: {
+    width: 100,
+    height: 100,
     margin: 20,
   },
 });

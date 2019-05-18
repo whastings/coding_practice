@@ -21,7 +21,7 @@ const RestaurantRow = ({ restaurant, index, onInfoClick }) => {
         </View>
         <View style={[styles.edges, styles.infoButtonContainer]}>
           <TouchableHighlight
-            onPress={onInfoClick}
+            onPress={() => onInfoClick(restaurant)}
             style={styles.infoButton}
             underlayColor='#5398DC'
           >

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, TouchableHighlight, View } from 'react-native';
+import { Image, StyleSheet, Text, TouchableHighlight, View } from 'react-native';
 
 const RestaurantRow = ({ restaurant, index }) => {
   const [showInfo, setShowInfo] = useState(false);
@@ -36,6 +36,13 @@ const RestaurantRow = ({ restaurant, index }) => {
       {showInfo && (
         <View style={styles.info}>
           <Text>Restaurant Info</Text>
+          <Image
+            source={{
+              uri: `http://localhost:3000/images/${restaurant.image}`,
+              width: 100,
+              height: 100,
+            }}
+          />
         </View>
       )}
     </View>

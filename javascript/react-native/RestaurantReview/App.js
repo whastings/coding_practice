@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { FlatList, StyleSheet, TextInput, View } from 'react-native';
+import { FlatList, Image, StyleSheet, TextInput, View } from 'react-native';
 
 import Header from './src/components/Header';
 import RestaurantRow from './src/components/RestaurantRow';
+import PizzaImage from './src/images/pizza.png';
 
 export default class App extends Component {
   state = {
@@ -42,6 +43,9 @@ export default class App extends Component {
           flex: 1,
         }}
       >
+        <View style={styles.pizzaImage}>
+          <Image source={PizzaImage} />
+        </View>
         <Header />
 
         <TextInput
@@ -63,13 +67,6 @@ export default class App extends Component {
 }
 
 const styles = StyleSheet.create({
-  header: {
-    padding: 40,
-    fontSize: 30,
-    textAlign: 'center',
-    color: '#0066CC',
-    fontWeight: '300',
-  },
   input: {
     padding: 10,
     paddingHorizontal: 20,
@@ -78,5 +75,9 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderColor: '#ddd',
     backgroundColor: '#F5F5F5',
+  },
+  pizzaImage: {
+    alignItems: 'center',
+    marginTop: 40,
   },
 });

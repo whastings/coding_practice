@@ -12,7 +12,7 @@ const Header = () => {
 
 const styles = StyleSheet.create({
   header: {
-    padding: 40,
+    padding: 20,
     fontSize: 30,
     textAlign: 'center',
     color: '#0066CC',

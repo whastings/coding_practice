@@ -27,4 +27,8 @@ app.get('/restaurants', (req, res) => {
   ])
 });
 
+app.get('/images/:image', (req, res) => {
+  res.sendFile(__dirname + '/images/' + req.params.image);
+});
+
 app.listen(port, () => console.log(`Restaurant server listening on port ${port}!`));

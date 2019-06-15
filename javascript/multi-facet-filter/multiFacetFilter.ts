@@ -6,11 +6,16 @@ interface FilterFacets {
   [key: string]: string,
 }
 
+interface FacetValueInfo {
+  name: string,
+  count: number,
+}
+
 interface FilterResults {
   results: FilterableElement[],
   facets: Array<{
     name: string,
-    values: Array<{ name: string, count: number }>,
+    values: Array<FacetValueInfo>,
   }>,
 }
 
@@ -27,31 +32,44 @@ const multiFacetFilter = (searchArray: FilterableElement[], searchFacets: Filter
   const results = searchArray.filter((element) => elementMatches(element, searchFacets));
   const facetNames = Object.keys(searchFacets);
 
-  const facetValues = facetNames.reduce((facetMap, facetName) => {
-    facetMap.set(facetName, new Set<string>());
-    return facetMap;
-  }, new Map<string, Set<string>>());
+  const facetsToFacetValues = searchArray.reduce((map, element) => {
+    for (let facetName of facetNames) {
+      const facetValuesMap = map.get(facetName) || new Map();
+      if (!map.has(facetName)) {
+        map.set(facetName, facetValuesMap);
+      }
+      const facetValue = element[facetName];
+      if (!facetValuesMap.has(facetValue)) {
+        facetValuesMap.set(facetValue, { name: facetValue, count: 0 });
+      }
+    }
+    return map;
+  }, new Map<string, Map<string, FacetValueInfo>>());
 
-  searchArray.forEach((element) => {
-    Object.keys(element).forEach((key) => {
-      const valuesArray = facetValues.get(key);
-      if (valuesArray) {
-        valuesArray.add(element[key]);
-      };
-    });
-  });
+  const facets = facetNames.map((facetName) => {
+    const otherSearchFacets = facetNames
+      .filter(name => name !== facetName)
+      .reduce((obj, name) => {
+        obj[name] = searchFacets[name];
+        return obj;
+      }, {} as { [key: string]: string });
+    const unfilteredResultsForFacet = searchArray.filter(
+      (element) => elementMatches(element, otherSearchFacets),
+    );
+    const facetValuesMap = facetsToFacetValues.get(facetName);
+    if (!facetValuesMap) {
+      throw new Error(`Missing entry for ${facetName}`);
+    }
 
-  const facets = facetNames.map((name) => {
-    const valuesArray = Array.from(facetValues.get(name) || []);
-    const values = valuesArray.map((value) => {
-      const updatedFacets = { ...searchFacets, [name]: value };
-      const count = searchArray.filter((element) => elementMatches(element, updatedFacets)).length;
-      return { name: value, count };
+    unfilteredResultsForFacet.forEach((result) => {
+      const facetValue = result[facetName];
+      const valueInfo = facetValuesMap.get(facetValue);
+      if (valueInfo) {
+        valueInfo.count += 1;
+      }
     });
-    return {
-      name,
-      values,
-    };
+
+    return { name: facetName, values: Array.from(facetValuesMap.values()) };
   });
 
   return { results, facets };

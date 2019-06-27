@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">MakeItRain</string>
     <string name="title"> You Have </string>
-    <string name="money_value">$2000</string>
+    <string name="money_value">$0</string>
     <string name="button">Make It Rain</string>
     <string name="show_tag">Show Tag</string>
+    <string name="rich_message">You\'re Rich!</string>
 </resources>

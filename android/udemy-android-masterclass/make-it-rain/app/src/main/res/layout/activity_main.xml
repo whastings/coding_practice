@@ -21,11 +21,12 @@
 
     <TextView
         android:id="@+id/money_text"
-        android:layout_width="wrap_content"
-        android:layout_height="30dp"
+        android:layout_width="157dp"
+        android:layout_height="48dp"
         android:layout_marginTop="40dp"
         android:text="@string/money_value"
-        android:textSize="24sp"
+        android:textAlignment="center"
+        android:textSize="34sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
@@ -46,12 +47,27 @@
         android:id="@+id/button_show_tag"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="92dp"
-        android:text="@string/show_tag"
+        android:layout_marginTop="156dp"
         android:onClick="showTag"
+        android:text="@string/show_tag"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_make_rain" />
+        app:layout_constraintTop_toBottomOf="@+id/rich_text" />
+
+    <TextView
+        android:id="@+id/rich_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        android:text="@string/rich_message"
+        android:textColor="@color/colorAccent"
+        android:textSize="36sp"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_make_rain"
+        tools:text="@string/rich_message" />
 
 </android.support.constraint.ConstraintLayout>

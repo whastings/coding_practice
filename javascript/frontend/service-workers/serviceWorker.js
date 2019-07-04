@@ -1,7 +1,7 @@
 // Based on:
 // - https://css-tricks.com/serviceworker-for-offline/
 
-const VERSION = 1;
+const VERSION = '1';
 
 const OFFLINE_HTML = `
   <!DOCTYPE html>
@@ -26,6 +26,16 @@ const updateCache = async (event, response) => {
   const cache = await caches.open(VERSION);
   cache.put(event.request, responseForCache);
   console.log(`Cache updated for ${event.request.url}`);
+};
+
+const cleanUpOldCaches = async () => {
+  const keys = await caches.keys();
+  const oldKeys = keys.filter((key) => key !== VERSION);
+
+  await Promise.all(oldKeys.map((key) => {
+    console.log('Cleaning up old cache key: ', key);
+    return caches.delete(key);
+  }));
 };
 
 const getFailedRequestResponse = (request, failedResponse) => {
@@ -84,6 +94,10 @@ self.addEventListener('install', (event) => {
       ]);
     }),
   );
+});
+
+self.addEventListener('activate', (event) => {
+  event.waitUntil(cleanUpOldCaches());
 });
 
 self.addEventListener('fetch', (event) => {

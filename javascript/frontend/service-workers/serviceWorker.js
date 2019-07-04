@@ -3,6 +3,23 @@
 
 const VERSION = 1;
 
+const OFFLINE_HTML = `
+  <!DOCTYPE html>
+  <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta http-equiv="X-UA-Compatible" content="ie=edge">
+      <title>Failed to Load</title>
+    </head>
+    <body>
+      <h1>Oh Noes!!!</h1>
+      <p>Couldn't load this page</p>
+      <p>You may be offline...</p>
+    </body>
+  </html>
+`;
+
 const updateCache = async (event, response) => {
   const responseForCache = response.clone();
 
@@ -11,9 +28,29 @@ const updateCache = async (event, response) => {
   console.log(`Cache updated for ${event.request.url}`);
 };
 
+const getFailedRequestResponse = (request, failedResponse) => {
+  if (request.destination === 'document') {
+    return new Response(OFFLINE_HTML, {
+      status: 503,
+      statusText: 'Service Unavailable',
+      // https://developer.mozilla.org/en-US/docs/Web/API/Headers
+      headers: new Headers({
+        'Content-Type': 'text/html',
+      }),
+    });
+  }
+
+  return failedResponse;
+}
+
 const fetchAndUpdateCache = async (event) => {
   // https://developer.mozilla.org/en-US/docs/Web/API/Response
-  const response = await fetch(event.request);
+  let response;
+  try {
+    response = await fetch(event.request);
+  } catch (e) {
+    return getFailedRequestResponse(event.request, response);
+  }
   updateCache(event, response);
   return response;
 };

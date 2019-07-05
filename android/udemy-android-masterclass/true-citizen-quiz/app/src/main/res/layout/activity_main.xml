@@ -14,7 +14,7 @@
     
     <TextView
         android:id="@+id/answer_text_view"
-        android:text="@string/question_declaration"
+        android:text="@string/question_constitution"
         android:textColor="@android:color/white"
         android:textSize="16sp"
         android:padding="8dp"
@@ -24,6 +24,7 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_marginTop="34dp"
+        android:layout_marginBottom="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
         <Button
@@ -37,11 +38,24 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </LinearLayout>
-    <ImageButton
-        android:contentDescription="@string/next_text"
-        android:id="@+id/next_button"
-        android:background="@android:color/transparent"
-        android:src="@drawable/icons8_next_page_filled_30"
+    <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content">
+        <ImageButton
+            android:contentDescription="@string/previous_text"
+            android:id="@+id/previous_button"
+            android:background="@android:color/transparent"
+            android:src="@drawable/icons8_next_page_filled_30"
+            android:layout_marginRight="10dp"
+            android:rotation="180"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <ImageButton
+            android:contentDescription="@string/next_text"
+            android:id="@+id/next_button"
+            android:background="@android:color/transparent"
+            android:src="@drawable/icons8_next_page_filled_30"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
 </LinearLayout>

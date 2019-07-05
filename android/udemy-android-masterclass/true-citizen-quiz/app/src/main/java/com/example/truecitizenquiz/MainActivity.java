@@ -13,6 +13,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button falseButton;
     private Button trueButton;
     private ImageButton nextButton;
+    private ImageButton previousButton;
     private TextView questionTextView;
     private Question[] questionBank = new Question[] {
             new Question(R.string.question_constitution, true),
@@ -33,11 +34,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         falseButton = findViewById(R.id.false_button);
         trueButton = findViewById(R.id.true_button);
         nextButton = findViewById(R.id.next_button);
+        previousButton = findViewById(R.id.previous_button);
         questionTextView = findViewById(R.id.answer_text_view);
 
         falseButton.setOnClickListener(this);
         trueButton.setOnClickListener(this);
         nextButton.setOnClickListener(this);
+        previousButton.setOnClickListener(this);
     }
 
     @Override
@@ -50,10 +53,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 checkAnswer(true);
                 break;
             case R.id.next_button:
-                currentQuestionIndex = (currentQuestionIndex + 1) % questionBank.length;
-                questionTextView.setText(questionBank[currentQuestionIndex].getAnswerResId());
+                changeQuestion(1);
+                break;
+            case R.id.previous_button:
+                changeQuestion(-1);
                 break;
         }
+    }
+
+    private void changeQuestion(int increment) {
+        currentQuestionIndex = (currentQuestionIndex + increment) % questionBank.length;
+        currentQuestionIndex = (currentQuestionIndex < 0) ? questionBank.length - 1 : currentQuestionIndex;
+        questionTextView.setText(questionBank[currentQuestionIndex].getAnswerResId());
     }
 
     private void checkAnswer(boolean userChoseCorrect) {

@@ -3,12 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimaryDark"
+    android:background="@android:color/holo_blue_dark"
     android:orientation="vertical"
     android:gravity="center"
     tools:context=".MainActivity">
     <ImageView
-        android:src="@drawable/ic_launcher_foreground"
+        android:src="@drawable/icons8_usa_96"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
     
@@ -40,7 +40,8 @@
     <ImageButton
         android:contentDescription="@string/next_text"
         android:id="@+id/next_button"
-        android:src="@android:drawable/ic_media_next"
+        android:background="@android:color/transparent"
+        android:src="@drawable/icons8_next_page_filled_30"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 </LinearLayout>

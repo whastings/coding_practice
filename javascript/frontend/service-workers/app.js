@@ -1,6 +1,7 @@
 const app = () => {
   const fInput = document.querySelector('#f-input');
   const cInput = document.querySelector('#c-input');
+  const installButton = document.querySelector('.install-button');
 
   fInput.addEventListener('input', () => {
     const fValue = Number(fInput.value);
@@ -18,6 +19,21 @@ const app = () => {
     } else {
       fInput.value = (cValue * (9 / 5)) + 32;
     }
+  });
+
+  // https://developers.google.com/web/fundamentals/app-install-banners/
+  window.addEventListener('beforeinstallprompt', (event) => {
+    event.preventDefault();
+    installButton.style.display = 'inline-block';
+
+    installButton.addEventListener(
+      'click',
+      () => {
+        installButton.style.display = 'none';
+        event.prompt();
+      },
+      { once: true },
+    )
   });
 };
 

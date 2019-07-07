@@ -1,0 +1,13 @@
+.app {
+  padding: 10px;
+}
+
+.install-button {
+  display: none;
+}
+
+@media all and (display-mode: standalone) {
+  body {
+    background-color: lightblue;
+  }
+}

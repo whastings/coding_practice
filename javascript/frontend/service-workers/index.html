@@ -25,7 +25,11 @@
     </div>
     <script>
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('serviceWorker.js').then(
+        const serviceWorkerRegistration = window.location.href.includes('github.io') ?
+          // https://gist.github.com/kosamari/7c5d1e8449b2fbc97d372675f16b566e
+          ['serviceWorker.js', { scope: '/coding_practice/javascript/frontend/service-workers/' }] :
+          ['serviceWorker.js'];
+        navigator.serviceWorker.register(...serviceWorkerRegistration).then(
           () => console.info('Service worker registered'),
           (error) => console.error('Service worker registration failed: ', error),
         );

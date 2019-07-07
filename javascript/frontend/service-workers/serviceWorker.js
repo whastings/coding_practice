@@ -87,7 +87,7 @@ self.addEventListener('install', (event) => {
     // https://developer.mozilla.org/en-US/docs/Web/API/CacheStorage
     caches.open(VERSION).then((cache) => {
       return cache.addAll([
-        '/',
+        './',
         'styles.css',
         'app.js',
         'https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css',
@@ -106,5 +106,6 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
+  console.log('FETCHING ', event.request.url);
   event.respondWith(fetchCacheFirst(event));
 });

@@ -11,3 +11,13 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+.number-row {
+  border-bottom: 1px #000 solid;
+  font-size: 20px;
+  padding: 15px 0;
+}
+
+.number-row--active {
+  background-color: yellow;
+}

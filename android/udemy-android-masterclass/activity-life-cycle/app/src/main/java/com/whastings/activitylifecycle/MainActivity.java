@@ -1,5 +1,6 @@
 package com.whastings.activitylifecycle;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -14,6 +15,7 @@ import android.widget.Toast;
 public class MainActivity extends AppCompatActivity {
     private Button showGuess;
     private EditText enterGuess;
+    private final int REQUEST_CODE = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,12 +33,24 @@ public class MainActivity extends AppCompatActivity {
                 if (!guess.isEmpty()) {
                     Intent intent = new Intent(MainActivity.this, ShowGuess.class);
                     intent.putExtra("guess", guess);
-                    startActivity(intent);
+                    // As opposed to startActivity(), which doesn't allow receiving a result back
+                    startActivityForResult(intent, REQUEST_CODE);
                 } else {
                     Toast.makeText(MainActivity.this, "Enter guess", Toast.LENGTH_LONG).show();
                 }
             }
         });
+    }
+
+    // To handle response from ShowGuess
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
+            String message = data.getStringExtra("message_back");
+            Toast.makeText(MainActivity.this, message, Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override

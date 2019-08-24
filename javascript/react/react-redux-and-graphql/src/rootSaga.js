@@ -1,11 +1,11 @@
 import { all } from 'redux-saga/effects'
 
-import { loadHomeSaga } from './sections/homePage/homePageRedux'
+import { homePageSaga } from './sections/homePage/homePageRedux'
 import { loadRepoSaga } from './sections/repoPage/repoPageRedux'
 
 const rootSaga = function* () {
   yield all([
-    loadHomeSaga(),
+    homePageSaga(),
     loadRepoSaga(),
   ])
 }

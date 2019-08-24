@@ -6,14 +6,31 @@ class GraphqlClient {
     this.queries = new Map()
   }
 
-  query = ({ queryName, query, variables, ...otherOptions }) => {
-    this.queries.set(queryName, { query, variables })
-    return this.apolloClient.query({ query, variables, ...otherOptions })
+  fetchMore = ({ queryName, variables, updateQuery }) => {
+    const { observable } = this.queries.get(queryName)
+    return observable.fetchMore({ variables, updateQuery })
   }
 
-  readQuery(queryName) {
-    const { query, variables } = this.queries.get(queryName)
-    return this.apolloClient.readQuery({ query, variables })
+  query = ({ queryName, query, variables, ...otherOptions }) => {
+    const observable = this.apolloClient.watchQuery({ query, variables, ...otherOptions })
+    this.queries.set(queryName, { query, variables, observable })
+    return observable.result()
+  }
+
+  readQuery = (queryName)  => {
+    const { observable } = this.queries.get(queryName)
+    return observable.getCurrentResult().data
+  }
+
+  subscribeToQuery = (queryName, callback) => {
+    const { observable } = this.queries.get(queryName)
+    const subscription = observable.subscribe({
+      next: callback,
+      error(error) {
+        callback({ error })
+      }
+    })
+    return () => subscription.unsubscribe()
   }
 }
 

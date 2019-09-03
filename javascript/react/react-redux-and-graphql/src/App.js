@@ -18,7 +18,7 @@ const App = () => {
   return (
     <Switch>
       <Route exact path="/" component={HomePage} />
-      <Route exact path="/repos/:id" component={RepoPage} />
+      <Route exact path="/repos/:username/:id" component={RepoPage} />
     </Switch>
   );
 }

@@ -2,27 +2,9 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 
-import graphqlClient from '../../utils/graphqlClient'
+import useQueryResult from '../../utils/useQueryResult'
 import { fetchMoreRepos } from './homePageRedux'
 import { getRequestState } from '../../utils/networkRedux'
-
-const useQueryResult = (queryName) => {
-  const resultRef = React.useRef(null)
-  const [, forceUpdate] = React.useReducer(x => x + 1, 0)
-
-  if (!resultRef.current) {
-    resultRef.current = { data: graphqlClient.readQuery(queryName) }
-  }
-
-  React.useEffect(() => {
-    return graphqlClient.subscribeToQuery(queryName, (result) => {
-      resultRef.current = result
-      forceUpdate()
-    })
-  }, [queryName])
-
-  return resultRef.current
-}
 
 const HomePage = () => {
   const dispatch = useDispatch()
@@ -41,7 +23,9 @@ const HomePage = () => {
       <ul>
         {ownRepos.edges.map(({ node }) => (
           <li key={node.name}>
-            <Link to={'/repos/foo'}>{node.name}</Link>
+            <Link to={`/repos/${node.owner.login}/${node.name}`}>
+              {node.name}
+            </Link>
           </li>
         ))}
       </ul>

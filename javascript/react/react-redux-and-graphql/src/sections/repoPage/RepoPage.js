@@ -1,8 +1,17 @@
 import React from 'react'
 
+import useQueryResult from '../../utils/useQueryResult'
+
 const RepoPage = () => {
+  const { data: { repository } } = useQueryResult('repo')
+
   return (
-    <div>Show repo here</div>
+    <>
+      <h1>{repository.name}</h1>
+      <div>
+        <strong>Stars: </strong> {repository.stargazers.totalCount}
+      </div>
+    </>
   )
 }
 

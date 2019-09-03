@@ -5,7 +5,7 @@ import { createAction } from 'redux-starter-kit'
 import produce from 'immer'
 
 import { endPageLoad, startPageLoad } from '../../appRedux';
-import isActionForRoute from '../../utils/isActionForRoute'
+import matchActionToRoute from '../../utils/matchActionToRoute'
 import graphqlClient from '../../utils/graphqlClient'
 import { loadMore, loadQuery } from '../../utils/networkRedux'
 
@@ -16,6 +16,9 @@ const OWN_REPOS_QUERY = gql`
         edges {
           node {
             name
+            owner {
+              login
+            }
           }
         }
         pageInfo {
@@ -51,7 +54,7 @@ function* fetchMoreReposSaga() {
 
 function* loadHomeSaga() {
   yield takeLatest(LOCATION_CHANGE, function* (routeAction) {
-    if (!isActionForRoute(routeAction, '/')) {
+    if (!matchActionToRoute(routeAction, '/').matches) {
       return
     }
 

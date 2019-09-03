@@ -1,9 +1,10 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 import graphqlClient from '../../utils/graphqlClient'
 import { fetchMoreRepos } from './homePageRedux'
+import { getRequestState } from '../../utils/networkRedux'
 
 const useQueryResult = (queryName) => {
   const resultRef = React.useRef(null)
@@ -26,7 +27,9 @@ const useQueryResult = (queryName) => {
 const HomePage = () => {
   const dispatch = useDispatch()
   const queryResult = useQueryResult('ownRepos')
+  const queryState = useSelector((state) => getRequestState(state, 'ownRepos'))
   const ownRepos = queryResult.data.viewer.repositories
+  const { hasNextPage } = queryResult.data.viewer.repositories.pageInfo
 
   const handleLoadMore = () => {
     dispatch(fetchMoreRepos())
@@ -42,7 +45,11 @@ const HomePage = () => {
           </li>
         ))}
       </ul>
-      <button onClick={handleLoadMore}>Load More</button>
+      {hasNextPage && (
+        <button onClick={handleLoadMore} disabled={queryState.loading}>
+          Load More
+        </button>
+      )}
     </>
   )
 }

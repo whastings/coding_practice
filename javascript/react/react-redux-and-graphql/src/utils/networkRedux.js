@@ -36,6 +36,14 @@ export const networkReducer = createReducer(
   },
 )
 
+export const getRequestState = (state, queryName) => {
+  return state.network.requests[queryName] || {
+    loading: false,
+    success: false,
+    failure: false,
+  }
+}
+
 export function* loadQuery({ queryName, query, variables }) {
   yield put({ type: LOAD_QUERY_START, payload: { queryName, variables } })
 

@@ -20,11 +20,14 @@ const OWN_REPOS_QUERY = gql`
         }
         pageInfo {
           endCursor
+          hasNextPage
         }
       }
     }
   }
 `
+
+const REPOS_PER_PAGE = 3
 
 export const fetchMoreRepos = createAction('homePage/fetchMoreRepos')
 
@@ -35,7 +38,7 @@ function* fetchMoreReposSaga() {
 
     yield* loadMore({
       queryName: 'ownRepos',
-      variables: { first: 1, after: endCursor },
+      variables: { first: REPOS_PER_PAGE, after: endCursor },
       updateQuery(prevData, { fetchMoreResult }) {
         return produce(prevData, (updatedData) => {
           updatedData.viewer.repositories.edges.push(...fetchMoreResult.viewer.repositories.edges)
@@ -57,7 +60,7 @@ function* loadHomeSaga() {
     yield* loadQuery({
       queryName: 'ownRepos',
       query: OWN_REPOS_QUERY,
-      variables: { first: 1, after: null },
+      variables: { first: REPOS_PER_PAGE, after: null },
     })
 
     yield put(endPageLoad())

@@ -7,6 +7,7 @@ import produce from 'immer'
 import { endPageLoad, startPageLoad } from '../../appRedux';
 import isActionForRoute from '../../utils/isActionForRoute'
 import graphqlClient from '../../utils/graphqlClient'
+import { loadMore, loadQuery } from '../../utils/networkRedux'
 
 const OWN_REPOS_QUERY = gql`
   query ownReposQuery($first: Int!, $after: String) { 
@@ -32,7 +33,7 @@ function* fetchMoreReposSaga() {
     const currentData = yield call(graphqlClient.readQuery, 'ownRepos')
     const { endCursor } = currentData.viewer.repositories.pageInfo
 
-    yield call(graphqlClient.fetchMore, {
+    yield* loadMore({
       queryName: 'ownRepos',
       variables: { first: 1, after: endCursor },
       updateQuery(prevData, { fetchMoreResult }) {
@@ -40,7 +41,7 @@ function* fetchMoreReposSaga() {
           updatedData.viewer.repositories.edges.push(...fetchMoreResult.viewer.repositories.edges)
           updatedData.viewer.repositories.pageInfo = fetchMoreResult.viewer.repositories.pageInfo
         })
-      }
+      },
     })
   })
 }
@@ -53,7 +54,7 @@ function* loadHomeSaga() {
 
     yield put(startPageLoad())
 
-    yield call(graphqlClient.query, {
+    yield* loadQuery({
       queryName: 'ownRepos',
       query: OWN_REPOS_QUERY,
       variables: { first: 1, after: null },

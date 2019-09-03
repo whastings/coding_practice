@@ -1,8 +1,8 @@
-import { put, takeLatest } from 'redux-saga/effects'
+import { takeLatest } from 'redux-saga/effects'
 import { LOCATION_CHANGE } from 'connected-react-router/esm/actions'
 import gql from 'graphql-tag'
 
-import { endPageLoad, startPageLoad } from '../../appRedux';
+import { wrapWithLoadingScreen } from '../../appRedux';
 import matchActionToRoute from '../../utils/matchActionToRoute'
 import { loadQuery } from '../../utils/networkRedux'
 
@@ -25,14 +25,10 @@ export function* loadRepoSaga() {
     }
     const [username, repoName] = routeMatch.params
 
-    yield put(startPageLoad())
-
-    yield* loadQuery({
+    yield* wrapWithLoadingScreen(loadQuery, {
       queryName: 'repo',
       query: REPO_QUERY,
       variables: { owner: username, name: repoName },
     })
-
-    yield put(endPageLoad())
   })
 }

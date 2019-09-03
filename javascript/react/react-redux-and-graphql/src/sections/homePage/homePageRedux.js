@@ -4,7 +4,7 @@ import gql from 'graphql-tag'
 import { createAction } from 'redux-starter-kit'
 import produce from 'immer'
 
-import { endPageLoad, startPageLoad } from '../../appRedux';
+import { wrapWithLoadingScreen } from '../../appRedux';
 import matchActionToRoute from '../../utils/matchActionToRoute'
 import graphqlClient from '../../utils/graphqlClient'
 import { loadMore, loadQuery } from '../../utils/networkRedux'
@@ -58,15 +58,11 @@ function* loadHomeSaga() {
       return
     }
 
-    yield put(startPageLoad())
-
-    yield* loadQuery({
+    yield* wrapWithLoadingScreen(loadQuery, {
       queryName: 'ownRepos',
       query: OWN_REPOS_QUERY,
       variables: { first: REPOS_PER_PAGE, after: null },
     })
-
-    yield put(endPageLoad())
   })
 }
 

@@ -1,25 +1,18 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux'
-import { ConnectedRouter } from 'connected-react-router'
-import { createBrowserHistory } from 'history'
 
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import createRootReducer from './createRootReducer'
-import rootSaga from './rootSaga'
 import createStore from './createStore'
 
-const history = createBrowserHistory()
-const store = createStore(createRootReducer(history), rootSaga, history)
+const store = createStore()
 
 ReactDOM.render(
   (
     <Provider store={store}>
-      <ConnectedRouter history={history}>
-        <App />
-      </ConnectedRouter>
+      <App />
     </Provider>
   ),
   document.getElementById('root'),

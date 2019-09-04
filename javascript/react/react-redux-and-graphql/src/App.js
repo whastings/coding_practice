@@ -1,25 +1,30 @@
 import React from 'react'
-import { Switch, Route } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 
 import './App.css'
 import HomePage from './sections/homePage/HomePage'
 import RepoPage from './sections/repoPage/RepoPage'
+import { getCurrentPage } from './appRedux'
+
+const ROUTE_COMPONENTS = {
+  home: HomePage,
+  repo: RepoPage,
+}
 
 const App = () => {
   const isPageLoading = useSelector((state) => state.app.isPageLoading)
+  const currentPage = useSelector(getCurrentPage)
 
-  if (isPageLoading) {
+  if (isPageLoading || !currentPage) {
     return (
       <strong>Loading...</strong>
     )
   }
 
+  const RouteComponent = ROUTE_COMPONENTS[currentPage]
+
   return (
-    <Switch>
-      <Route exact path="/" component={HomePage} />
-      <Route exact path="/repos/:username/:id" component={RepoPage} />
-    </Switch>
+    <RouteComponent />
   );
 }
 

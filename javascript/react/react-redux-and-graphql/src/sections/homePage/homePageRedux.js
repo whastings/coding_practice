@@ -1,11 +1,9 @@
 import { all, call, put, takeLatest } from 'redux-saga/effects'
-import { LOCATION_CHANGE } from 'connected-react-router/esm/actions'
 import gql from 'graphql-tag'
 import { createAction } from 'redux-starter-kit'
 import produce from 'immer'
 
-import { wrapWithLoadingScreen } from '../../appRedux';
-import matchActionToRoute from '../../utils/matchActionToRoute'
+import { switchPage, wrapWithLoadingScreen } from '../../appRedux';
 import graphqlClient from '../../utils/graphqlClient'
 import { loadMore, loadQuery } from '../../utils/networkRedux'
 
@@ -33,6 +31,7 @@ const OWN_REPOS_QUERY = gql`
 const REPOS_PER_PAGE = 3
 
 export const fetchMoreRepos = createAction('homePage/fetchMoreRepos')
+export const HOME_PAGE_LOAD = 'homePage/HOME_PAGE_LOAD'
 
 function* fetchMoreReposSaga() {
   yield takeLatest(fetchMoreRepos, function* () {
@@ -53,16 +52,13 @@ function* fetchMoreReposSaga() {
 }
 
 function* loadHomeSaga() {
-  yield takeLatest(LOCATION_CHANGE, function* (routeAction) {
-    if (!matchActionToRoute(routeAction, '/').matches) {
-      return
-    }
-
+  yield takeLatest(HOME_PAGE_LOAD, function* () {
     yield* wrapWithLoadingScreen(loadQuery, {
       queryName: 'ownRepos',
       query: OWN_REPOS_QUERY,
       variables: { first: REPOS_PER_PAGE, after: null },
     })
+    yield put(switchPage('home'))
   })
 }
 

@@ -1,14 +1,13 @@
 import { combineReducers } from 'redux'
-import { connectRouter } from 'connected-react-router'
 
 import { appReducer } from './appRedux'
 import { networkReducer } from './utils/networkRedux'
 
-const createRootReducer = (history) => {
+const createRootReducer = (additionalReducers = {}) => {
   return combineReducers({
     app: appReducer,
     network: networkReducer,
-    router: connectRouter(history),
+    ...additionalReducers,
   })
 }
 

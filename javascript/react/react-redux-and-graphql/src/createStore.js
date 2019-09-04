@@ -1,21 +1,31 @@
 import { applyMiddleware, createStore as createReduxStore } from 'redux'
 import createSagaMiddleware from 'redux-saga'
-import { routerMiddleware } from 'connected-react-router'
+import { connectRoutes } from 'redux-first-router'
 import { composeWithDevTools } from 'redux-devtools-extension'
 
-const createStore = (rootReducer, rootSaga, history) => {
+import rootSaga from './rootSaga'
+import routeActionsMap from './routes'
+import createRootReducer from './createRootReducer'
+
+const createStore = () => {
   const sagaMiddleware = createSagaMiddleware()
+  const routingConnector = connectRoutes(routeActionsMap)
+  const rootReducer = createRootReducer({ location: routingConnector.reducer })
+
   const store = createReduxStore(
     rootReducer,
     composeWithDevTools(
+      routingConnector.enhancer,
       applyMiddleware(
-        routerMiddleware(history),
+        routingConnector.middleware,
         sagaMiddleware,
       ),
     ),
   )
 
   sagaMiddleware.run(rootSaga)
+  routingConnector.initialDispatch()
+
   return store
 }
 

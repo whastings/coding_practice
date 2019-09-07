@@ -11,6 +11,10 @@ class GraphqlClient {
     return observable.fetchMore({ variables, updateQuery })
   }
 
+  mutate = ({ mutation, variables }) => {
+    return this.apolloClient.mutate({ mutation, variables })
+  }
+
   query = ({ queryName, query, variables, ...otherOptions }) => {
     const observable = this.apolloClient.watchQuery({ query, variables, ...otherOptions })
     this.queries.set(queryName, { query, variables, observable })

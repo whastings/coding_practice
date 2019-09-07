@@ -3,31 +3,31 @@ import { call, put } from 'redux-saga/effects'
 
 import graphqlClient from './graphqlClient'
 
-const LOAD_QUERY_START = 'network/LOAD_QUERY_START'
-const LOAD_QUERY_SUCCESS = 'network/LOAD_QUERY_SUCCESS'
-const LOAD_QUERY_FAILURE = 'network/LOAD_QUERY_FAILURE'
+const REQUEST_START = 'network/REQUEST_START'
+const REQUEST_SUCCESS = 'network/REQUEST_SUCCESS'
+const REQUEST_FAILURE = 'network/REQUEST_FAILURE'
 
 export const networkReducer = createReducer(
   {
     requests: {},
   },
   {
-    [LOAD_QUERY_START]: ({ requests }, action) => {
-      requests[action.payload.queryName] = {
+    [REQUEST_START]: ({ requests }, action) => {
+      requests[action.payload.requestName] = {
         loading: true,
         success: false,
         failure: false,
       }
     },
-    [LOAD_QUERY_SUCCESS]: ({ requests }, action) => {
-      requests[action.payload.queryName] = {
+    [REQUEST_SUCCESS]: ({ requests }, action) => {
+      requests[action.payload.requestName] = {
         loading: false,
         success: true,
         failure: false,
       }
     },
-    [LOAD_QUERY_FAILURE]: ({ requests }, action) => {
-      requests[action.payload.queryName] = {
+    [REQUEST_FAILURE]: ({ requests }, action) => {
+      requests[action.payload.requestName] = {
         loading: false,
         success: false,
         failure: true,
@@ -36,42 +36,47 @@ export const networkReducer = createReducer(
   },
 )
 
-export const getRequestState = (state, queryName) => {
-  return state.network.requests[queryName] || {
+export const getRequestState = (state, requestName) => {
+  return state.network.requests[requestName] || {
     loading: false,
     success: false,
     failure: false,
   }
 }
 
-export function* loadQuery({ queryName, query, variables }) {
-  yield put({ type: LOAD_QUERY_START, payload: { queryName, variables } })
+function* makeRequest({ requestName, requestEffect }) {
+  yield put({ type: REQUEST_START, payload: { requestName } })
 
   let response
   try {
-    response = yield call(graphqlClient.query, { queryName, query, variables })
+    response = yield requestEffect
   } catch (error) {
-    yield put({ type: LOAD_QUERY_FAILURE, payload: { queryName, variables } })
+    yield put({ type: REQUEST_FAILURE, payload: { requestName } })
     throw error
   }
 
-  yield put({ type: LOAD_QUERY_SUCCESS, payload: { queryName, variables } })
+  yield put({ type: REQUEST_SUCCESS, payload: { requestName } })
 
   return response
 }
 
+export function* executeMutation({ mutationName, mutation, variables }) {
+  return yield* makeRequest({
+    requestName: mutationName,
+    requestEffect: call(graphqlClient.mutate, { mutation, variables })
+  })
+}
+
+export function* loadQuery({ queryName, query, variables }) {
+  return yield* makeRequest({
+    requestName: queryName,
+    requestEffect: call(graphqlClient.query, { queryName, query, variables })
+  })
+}
+
 export function* loadMore({ queryName, variables, updateQuery }) {
-  yield put({ type: LOAD_QUERY_START, payload: { queryName, variables } })
-
-  let response
-  try {
-    response = yield call(graphqlClient.fetchMore, { queryName, variables, updateQuery })
-  } catch (error) {
-    yield put({ type: LOAD_QUERY_FAILURE, payload: { queryName, variables } })
-    throw error
-  }
-
-  yield put({ type: LOAD_QUERY_SUCCESS, payload: { queryName, variables } })
-
-  return response
+  return yield* makeRequest({
+    requestName: queryName,
+    requestEffect: call(graphqlClient.fetchMore, { queryName, variables, updateQuery })
+  })
 }

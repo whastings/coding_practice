@@ -1,6 +1,6 @@
 import apolloClient from './apolloClient'
 
-class GraphqlClient {
+export class GraphqlClient {
   constructor(apolloClient) {
     this.apolloClient = apolloClient
     this.queries = new Map()

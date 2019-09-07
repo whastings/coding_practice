@@ -7,7 +7,7 @@ import { switchPage, wrapWithLoadingScreen } from '../../appRedux';
 import graphqlClient from '../../utils/graphqlClient'
 import { loadMore, loadQuery } from '../../utils/networkRedux'
 
-const OWN_REPOS_QUERY = gql`
+export const OWN_REPOS_QUERY = gql`
   query ownReposQuery($first: Int!, $after: String) { 
     viewer { 
       repositories(first: $first, after: $after) {

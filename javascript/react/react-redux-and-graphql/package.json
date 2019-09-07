@@ -42,7 +42,17 @@
       "last 1 safari version"
     ]
   },
+  "jest": {
+    "moduleNameMapper": {
+      "redux-saga/effects": "<rootDir>/__mocks__/redux-saga/effects.js"
+    },
+    "transformIgnorePatterns": [
+      "<rootDir>/node_modules/(?!(@apollo/react-testing))/"
+    ]
+  },
   "devDependencies": {
-    "redux-devtools-extension": "^2.13.8"
+    "@apollo/react-testing": "^3.1.0",
+    "redux-devtools-extension": "^2.13.8",
+    "waait": "^1.0.5"
   }
 }

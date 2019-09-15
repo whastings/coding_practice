@@ -24,7 +24,7 @@ describe('homePageRedux', () => {
   }
 
   beforeEach(() => {
-    graphqlClient.resetMocks()
+    graphqlClient.reset()
   })
 
   describe('loading home page', () => {

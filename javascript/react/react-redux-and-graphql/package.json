@@ -5,7 +5,7 @@
   "dependencies": {
     "apollo-cache-inmemory": "^1.6.3",
     "apollo-client": "^2.6.4",
-    "apollo-link": "^1.2.12",
+    "apollo-link": "^1.2.13",
     "apollo-link-error": "^1.1.11",
     "apollo-link-http": "^1.5.15",
     "graphql": "^14.4.2",
@@ -52,6 +52,9 @@
   },
   "devDependencies": {
     "@apollo/react-testing": "^3.1.0",
+    "@octokit/graphql-schema": "^6.39.0",
+    "apollo-link-schema": "^1.2.4",
+    "graphql-tools": "^4.0.5",
     "redux-devtools-extension": "^2.13.8",
     "waait": "^1.0.5"
   }

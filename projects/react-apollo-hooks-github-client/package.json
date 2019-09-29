@@ -15,6 +15,7 @@
     "apollo-link-http": "^1.5.16",
     "graphql": "^14.5.8",
     "graphql-tag": "^2.10.1",
+    "immer": "^4.0.0",
     "react": "^16.10.1",
     "react-apollo": "^3.1.1",
     "react-dom": "^16.10.1",

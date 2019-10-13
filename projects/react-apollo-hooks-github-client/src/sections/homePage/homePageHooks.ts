@@ -7,7 +7,7 @@ import { OwnReposQuery, OwnReposQueryVariables } from './types/OwnReposQuery'
 
 const REPOS_PER_PAGE = 3
 
-const OWN_REPOS_QUERY = gql`
+export const OWN_REPOS_QUERY = gql`
   query OwnReposQuery($first: Int!, $after: String) {
     viewer {
       repositories(first: $first, after: $after) {

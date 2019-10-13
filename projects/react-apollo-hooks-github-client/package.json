@@ -17,7 +17,7 @@
     "graphql-tag": "^2.10.1",
     "immer": "^4.0.0",
     "react": "^16.10.1",
-    "react-apollo": "^3.1.1",
+    "react-apollo": "^3.1.2",
     "react-dom": "^16.10.1",
     "react-router-dom": "^5.1.1",
     "react-scripts": "3.1.2",
@@ -46,7 +46,11 @@
     ]
   },
   "devDependencies": {
+    "@apollo/react-testing": "3.1.0",
     "@octokit/graphql-schema": "^6.44.0",
-    "apollo": "^2.18.3"
+    "@testing-library/react-hooks": "^2.0.3",
+    "@types/testing-library__react-hooks": "^2.0.0",
+    "apollo": "^2.18.3",
+    "react-test-renderer": "^16.10.2"
   }
 }

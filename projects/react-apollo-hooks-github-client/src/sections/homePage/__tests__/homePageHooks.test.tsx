@@ -1,26 +1,35 @@
 import React from 'react'
-import { renderHook } from '@testing-library/react-hooks'
-import { MockedProvider, MockedResponse, wait } from '@apollo/react-testing'
+import { act, renderHook } from '@testing-library/react-hooks'
+import { MockedProvider, MockedResponse } from '@apollo/react-testing'
 
+import { OwnReposQuery } from '../types/OwnReposQuery'
 import { useOwnReposQuery, OWN_REPOS_QUERY } from '../homePageHooks'
 
 describe('homePageHooks', () => {
+  interface OwnReposQueryMock extends MockedResponse {
+    result: {
+      data: OwnReposQuery,
+    },
+  }
+
   const createRepo = ({ name, ownerName }: { name: string, ownerName: string }) => {
     return {
       name,
       owner: {
         login: ownerName,
-        __typename: 'RepositoryOwner',
+        __typename: 'User' as const,
       },
-      __typename: 'Repository',
+      __typename: 'Repository' as const,
     }
   }
+
   const reposPageOne = [
     createRepo({ name: 'repo1', ownerName: 'foo' }),
     createRepo({ name: 'repo2', ownerName: 'bar' }),
     createRepo({ name: 'repo3', ownerName: 'baz' }),
   ]
-  const initialRequestMock = {
+
+  const initialRequestMock: OwnReposQueryMock = {
     request: {
       query: OWN_REPOS_QUERY,
       variables: { first: 3 },
@@ -38,7 +47,8 @@ describe('homePageHooks', () => {
       }
     },
   }
-  const setup = (mocks: Array<MockedResponse>) => {
+
+  const setup = (mocks: Array<OwnReposQueryMock>) => {
     const Wrapper: React.FC = ({ children }) => {
       return (
         <MockedProvider mocks={mocks}>
@@ -61,6 +71,48 @@ describe('homePageHooks', () => {
 
       expect(result.current.loading).toBe(false)
       expect(result.current.repos).toEqual(reposPageOne)
+    })
+
+    it('loads the next page of repos', async () => {
+      const reposPageTwo = [
+        createRepo({ name: 'repo4', ownerName: 'foo' }),
+        createRepo({ name: 'repo5', ownerName: 'bar' }),
+        createRepo({ name: 'repo6', ownerName: 'baz' }),
+      ]
+      const secondRequestMock: OwnReposQueryMock = {
+        request: {
+          query: OWN_REPOS_QUERY,
+          variables: { first: 3, after: 'abc123' },
+        },
+        result: {
+          data: {
+            viewer: {
+              repositories: {
+                nodes: reposPageTwo,
+                pageInfo: { endCursor: null, hasNextPage: false, __typename: 'PageInfo' },
+                __typename: 'RepositoryConnection',
+              },
+              __typename: 'User'
+            }
+          }
+        },
+      }
+      const { result, waitForNextUpdate } = setup([initialRequestMock, secondRequestMock])
+      await waitForNextUpdate()
+
+      expect(result.current.loadingMore).toBe(false)
+      expect(result.current.hasNextPage).toBe(true)
+
+      act(() => {
+        result.current.fetchMore()
+      })
+      expect(result.current.loadingMore).toBe(true)
+
+      await waitForNextUpdate()
+
+      expect(result.current.loadingMore).toBe(false)
+      expect(result.current.hasNextPage).toBe(false)
+      expect(result.current.repos).toEqual(reposPageOne.concat(reposPageTwo))
     })
   })
 })

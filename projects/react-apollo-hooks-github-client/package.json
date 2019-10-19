@@ -48,6 +48,7 @@
   "devDependencies": {
     "@apollo/react-testing": "3.1.0",
     "@octokit/graphql-schema": "^6.44.0",
+    "@testing-library/react": "^9.3.0",
     "@testing-library/react-hooks": "^2.0.3",
     "@types/testing-library__react-hooks": "^2.0.0",
     "apollo": "^2.18.3",

@@ -2,6 +2,7 @@ import React from 'react'
 import { act, renderHook } from '@testing-library/react-hooks'
 import { MockedProvider, MockedResponse } from '@apollo/react-testing'
 
+import { createRepo } from './utils'
 import { OwnReposQuery } from '../types/OwnReposQuery'
 import { useOwnReposQuery, OWN_REPOS_QUERY } from '../homePageHooks'
 
@@ -10,17 +11,6 @@ describe('homePageHooks', () => {
     result: {
       data: OwnReposQuery,
     },
-  }
-
-  const createRepo = ({ name, ownerName }: { name: string, ownerName: string }) => {
-    return {
-      name,
-      owner: {
-        login: ownerName,
-        __typename: 'User' as const,
-      },
-      __typename: 'Repository' as const,
-    }
   }
 
   const reposPageOne = [

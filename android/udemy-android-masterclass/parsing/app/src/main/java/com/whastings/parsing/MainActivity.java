@@ -11,7 +11,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -24,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        requestQueue = Volley.newRequestQueue(this);
+        requestQueue = MySingleton.getInstance(this.getApplicationContext()).getRequestQueue();
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
             Request.Method.GET,

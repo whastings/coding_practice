@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
 import { useOwnReposQuery } from './homePageHooks'
 
@@ -17,7 +18,9 @@ const HomePage: React.FC = () => {
       <ul>
         {repos.map((repo) => (
           <li key={repo!.name}>
-            {repo!.name}
+            <Link to={`/repos/${repo!.owner.login}/${repo!.name}`}>
+              {repo!.name}
+            </Link>
           </li>
         ))}
       </ul>

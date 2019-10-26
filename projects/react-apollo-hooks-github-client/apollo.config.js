@@ -4,7 +4,7 @@ module.exports = {
       name: 'github-api',
       localSchemaFile: './node_modules/@octokit/graphql-schema/schema.json'
     },
-    includes: ['./src/**/*.tsx'],
+    includes: ['./src/**/*.tsx', './src/**/*.ts'],
     tagName: 'gql',
   },
 }

@@ -2,7 +2,7 @@ import React from 'react'
 import { act, renderHook } from '@testing-library/react-hooks'
 import { MockedProvider, MockedResponse } from '@apollo/react-testing'
 
-import { createRepo } from './utils'
+import { createRepo } from '../__test_utils__'
 import { OwnReposQuery } from '../types/OwnReposQuery'
 import { useOwnReposQuery, OWN_REPOS_QUERY } from '../homePageHooks'
 

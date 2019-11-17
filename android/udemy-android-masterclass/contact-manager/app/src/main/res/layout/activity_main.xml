@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="60dp"
         android:layout_marginLeft="60dp"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="16dp"
         android:text="Add Contacts"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -23,7 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="16dp"
         android:text="Update Contact"
         app:layout_constraintStart_toEndOf="@+id/add_button"
         app:layout_constraintTop_toTopOf="parent" />
@@ -55,20 +55,20 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ListView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/contacts_list"
-        android:layout_width="410dp"
-        android:layout_height="439dp"
+        android:layout_width="390dp"
+        android:layout_height="451dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.533"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/delete_button"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toBottomOf="@+id/delete_button" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

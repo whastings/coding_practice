@@ -1,37 +1,41 @@
 package com.example.contactmanager;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListView;
-import android.widget.TextView;
 
+import com.example.contactmanager.adapter.ContactsRecyclerViewAdapter;
 import com.example.contactmanager.data.DatabaseHandler;
 import com.example.contactmanager.model.Contact;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private Button addButton;
     private Button deleteButton;
     private Button updateButton;
-    private ListView contactsListView;
 
-    private ArrayList<String> contactStringsList;
-    private ArrayAdapter<String> contactsArrayAdapter;
+    private RecyclerView recyclerView;
+    private ContactsRecyclerViewAdapter contactsRecyclerViewAdapter;
+
+    private List<Contact> contactsList;
     private DatabaseHandler dbHandler;
-    private TextView contactsCountText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        dbHandler = new DatabaseHandler(MainActivity.this);
+        contactsList = dbHandler.getAllContacts();
+        for (Contact contact : contactsList) {
+            Log.d("MainActivity", "contact: " + contact.getId() + " " + contact.getName());
+        }
 
         addButton = findViewById(R.id.add_button);
         addButton.setOnClickListener(this);
@@ -39,31 +43,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         deleteButton.setOnClickListener(this);
         updateButton = findViewById(R.id.update_button);
         updateButton.setOnClickListener(this);
-        contactsListView = findViewById(R.id.contacts_list);
 
-        contactStringsList = new ArrayList<>();
-
-        dbHandler = new DatabaseHandler(MainActivity.this);
-        List<Contact> contactList = dbHandler.getAllContacts();
-        for (Contact contact : contactList) {
-            Log.d("MainActivity", "contact: " + contact.getId() + " " + contact.getName());
-            contactStringsList.add(contact.getName());
-        }
-        contactsArrayAdapter = new ArrayAdapter<>(
-                this,
-                android.R.layout.simple_list_item_1,
-                contactStringsList
-        );
-        contactsListView.setAdapter(contactsArrayAdapter);
-
-        contactsCountText = findViewById(R.id.contacts_count_text);
-        contactsCountText.setText("Contacts: " + dbHandler.getCount());
-        contactsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                Log.d("MainActivity", "Contact Clicked: " + contactStringsList.get(position));
-            }
-        });
+        recyclerView = findViewById(R.id.contacts_list);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        contactsRecyclerViewAdapter = new ContactsRecyclerViewAdapter(MainActivity.this, contactsList);
+        recyclerView.setAdapter(contactsRecyclerViewAdapter);
     }
 
     @Override

@@ -10,6 +10,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 import com.example.contactmanager.model.Contact;
 import com.example.contactmanager.util.Util;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class DatabaseHandler extends SQLiteOpenHelper {
     public DatabaseHandler(Context context) {
         super(context, Util.DATABASE_NAME, null, Util.DATABASE_VERSION);
@@ -54,14 +57,37 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         if (cursor != null) {
             cursor.moveToFirst();
-            Contact contact = new Contact();
-            contact.setId(Integer.parseInt(cursor.getString(0)));
-            contact.setName(cursor.getString(1));
-            contact.setPhoneNumber(cursor.getString(2));
+            Contact contact = makeContact(cursor);
 
             return contact;
         }
 
         return null;
+    }
+
+    public List<Contact> getAllContacts() {
+        List<Contact> contactList = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String selectAll = "SELECT * FROM " + Util.TABLE_NAME;
+        Cursor cursor = db.rawQuery(selectAll, null, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                Contact contact = makeContact(cursor);
+                contactList.add(contact);
+            } while(cursor.moveToNext());
+        }
+
+        return contactList;
+    }
+
+    private Contact makeContact(Cursor cursor) {
+        Contact contact = new Contact();
+        contact.setId(Integer.parseInt(cursor.getString(0)));
+        contact.setName(cursor.getString(1));
+        contact.setPhoneNumber(cursor.getString(2));
+
+        return contact;
     }
 }

@@ -103,6 +103,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.close();
     }
 
+    public int getCount() {
+        String countQuery = "SELECT * FROM " + Util.TABLE_NAME;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(countQuery, null);
+
+        return cursor.getCount();
+    }
+
     private ContentValues getContactContentValues(Contact contact) {
         ContentValues values = new ContentValues();
         values.put(Util.KEY_NAME, contact.getName());

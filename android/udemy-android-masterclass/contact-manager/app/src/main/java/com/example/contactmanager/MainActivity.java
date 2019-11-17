@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.example.contactmanager.data.DatabaseHandler;
 import com.example.contactmanager.model.Contact;
@@ -17,6 +18,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button deleteButton;
     private Button updateButton;
     private DatabaseHandler dbHandler;
+    private TextView contactsCountText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +37,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         for (Contact contact : contactList) {
             Log.d("MainActivity", "contact: " + contact.getId() + " " + contact.getName());
         }
+
+        contactsCountText = findViewById(R.id.contacts_count_text);
+        contactsCountText.setText("Contacts: " + dbHandler.getCount());
     }
 
     @Override

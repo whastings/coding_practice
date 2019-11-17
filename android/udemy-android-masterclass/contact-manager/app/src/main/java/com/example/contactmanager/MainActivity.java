@@ -14,6 +14,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private Button addButton;
+    private Button deleteButton;
     private Button updateButton;
     private DatabaseHandler dbHandler;
 
@@ -24,13 +25,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         addButton = findViewById(R.id.add_button);
         addButton.setOnClickListener(this);
+        deleteButton = findViewById(R.id.delete_button);
+        deleteButton.setOnClickListener(this);
         updateButton = findViewById(R.id.update_button);
         updateButton.setOnClickListener(this);
 
         dbHandler = new DatabaseHandler(MainActivity.this);
-        Contact secondContact = dbHandler.getContact(1);
-        Log.d("MainActivity", "first contact: " + secondContact.getId() + " " + secondContact.getName());
-
         List<Contact> contactList = dbHandler.getAllContacts();
         for (Contact contact : contactList) {
             Log.d("MainActivity", "contact: " + contact.getId() + " " + contact.getName());
@@ -41,17 +41,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.add_button:
-                this.addContact();
+                this.addContacts();
+                break;
+            case R.id.delete_button:
+                this.deleteContacts();
+                break;
             case R.id.update_button:
                 this.updateContact();
+                break;
         }
     }
 
-    private void addContact() {
+    private void addContacts() {
         Contact jeremy = new Contact("Jeremy", "1112223333");
         dbHandler.addContact(jeremy);
         Contact jason = new Contact("Jason", "5556667777");
         dbHandler.addContact(jason);
+    }
+
+    private void deleteContacts() {
+        List<Contact> contactList = dbHandler.getAllContacts();
+        for (Contact contact : contactList) {
+            dbHandler.deleteContact(contact);
+        }
     }
 
     private void updateContact() {

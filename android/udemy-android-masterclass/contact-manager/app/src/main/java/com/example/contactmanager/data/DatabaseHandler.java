@@ -37,9 +37,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public void addContact(Contact contact) {
         SQLiteDatabase db = this.getWritableDatabase();
 
-        ContentValues values = new ContentValues();
-        values.put(Util.KEY_NAME, contact.getName());
-        values.put(Util.KEY_PHONE_NUMBER, contact.getPhoneNumber());
+        ContentValues values = getContactContentValues(contact);
 
         db.insert(Util.TABLE_NAME, null, values);
         db.close();
@@ -80,6 +78,26 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         }
 
         return contactList;
+    }
+
+    public int updateContact(Contact contact) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = getContactContentValues(contact);
+
+        return db.update(
+                Util.TABLE_NAME,
+                values,
+                Util.KEY_ID + "= ?",
+                new String[] {String.valueOf(contact.getId())}
+        );
+    }
+
+    private ContentValues getContactContentValues(Contact contact) {
+        ContentValues values = new ContentValues();
+        values.put(Util.KEY_NAME, contact.getName());
+        values.put(Util.KEY_PHONE_NUMBER, contact.getPhoneNumber());
+        return values;
     }
 
     private Contact makeContact(Cursor cursor) {

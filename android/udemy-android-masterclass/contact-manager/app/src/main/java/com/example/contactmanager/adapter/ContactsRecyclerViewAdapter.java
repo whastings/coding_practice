@@ -1,9 +1,11 @@
 package com.example.contactmanager.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -46,15 +48,34 @@ public class ContactsRecyclerViewAdapter extends RecyclerView.Adapter<ContactsRe
         return contactList.size();
     }
 
-    public class ContactViewHolder extends RecyclerView.ViewHolder {
+    public class ContactViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public TextView nameTextView;
         public TextView phoneNumberTextView;
+        public ImageView contactIcon;
 
         public ContactViewHolder(@NonNull View itemView) {
             super(itemView);
 
             nameTextView = itemView.findViewById(R.id.name);
             phoneNumberTextView = itemView.findViewById(R.id.phone_number);
+            contactIcon = itemView.findViewById(R.id.contact_icon);
+
+            itemView.setOnClickListener(this);
+            contactIcon.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+            int position = getAdapterPosition();
+            Contact contact = contactList.get(position);
+            switch (view.getId()) {
+                case R.id.contact_icon:
+                    Log.d("Contact", "icon clicked: " + contact.getName());
+                    break;
+                default:
+                    Log.d("Contact", "contact clicked: " + contact.getName());
+                    break;
+            }
         }
     }
 }

@@ -1,6 +1,7 @@
 package com.example.contactmanager.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.contactmanager.ContactActivity;
 import com.example.contactmanager.R;
 import com.example.contactmanager.model.Contact;
 
@@ -74,8 +76,16 @@ public class ContactsRecyclerViewAdapter extends RecyclerView.Adapter<ContactsRe
                     break;
                 default:
                     Log.d("Contact", "contact clicked: " + contact.getName());
+                    switchToContact(contact);
                     break;
             }
+        }
+
+        private void switchToContact(Contact contact) {
+            Intent intent = new Intent(context, ContactActivity.class);
+            intent.putExtra("contactName", contact.getName());
+            intent.putExtra("contactPhoneNumber", contact.getPhoneNumber());
+            context.startActivity(intent);
         }
     }
 }

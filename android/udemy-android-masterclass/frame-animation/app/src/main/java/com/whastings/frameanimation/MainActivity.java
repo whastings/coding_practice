@@ -6,20 +6,25 @@ import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.MotionEvent;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
 public class MainActivity extends AppCompatActivity {
     private AnimationDrawable batAnimation;
-    private ImageView batImageView;
+    private ImageView frameBatImageView;
+    private ImageView fadeBatImageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        batImageView = findViewById(R.id.bat_image);
-        batImageView.setBackgroundResource(R.drawable.bat_anim);
-        batAnimation = (AnimationDrawable) batImageView.getBackground();
+        frameBatImageView = findViewById(R.id.bat_image);
+        frameBatImageView.setBackgroundResource(R.drawable.bat_anim);
+        batAnimation = (AnimationDrawable) frameBatImageView.getBackground();
+
+        fadeBatImageView = findViewById(R.id.bat_image2);
     }
 
     @Override
@@ -33,6 +38,18 @@ public class MainActivity extends AppCompatActivity {
                 batAnimation.stop();
             }
         }, 5000);
+
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Animation fadeAnimation = AnimationUtils.loadAnimation(
+                    getApplicationContext(),
+                    R.anim.fadein_animation
+                );
+                fadeBatImageView.startAnimation(fadeAnimation);
+            }
+        }, 50);
+
         return super.onTouchEvent(event);
     }
 }

@@ -1,18 +1,18 @@
 import { createStackNavigator } from 'react-navigation-stack'
 import { createSwitchNavigator } from 'react-navigation'
 
-import HomeScreen from './sections/home/HomeScreen'
+import ReposListScreen from './sections/reposList/ReposListScreen'
 import LoadingScreen from './sections/loading/LoadingScreen'
 import LoginScreen from './sections/login/LoginScreen'
 import RepoScreen from './sections/repo/RepoScreen'
 
 const LoggedInNavigator = createStackNavigator(
   {
-    Home: HomeScreen,
+    ReposList: ReposListScreen,
     Repo: RepoScreen,
   },
   {
-    initialRouteName: 'Home',
+    initialRouteName: 'ReposList',
   },
 )
 const AppNavigator = createSwitchNavigator(

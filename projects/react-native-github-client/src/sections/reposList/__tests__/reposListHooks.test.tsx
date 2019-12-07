@@ -4,9 +4,9 @@ import { MockedProvider, MockedResponse } from '@apollo/react-testing'
 
 import { createRepo } from './utils'
 import { OwnReposQuery } from '../types/OwnReposQuery'
-import { useOwnReposQuery, OWN_REPOS_QUERY } from '../homeHooks'
+import { useOwnReposQuery, OWN_REPOS_QUERY } from '../reposListHooks'
 
-describe('homePageHooks', () => {
+describe('reposListHooks', () => {
   interface OwnReposQueryMock extends MockedResponse {
     result: {
       data: OwnReposQuery,

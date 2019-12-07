@@ -2,12 +2,12 @@ import React from 'react'
 import { Button, FlatList, StyleSheet, Text, View } from 'react-native'
 import { NavigationStackScreenComponent } from 'react-navigation-stack'
 
-import { useOwnReposQuery } from './homeHooks'
-import { Repository } from './types/homeTypes'
+import { useOwnReposQuery } from './reposListHooks'
+import { Repository } from './types/reposListTypes'
 import RepoListItem from './RepoListItem'
 import { RepoScreenParams } from '../repo/RepoScreen'
 
-const HomePage: NavigationStackScreenComponent = (props) => {
+const ReposListScreen: NavigationStackScreenComponent = (props) => {
   const { fetchMore, hasNextPage, loading, loadingMore, repos } = useOwnReposQuery()
 
   if (loading || !repos) {
@@ -50,8 +50,8 @@ const HomePage: NavigationStackScreenComponent = (props) => {
   )
 }
 
-HomePage.navigationOptions = {
-  title: 'Home',
+ReposListScreen.navigationOptions = {
+  title: 'Repositories',
 }
 
 const styles = StyleSheet.create({
@@ -60,4 +60,4 @@ const styles = StyleSheet.create({
   },
 })
 
-export default HomePage
+export default ReposListScreen

@@ -3,14 +3,14 @@ import { render, fireEvent } from '@testing-library/react-native'
 import { NavigationStackScreenProps } from 'react-navigation-stack'
 
 import { createRepo } from './utils'
-import HomeScreen from '../HomeScreen'
+import ReposListScreen from '../ReposListScreen'
 
 const mockUseOwnReposQuery = jest.fn()
-jest.mock('../homeHooks', () => ({
+jest.mock('../reposListHooks', () => ({
   useOwnReposQuery: () => mockUseOwnReposQuery(),
 }))
 
-describe('HomeScreen', () => {
+describe('ReposListScreen', () => {
   const repos = [
     createRepo({ name: 'repo1', ownerName: 'foo' }),
     createRepo({ name: 'repo2', ownerName: 'bar' }),
@@ -33,7 +33,7 @@ describe('HomeScreen', () => {
       },
     } as unknown as NavigationStackScreenProps
 
-    const renderResult = render(<HomeScreen {...mockProps} />)
+    const renderResult = render(<ReposListScreen {...mockProps} />)
 
     return { ...renderResult, mockProps }
   }

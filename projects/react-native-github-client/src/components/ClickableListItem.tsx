@@ -6,7 +6,7 @@ interface Props {
   onPress: () => void,
 }
 
-const RepoListItem: React.FC<Props> = (props) => {
+const ClickableListItem: React.FC<Props> = (props) => {
   return (
     <TouchableHighlight onPress={props.onPress}>
       <View style={styles.container}>
@@ -25,4 +25,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default RepoListItem
+export default ClickableListItem

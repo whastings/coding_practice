@@ -4,7 +4,7 @@ import { NavigationStackScreenComponent } from 'react-navigation-stack'
 
 import { useOwnReposQuery } from './reposListHooks'
 import { Repository } from './types/reposListTypes'
-import RepoListItem from './RepoListItem'
+import ClickableListItem from '../../components/ClickableListItem'
 import { RepoScreenParams } from '../repo/RepoScreen'
 
 const ReposListScreen: NavigationStackScreenComponent = (props) => {
@@ -38,7 +38,7 @@ const ReposListScreen: NavigationStackScreenComponent = (props) => {
       <FlatList
         data={repos}
         renderItem={({ item }) => (
-          <RepoListItem
+          <ClickableListItem
             name={item!.name}
             onPress={() => navigateToRepo(item!)}
           />

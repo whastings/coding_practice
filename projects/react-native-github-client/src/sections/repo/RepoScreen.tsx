@@ -37,7 +37,7 @@ const RepoScreen: NavigationStackScreenComponent<RepoScreenParams> = (props) => 
     <View>
       <Text>{repository.name}</Text>
       <Text>Stars: {repository.stargazers.totalCount}</Text>
-      <Button onPress={handleToggleStarClick} title={toggleStarButtonText}>
+      <Button onPress={handleToggleStarClick} title={toggleStarButtonText} disabled={toggleStarLoading}>
         {toggleStarButtonText}
       </Button>
     </View>

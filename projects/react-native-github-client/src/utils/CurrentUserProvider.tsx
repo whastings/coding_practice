@@ -15,7 +15,7 @@ const VIEWER_QUERY = gql`
 
 const CurrentUserContext = createContext<ViewerQuery_viewer | null>(null)
 
-export const useCurrentUser = () => useContext(CurrentUserContext)
+export const useCurrentUser = () => useContext(CurrentUserContext)!
 
 const CurrentUserProvider: React.FC = (props) => {
   const { data, loading } = useQuery<ViewerQuery>(VIEWER_QUERY)

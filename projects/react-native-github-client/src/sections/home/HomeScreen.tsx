@@ -7,8 +7,8 @@ import { useCurrentUser } from '../../utils/CurrentUserProvider'
 const HomeScreen: NavigationStackScreenComponent = (props) => {
   const currentUser = useCurrentUser()
 
-  const goToOwnRepos = () => {
-    props.navigation.navigate('ReposList')
+  const navigate = (screen: string) => {
+    props.navigation.navigate(screen)
   }
 
   return (
@@ -16,8 +16,11 @@ const HomeScreen: NavigationStackScreenComponent = (props) => {
       <Text>
         Hello, {currentUser!.login}
       </Text>
-      <Button onPress={goToOwnRepos} title="Your Repositories">
+      <Button onPress={() => navigate('ReposList')} title="Your Repositories">
         Your Repositories
+      </Button>
+      <Button onPress={() => navigate('FollowersList')} title="Your Followers">
+        Your Followers
       </Button>
     </View>
   )

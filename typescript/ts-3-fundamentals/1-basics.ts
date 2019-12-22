@@ -9,4 +9,21 @@ anyVar = 10
 anyVar = 'abc'
 let numVar: number
 numVar = 10
-// numVar = 'abc'
+// numVar = 'abc' (ERROR)
+
+// Array can only contain one kind of type
+const array: number[] = []
+array.push(10)
+// array.push('abc') (ERROR)
+const inferredArray = [10] // Type: number[]
+
+// Tuple is array of fixed length and potentially different types
+// but always in same order
+const tuple: [number, string, string, number] = [ // Always number, two strings, and another number
+  123,
+  'Fake St.',
+  'CA, USA',
+  12345,
+]
+// Must declare tuple type, or else TS thinks it's just an array
+const notTuple = [1, 2, 3] // Type: number[]

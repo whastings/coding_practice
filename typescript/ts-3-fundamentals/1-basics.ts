@@ -27,3 +27,24 @@ const tuple: [number, string, string, number] = [ // Always number, two strings,
 ]
 // Must declare tuple type, or else TS thinks it's just an array
 const notTuple = [1, 2, 3] // Type: number[]
+
+// Object types are like object literals
+// Properties are required by default
+// Suffix with `?` to make optional
+// Only specified properties are allowed
+let object: { firstName: string, lastName: string, phoneNumber?: string }
+object = {
+  firstName: 'Will',
+  lastName: 'Hastings',
+  // foobar: 'baz', (ERROR)
+}
+// Interface is like type
+interface Person {
+  firstName: string,
+  lastName: string,
+  phoneNumber?: string,
+}
+const object2: Person = {
+  firstName: 'Will',
+  lastName: 'Hastings',
+}

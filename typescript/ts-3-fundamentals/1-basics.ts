@@ -48,3 +48,26 @@ const object2: Person = {
   firstName: 'Will',
   lastName: 'Hastings',
 }
+
+// Intersection type gives you the properties two types have in common
+interface HasEmail {
+  name: string,
+  email: string,
+}
+interface HasPhoneNumber {
+  name: string,
+  phoneNumber: string,
+}
+const intersectionContactInfo: HasEmail | HasPhoneNumber = Math.random() > 0.5 ?
+  { name: 'Will', email: 'will@example.com' } : { name: 'Will', phoneNumber: '1112223333' }
+// So you can only access the common properties
+intersectionContactInfo.name
+// intersectionContactInfo.email (Error)
+
+// Union type gives you all the properties of both types
+// and so you must provide values for all
+const unionContactInfo: HasEmail & HasPhoneNumber = {
+  name: 'Will',
+  email: 'will@example.com',
+  phoneNumber: '1112223333'
+}

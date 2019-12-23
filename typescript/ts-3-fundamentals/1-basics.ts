@@ -50,11 +50,11 @@ const object2: Person = {
 }
 
 // Intersection type gives you the properties two types have in common
-interface HasEmail {
+export interface HasEmail {
   name: string,
   email: string,
 }
-interface HasPhoneNumber {
+export interface HasPhoneNumber {
   name: string,
   phoneNumber: string,
 }

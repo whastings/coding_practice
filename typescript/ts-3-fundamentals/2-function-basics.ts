@@ -22,3 +22,17 @@ contactPeople('email', { name: 'Will', email: 'will@example.com' })
 contactPeople('phoneNumber', { name: 'Will', phoneNumber: '1112223333' })
 // contactPeople('email', { name: 'Will', phoneNumber: '1112223333' }) (Error)
 
+// The type of `this` can be specified for a function
+function sendMessage(
+  this: HasEmail & HasPhoneNumber,
+  method: 'email' | 'phoneNumber'
+): void {
+  if (method === 'email') {
+    console.log('Sending email: ', this.email)
+  } else {
+    console.log('Sending text: ', this.phoneNumber)
+  }
+}
+const contact = { name: 'Will', email: 'will@example.com', phoneNumber: '1112223333' }
+// sendMessage('email') (Error)
+sendMessage.call(contact, 'email')

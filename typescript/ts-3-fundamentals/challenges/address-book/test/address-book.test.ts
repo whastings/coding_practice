@@ -16,7 +16,6 @@ describe("index.ts module", () => {
     expect(typeof indexExports.AddressBook).to.eq("function", "export exists");
     const ab = new indexExports.AddressBook();
     expect(!!ab).to.eq(true, "can instantiate from AddressBook as a class");
-    expect(ab.constructor.name).to.eq("AddressBook");
     expect(Object.keys(indexExports.AddressBook.prototype)).to.deep.eq(
       ["addContact", "findContactByName"],
       "should have addContact and findContactByName methods"

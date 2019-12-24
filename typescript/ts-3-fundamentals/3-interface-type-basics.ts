@@ -18,6 +18,9 @@ const hasIntPhone: HasIntPhone = {
   phoneNumber: '2223334444',
   countryCode: '01',
 }
+// Object of sub-interface can be passed where super-interface expected
+const takesPhone = (objectWithPhone: HasPhoneNumber) => {}
+takesPhone(hasIntPhone)
 
 // Interface can describe a function
 interface SendMessage {

@@ -38,3 +38,16 @@ const isDefined = <T>(arg: T | undefined): arg is T => {
 }
 const arrayWithUndefined = [1, 2, undefined, 3]
 const arrayWithoutUndefined = arrayWithUndefined.filter(isDefined)
+// Can also have type guards that throw
+function assertIsStringArray(array: any[]): asserts array is string[] {
+  if (!Array.isArray(array)) {
+    throw new Error('not an array!')
+  }
+  const strings = array.filter(i => typeof i === 'string')
+  if (strings.length !== array.length) {
+    throw new Error('not an array of strings')
+  }
+}
+const anyArray: any[] = ['a', 'b', 'c']
+assertIsStringArray(anyArray)
+anyArray.map((el) => el.toUpperCase())

@@ -51,3 +51,20 @@ function assertIsStringArray(array: any[]): asserts array is string[] {
 const anyArray: any[] = ['a', 'b', 'c']
 assertIsStringArray(anyArray)
 anyArray.map((el) => el.toUpperCase())
+
+// Bottom Type can't hold a value
+// `never` is TS's bottom type
+// let neverValue: never = 4 (Error)
+// An Exhaustive Conditional ends with a value as a `never`,
+// as in, if the types are actually correct when the program
+// runs, you should never get there
+const value1 = 10 as string | number
+if (typeof value1 === 'string') {
+  value1 // is a string
+} else if (typeof value1 === 'number') {
+  value1 // is a number
+} else {
+  value1 // is a never
+  // This is a good time to throw an error
+  throw new Error('TypeScript thought we could never end up here')
+}

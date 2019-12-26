@@ -49,7 +49,9 @@ const object2: Person = {
   lastName: 'Hastings',
 }
 
-// Intersection type gives you the properties two types have in common
+// Union Type describes a value that can be one of several possible types
+type StringOrNumber = string | number
+// For object interfaces/types, Union Type lets you access only the properties the two types have in common
 export interface HasEmail {
   name: string,
   email: string,
@@ -58,15 +60,15 @@ export interface HasPhoneNumber {
   name: string,
   phoneNumber: string,
 }
-const intersectionContactInfo: HasEmail | HasPhoneNumber = Math.random() > 0.5 ?
+const unionContactInfo: HasEmail | HasPhoneNumber = Math.random() > 0.5 ?
   { name: 'Will', email: 'will@example.com' } : { name: 'Will', phoneNumber: '1112223333' }
 // So you can only access the common properties
-intersectionContactInfo.name
-// intersectionContactInfo.email (Error)
+unionContactInfo.name
+// unionContactInfo.email (Error)
 
-// Union type gives you all the properties of both types
+// Intersection Type gives you all the properties of both types
 // and so you must provide values for all
-const unionContactInfo: HasEmail & HasPhoneNumber = {
+const intersectionContactInfo: HasEmail & HasPhoneNumber = {
   name: 'Will',
   email: 'will@example.com',
   phoneNumber: '1112223333'

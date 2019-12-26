@@ -33,3 +33,21 @@ type EventualType<T> =
   T // Otherwise if not Promise, pass through
 let eventualNumberVar: EventualType<Promise<number>>
 let eventualNumArrayVar: EventualType<number[]>
+
+// Partial makes all properties of an object type optional
+type MayHaveEmail = Partial<HasEmail>
+const mayHaveEmail: MayHaveEmail = { name: 'Will' }
+
+// Pick makes new type with only certain properties of another object type
+type HasNameOnly = Pick<HasEmail, 'name'>
+
+// Extract pulls a subset of types from a set that are assignable to a particular type
+// e.g. Set of types that are assignable to type `string`
+type OnlyStrings = Extract<'a' | 'b' | 1 | 2, string>
+
+// Exclude pulls a subset of types from a set that are NOT assignable to a particular type
+// e.g. Set of types that are not assignable to type `string`
+type NotStrings = Exclude<'a' | 'b' | 1 | 2, string>
+
+// Record creates a type with specified keys and values of a given type
+type MyRecord = Record<'a' | 'b' | 'c', number>

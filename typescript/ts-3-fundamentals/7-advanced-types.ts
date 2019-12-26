@@ -40,6 +40,22 @@ const mayHaveEmail: MayHaveEmail = { name: 'Will' }
 
 // Pick makes new type with only certain properties of another object type
 type HasNameOnly = Pick<HasEmail, 'name'>
+// e.g. For the result of combining two objects
+type Mix<A, B> =
+  // Pick the properties that exist on type A but not type B
+  Pick<
+    A,
+    Exclude<keyof A, keyof B>
+  >
+  // And combine them with the properties from type B
+  & B
+const mix: Mix<{ a: number; b: string }, { a: string; c: number[] }> = {
+  ...{ a: 42, b: "abc" },
+  ...{ a: "abc", c: [1, 2, 3] }
+};
+mix.a // string
+mix.b // string
+mix.c // number[]
 
 // Extract pulls a subset of types from a set that are assignable to a particular type
 // e.g. Set of types that are assignable to type `string`

@@ -25,7 +25,10 @@
               "apps/dashboard/src/favicon.ico",
               "apps/dashboard/src/assets"
             ],
-            "styles": ["apps/dashboard/src/styles.scss"],
+            "styles": [
+              "./node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css",
+              "apps/dashboard/src/styles.scss"
+            ],
             "scripts": []
           },
           "configurations": {
@@ -84,7 +87,10 @@
               "apps/dashboard/tsconfig.app.json",
               "apps/dashboard/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!apps/dashboard/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!apps/dashboard/**"
+            ]
           }
         },
         "test": {
@@ -94,7 +100,9 @@
             "tsConfig": "apps/dashboard/tsconfig.spec.json",
             "karmaConfig": "apps/dashboard/karma.conf.js",
             "polyfills": "apps/dashboard/src/polyfills.ts",
-            "styles": [],
+            "styles": [
+              "./node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css"
+            ],
             "scripts": [],
             "assets": []
           }
@@ -121,7 +129,10 @@
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": "apps/dashboard-e2e/tsconfig.e2e.json",
-            "exclude": ["**/node_modules/**", "!apps/dashboard-e2e/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!apps/dashboard-e2e/**"
+            ]
           }
         }
       }

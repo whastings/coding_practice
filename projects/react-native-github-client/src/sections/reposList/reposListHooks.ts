@@ -3,13 +3,13 @@ import gql from 'graphql-tag'
 import { useQuery } from '@apollo/client'
 import produce from 'immer'
 
-import { OwnReposQuery, OwnReposQueryVariables } from './types/OwnReposQuery'
+import { ReposQuery, ReposQueryVariables } from './types/ReposQuery'
 
 const REPOS_PER_PAGE = 3
 
-export const OWN_REPOS_QUERY = gql`
-  query OwnReposQuery($first: Int!, $after: String) {
-    viewer {
+export const REPOS_QUERY = gql`
+  query ReposQuery($login: String!, $first: Int!, $after: String) {
+    user(login:$login) {
       repositories(first: $first, after: $after) {
         nodes {
           id
@@ -27,21 +27,21 @@ export const OWN_REPOS_QUERY = gql`
   }
 `
 
-const getRepos = (data: OwnReposQuery) => {
-  return data.viewer.repositories.nodes || []
+const getRepos = (data: ReposQuery) => {
+  return data.user?.repositories.nodes || []
 }
 
-export const useOwnReposQuery = () => {
+export const useOwnReposQuery = (userLogin: string) => {
   const [loadingMore, setLoadingMore] = useState(false)
-  const { data, fetchMore, loading } = useQuery<OwnReposQuery, OwnReposQueryVariables>(
-    OWN_REPOS_QUERY,
+  const { data, fetchMore, loading } = useQuery<ReposQuery, ReposQueryVariables>(
+    REPOS_QUERY,
     {
-      variables: { first: REPOS_PER_PAGE },
+      variables: { first: REPOS_PER_PAGE, login: userLogin },
     }
   )
 
   const fetchMoreWrapper = async () => {
-    const { endCursor } = data!.viewer.repositories.pageInfo
+    const { endCursor } = data!.user!.repositories.pageInfo
     setLoadingMore(true)
 
     const result = await fetchMore({
@@ -51,8 +51,8 @@ export const useOwnReposQuery = () => {
           return prevData
         }
         return produce(prevData, (updatedData) => {
-          updatedData.viewer.repositories.nodes!.push(...(fetchMoreResult.viewer.repositories.nodes || []))
-          updatedData.viewer.repositories.pageInfo = fetchMoreResult.viewer.repositories.pageInfo
+          updatedData.user!.repositories.nodes!.push(...(fetchMoreResult.user!.repositories.nodes || []))
+          updatedData.user!.repositories.pageInfo = fetchMoreResult.user!.repositories.pageInfo
         })
       },
     })
@@ -61,7 +61,7 @@ export const useOwnReposQuery = () => {
   }
 
   return {
-    hasNextPage: !!data && data.viewer.repositories.pageInfo.hasNextPage,
+    hasNextPage: !!data && data.user?.repositories.pageInfo.hasNextPage,
     fetchMore: fetchMoreWrapper,
     loading,
     loadingMore,

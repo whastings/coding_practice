@@ -3,10 +3,10 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL query operation: OwnReposQuery
+// GraphQL query operation: ReposQuery
 // ====================================================
 
-export interface OwnReposQuery_viewer_repositories_nodes_owner {
+export interface ReposQuery_user_repositories_nodes_owner {
   __typename: "User" | "Organization";
   /**
    * The username used to login.
@@ -14,7 +14,7 @@ export interface OwnReposQuery_viewer_repositories_nodes_owner {
   login: string;
 }
 
-export interface OwnReposQuery_viewer_repositories_nodes {
+export interface ReposQuery_user_repositories_nodes {
   __typename: "Repository";
   id: string;
   /**
@@ -24,10 +24,10 @@ export interface OwnReposQuery_viewer_repositories_nodes {
   /**
    * The User owner of the repository.
    */
-  owner: OwnReposQuery_viewer_repositories_nodes_owner;
+  owner: ReposQuery_user_repositories_nodes_owner;
 }
 
-export interface OwnReposQuery_viewer_repositories_pageInfo {
+export interface ReposQuery_user_repositories_pageInfo {
   __typename: "PageInfo";
   /**
    * When paginating forwards, the cursor to continue.
@@ -39,34 +39,35 @@ export interface OwnReposQuery_viewer_repositories_pageInfo {
   hasNextPage: boolean;
 }
 
-export interface OwnReposQuery_viewer_repositories {
+export interface ReposQuery_user_repositories {
   __typename: "RepositoryConnection";
   /**
    * A list of nodes.
    */
-  nodes: (OwnReposQuery_viewer_repositories_nodes | null)[] | null;
+  nodes: (ReposQuery_user_repositories_nodes | null)[] | null;
   /**
    * Information to aid in pagination.
    */
-  pageInfo: OwnReposQuery_viewer_repositories_pageInfo;
+  pageInfo: ReposQuery_user_repositories_pageInfo;
 }
 
-export interface OwnReposQuery_viewer {
+export interface ReposQuery_user {
   __typename: "User";
   /**
    * A list of repositories that the user owns.
    */
-  repositories: OwnReposQuery_viewer_repositories;
+  repositories: ReposQuery_user_repositories;
 }
 
-export interface OwnReposQuery {
+export interface ReposQuery {
   /**
-   * The currently authenticated user.
+   * Lookup a user by login.
    */
-  viewer: OwnReposQuery_viewer;
+  user: ReposQuery_user | null;
 }
 
-export interface OwnReposQueryVariables {
+export interface ReposQueryVariables {
+  login: string;
   first: number;
   after?: string | null;
 }

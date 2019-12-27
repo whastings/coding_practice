@@ -9,9 +9,16 @@ export interface UserScreenParams {
 const UserScreen: NavigationStackScreenComponent<UserScreenParams> = (props) => {
   const { params } = props.navigation.state
 
+  const goToRepos = () => {
+    props.navigation.navigate('ReposList')
+  }
+
   return (
     <View>
       <Text>User: {params!.userLogin}</Text>
+      <Button title='Repositories' onPress={goToRepos}>
+        Repositories
+      </Button>
     </View>
   )
 }

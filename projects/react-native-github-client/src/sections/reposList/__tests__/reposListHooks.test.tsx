@@ -4,7 +4,7 @@ import { MockedProvider, MockedResponse } from '@apollo/react-testing'
 
 import { createRepo } from './utils'
 import { OwnReposQuery } from '../types/OwnReposQuery'
-import { useOwnReposQuery, OWN_REPOS_QUERY } from '../reposListHooks'
+import { useOwnReposQuery, REPOS_QUERY } from '../reposListHooks'
 
 describe('reposListHooks', () => {
   interface OwnReposQueryMock extends MockedResponse {
@@ -21,7 +21,7 @@ describe('reposListHooks', () => {
 
   const initialRequestMock: OwnReposQueryMock = {
     request: {
-      query: OWN_REPOS_QUERY,
+      query: REPOS_QUERY,
       variables: { first: 3 },
     },
     result: {
@@ -71,7 +71,7 @@ describe('reposListHooks', () => {
       ]
       const secondRequestMock: OwnReposQueryMock = {
         request: {
-          query: OWN_REPOS_QUERY,
+          query: REPOS_QUERY,
           variables: { first: 3, after: 'abc123' },
         },
         result: {

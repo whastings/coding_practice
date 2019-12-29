@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
+  // Name of tag to render this component: <app-projects></app-projects>
   selector: 'app-projects',
   templateUrl: './projects.component.html',
   styleUrls: ['./projects.component.css']
@@ -31,6 +32,7 @@ export class ProjectsComponent implements OnInit {
       approved: true,
     },
   ]
+  primaryColor = 'red'
   selectedProject
 
   constructor() { }

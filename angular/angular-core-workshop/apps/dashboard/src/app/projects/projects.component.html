@@ -13,7 +13,8 @@
             *ngFor="let project of projects"
             (click)="selectProject(project)"
           >
-            <h3 mat-line>
+            <!-- Attribute binding syntax uses square brackets -->
+            <h3 mat-line [style.color]="primaryColor">
               {{project.title}}
             </h3>
             <p mat-line>

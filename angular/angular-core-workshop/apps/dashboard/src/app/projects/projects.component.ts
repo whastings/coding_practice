@@ -6,10 +6,46 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./projects.component.css']
 })
 export class ProjectsComponent implements OnInit {
+  // Instance variables
+  // Are available in component's template
+  projects = [
+    {
+      id: '1',
+      title: 'Project One',
+      details: 'This is a sample project',
+      percentComplete: 20,
+      approved: false,
+    },
+    {
+      id: '2',
+      title: 'Project Two',
+      details: 'This is a sample project',
+      percentComplete: 40,
+      approved: false,
+    },
+    {
+      id: '3',
+      title: 'Project Three',
+      details: 'This is a sample project',
+      percentComplete: 100,
+      approved: true,
+    },
+  ]
+  selectedProject
 
   constructor() { }
 
   ngOnInit() {
+  }
+
+  cancel() {
+    this.selectedProject = null
+  }
+
+  // No need to bind event handling method to component instance
+  // Could also get DOM event if passed $event from template
+  selectProject(project) {
+    this.selectedProject = project
   }
 
 }

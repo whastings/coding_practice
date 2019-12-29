@@ -22,6 +22,9 @@
     },
     "ui-login": {
       "tags": []
+    },
+    "ui-toolbar": {
+      "tags": []
     }
   }
 }

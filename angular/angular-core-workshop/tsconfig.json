@@ -16,7 +16,8 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@workshop/material": ["libs/material/src/index.ts"]
+      "@workshop/material": ["libs/material/src/index.ts"],
+      "@workshop/core-data": ["libs/core-data/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

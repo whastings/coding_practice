@@ -21,6 +21,7 @@
 
 <mat-sidenav-container>
   <!-- `#sidenav` makes the underlying component instance available to the rest of the template -->
+  <!-- If you want to access it in component class, you can use `@ViewChild` decorator -->
   <mat-sidenav #sidenav mode="side" opened class="app-sidenav">
     <nav>
       <a mat-button class="nav-link">
@@ -33,7 +34,6 @@
   </mat-sidenav>
 
   <div class="app-content">
-    <app-projects></app-projects>
     <router-outlet></router-outlet>
   </div>
 </mat-sidenav-container>

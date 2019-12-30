@@ -25,7 +25,8 @@ export class ProjectsComponent implements OnInit {
   }
 
   getProjects() {
-    this.projects = this.projectsService.all()
+    this.projectsService.all()
+      .subscribe((result: any) => this.projects = result)
   }
 
   // No need to bind event handling method to component instance

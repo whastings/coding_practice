@@ -5,9 +5,6 @@ import { MaterialModule } from '@workshop/material'
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HomeModule } from './home/home.module';
-import { ProjectsModule } from './projects/projects.module';
-import { CustomersModule } from './customers/customers.module';
 import { UiLoginModule } from '@workshop/ui-login';
 
 @NgModule({
@@ -17,9 +14,6 @@ import { UiLoginModule } from '@workshop/ui-login';
     BrowserModule,
     BrowserAnimationsModule,
     MaterialModule,
-    HomeModule,
-    ProjectsModule,
-    CustomersModule,
     UiLoginModule,
   ],
   providers: [],

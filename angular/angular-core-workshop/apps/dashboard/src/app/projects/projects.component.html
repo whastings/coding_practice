@@ -10,7 +10,7 @@
       <mat-card-content>
         <mat-list>
           <mat-list-item
-            *ngFor="let project of projects"
+            *ngFor="let project of projects$ | async"
             (click)="selectProject(project)"
           >
             <!-- Attribute binding syntax uses square brackets -->

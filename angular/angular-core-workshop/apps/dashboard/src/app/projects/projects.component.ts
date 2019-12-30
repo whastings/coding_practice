@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ProjectsService, Project } from '@workshop/core-data'
+import { Observable } from 'rxjs';
 
 @Component({
   // Name of tag to render this component: <app-projects></app-projects>
@@ -10,8 +11,10 @@ import { ProjectsService, Project } from '@workshop/core-data'
 export class ProjectsComponent implements OnInit {
   // Instance variables
   // Are available in component's template
-  projects: Project[];
   primaryColor = 'red'
+  // Can render observables in template when piped to `async`
+  // Convention is to suffix observable variable with `$`
+  projects$: Observable<Project[]>
   selectedProject: Project
 
   constructor(private projectsService: ProjectsService) { }
@@ -25,8 +28,7 @@ export class ProjectsComponent implements OnInit {
   }
 
   getProjects() {
-    this.projectsService.all()
-      .subscribe((result: any) => this.projects = result)
+    this.projects$ = this.projectsService.all()
   }
 
   // No need to bind event handling method to component instance

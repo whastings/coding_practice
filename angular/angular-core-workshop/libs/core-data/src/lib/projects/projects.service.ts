@@ -11,6 +11,6 @@ export class ProjectsService {
 
   all() {
     // Returns an Observable
-    return this.httpClient.get('http://localhost:3000/projects')
+    return this.httpClient.get<Project[]>('http://localhost:3000/projects')
   }
 }

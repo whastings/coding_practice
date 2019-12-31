@@ -31,6 +31,14 @@ export class ProjectsComponent implements OnInit {
     this.projects$ = this.projectsService.all()
   }
 
+  deleteProject(project: Project) {
+    this.projectsService.delete(project.id)
+      // Must subscribe for the request to actually be issued.
+      // Then reload projects to get updated list
+      // TODO: How to remove from local state w/o making new request?
+      .subscribe(() => this.getProjects())
+  }
+
   // No need to bind event handling method to component instance
   // Could also get DOM event if passed $event from template
   selectProject(project) {

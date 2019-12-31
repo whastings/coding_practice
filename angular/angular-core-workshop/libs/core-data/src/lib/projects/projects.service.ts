@@ -13,4 +13,16 @@ export class ProjectsService {
     // Returns an Observable
     return this.httpClient.get<Project[]>('http://localhost:3000/projects')
   }
+
+  create(project: Project) {
+    return this.httpClient.post('http://localhost:3000/projects', project)
+  }
+
+  update(project: Project) {
+    return this.httpClient.patch(`http://localhost:3000/projects/${project.id}`, project)
+  }
+
+  delete(projectId: string) {
+    return this.httpClient.delete(`http://localhost:3000/projects/${projectId}`)
+  }
 }

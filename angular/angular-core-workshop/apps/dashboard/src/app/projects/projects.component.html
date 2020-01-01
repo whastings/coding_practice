@@ -38,16 +38,44 @@
             <!--{{selectedProject?.title}}-->
             <!-- Or you can use ngIf -->
             <!-- Which can do if/else using `else` -->
-            <span *ngIf="selectedProject; else elseBlock">{{selectedProject.title}}</span>
+            <span *ngIf="selectedProject.id; else elseBlock">{{selectedProject.title}}</span>
             <!-- Can create a named HTML partial with ng-template -->
             <!-- Then it can be used in the ngIf above -->
             <ng-template #elseBlock>Select a Project</ng-template>
           </h1>
         </mat-card-title>
       </mat-card-header>
-      <form>
+      <form (submit)="saveProject(selectedProject)">
         <mat-card-content>
-          <!-- PROJECT FORM HERE -->
+          <mat-form-field class="full-width">
+            <!-- ngModel requires FormsModule to be imported -->
+            <input matInput placeholder="Title" [(ngModel)]="selectedProject.title" type="text" name="title">
+          </mat-form-field>
+          <mat-form-field class="full-width">
+            <textarea
+              matInput
+              placeholder="Details"
+              [(ngModel)]="selectedProject.details"
+              type="text"
+              name="details"
+            ></textarea>
+          </mat-form-field>
+          <section>
+            <h4>{{selectedProject.percentComplete}}% complete</h4>
+            <mat-slider
+              class="full-width"
+              min="0"
+              max="100"
+              thumbLabel
+              [(ngModel)]="selectedProject.percentComplete"
+              name="percentComplete"
+            ></mat-slider>
+          </section>
+          <section>
+            <mat-checkbox [(ngModel)]="selectedProject.approved" name="approve">
+              Approved By Customer
+            </mat-checkbox>
+          </section>
         </mat-card-content>
         <mat-card-actions>
           <button type="submit" mat-button color="primary">Save</button>

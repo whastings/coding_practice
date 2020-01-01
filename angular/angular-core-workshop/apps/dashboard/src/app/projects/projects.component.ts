@@ -21,10 +21,16 @@ export class ProjectsComponent implements OnInit {
 
   ngOnInit() {
     this.getProjects()
+    this.resetProject()
   }
 
   cancel() {
-    this.selectedProject = null
+    this.resetProject()
+  }
+
+  resetProject() {
+    const emptyProject: Project = { id: null, title: '', details: '', percentComplete: 0,  approved: false }
+    this.selectedProject = emptyProject
   }
 
   getProjects() {
@@ -37,6 +43,10 @@ export class ProjectsComponent implements OnInit {
       // Then reload projects to get updated list
       // TODO: How to remove from local state w/o making new request?
       .subscribe(() => this.getProjects())
+  }
+
+  saveProject(project: Project) {
+
   }
 
   // No need to bind event handling method to component instance

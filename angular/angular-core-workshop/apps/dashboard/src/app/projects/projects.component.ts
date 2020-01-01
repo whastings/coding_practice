@@ -45,8 +45,28 @@ export class ProjectsComponent implements OnInit {
       .subscribe(() => this.getProjects())
   }
 
-  saveProject(project: Project) {
+  createProject(project: Project) {
+    this.projectsService.create(project)
+      .subscribe(() => {
+        this.getProjects()
+        this.resetProject()
+      })
+  }
 
+  updateProject(project: Project) {
+    this.projectsService.update(project)
+      .subscribe(() => {
+        this.getProjects()
+        this.resetProject()
+      })
+  }
+
+  saveProject(project: Project) {
+    if (project.id) {
+      this.updateProject(project)
+    } else {
+      this.createProject(project)
+    }
   }
 
   // No need to bind event handling method to component instance

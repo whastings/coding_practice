@@ -11,11 +11,10 @@ import { Observable } from 'rxjs';
 export class ProjectsComponent implements OnInit {
   // Instance variables
   // Are available in component's template
-  primaryColor = 'red'
+  selectedProject: Project
   // Can render observables in template when piped to `async`
   // Convention is to suffix observable variable with `$`
   projects$: Observable<Project[]>
-  selectedProject: Project
 
   constructor(private projectsService: ProjectsService) { }
 

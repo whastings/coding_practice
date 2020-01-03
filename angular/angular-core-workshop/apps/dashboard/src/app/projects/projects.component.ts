@@ -28,7 +28,13 @@ export class ProjectsComponent implements OnInit {
   }
 
   resetProject() {
-    const emptyProject: Project = { id: null, title: '', details: '', percentComplete: 0,  approved: false }
+    const emptyProject: Project = {
+      id: null,
+      title: '',
+      details: '',
+      percentComplete: 0,
+      approved: false,
+    }
     this.selectedProject = emptyProject
   }
 

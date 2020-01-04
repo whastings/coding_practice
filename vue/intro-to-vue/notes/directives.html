@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Directives</title>
+</head>
+<body>
+  <script src="https://vuejs.org/js/vue.js"></script>
+
+  <div id="list-example">
+    <ul>
+      <!--
+        Directives are attributes that modify the HTML Vue outputs.
+        v-for is a directive.
+      -->
+      <li v-for="item in list">{{item}}</li>
+    </ul>
+  </div>
+  <script>
+    // Vue instance starts the "app"
+    new Vue({
+      el: '#list-example',
+      // Data is available in templates
+      // Can be object or function returning object
+      data() {
+        return {
+          list: [
+            'foo',
+            'bar',
+            'baz',
+          ]
+        }
+      },
+    })
+  </script>
+
+  <div id="modifier-example">
+    <form>
+      <div>
+        Value: "{{value}}"
+      </div>
+      <!--
+        Modifiers alter the behavior of a directive
+        trim trims the string passed to v-model
+      -->
+      <input v-model.trim="value" />
+    </form>
+  </div>
+  <script>
+    new Vue({
+      el: '#modifier-example',
+      data() {
+        return {
+          value: '',
+        }
+      }
+    })
+  </script>
+
+  <div id="v-model-example">
+    <form>
+      <div>
+        Value: {{value}}
+      </div>
+      <!--
+        v-model creates a live binding to a data property.
+        You can use the `lazy` modifier to keep changes from applying to data until form is submitted.
+      -->
+      <input v-model="value" />
+    </form>
+  </div>
+  <script>
+    new Vue({
+      el: '#v-model-example',
+      data() {
+        return {
+          value: '',
+        }
+      }
+    })
+  </script>
+
+  <div id="v-if-example">
+    <form>
+      <input v-model="value" />
+      <!--
+        v-if adds element to DOM when value is truthy and removes it when falsy
+        Can also take an expression (e.g. with `===`)
+        Can also use v-show, which toggles `display: none;` instead
+        Can use with `v-else` and `v-if-else`
+      -->
+      <div v-if="value">
+        Hidden Text
+      </div>
+    </form>
+  </div>
+  <script>
+    new Vue({
+      el: '#v-if-example',
+      data() {
+        return {
+          value: '',
+        }
+      }
+    })
+  </script>
+
+  <div id="v-bind-example">
+    <!--
+      v-bind sets element attribute to a data property.
+    -->
+    <a v-bind:href="url">url</a>
+    <!--
+      `:attribute` is a shortcut for it.
+      It can contain a ternary conditional.
+      It can also contain an object for use with `style`
+    -->
+    <a
+      :href="url"
+      :class="[active ? 'link-active' : '']"
+      :style="{ fontWeight: weight }"
+    >
+      url
+    </a>
+    <!--
+    -->
+  </div>
+  <script>
+    new Vue({
+      el: '#v-bind-example',
+      data() {
+        return {
+          active: true,
+          url: 'http://example.com',
+          weight: 'bold',
+        }
+      }
+    })
+  </script>
+
+  <div id="v-on-example">
+    <div>
+      Count: {{count}}
+    </div>
+    <!--
+      v-on attaches an event listener
+      `@event` is a shortcut for it
+      It can contain simple logic
+      Supports `stop` modifier for `event.stopPropagation` and `prevent` for `event.preventDefault`
+    -->
+    <button v-on:click="count += 1">+</button>
+    <button @click="count > 0 ? count -= 1 : 0">-</button>
+  </div>
+  <script>
+    new Vue({
+      el: '#v-on-example',
+      data() {
+        return {
+          count: 0,
+        }
+      }
+    })
+  </script>
+
+  <div id="v-html-example">
+    <div v-html="html"></div>
+  </div>
+  <script>
+    new Vue({
+      el: '#v-html-example',
+      data() {
+        return {
+          html: 'Hello <strong>World</strong>',
+        }
+      }
+    })
+  </script>
+</body>
+</html>

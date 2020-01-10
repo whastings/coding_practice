@@ -31,7 +31,7 @@
      return this.data[index]
    }
 
-   pop(): T {
+   pop(): T | undefined {
      const el = this.data[this._length - 1]
      this.delete(this._length - 1)
      return el

@@ -1,3 +1,17 @@
+#
+# Hash Map
+#
+# - O(1) for lookups, deletes, and adds
+# - But doesn't preserve element order
+# - Tends to have a large memory footprint
+# - Accessing value requires hashing key
+#   - Hashing algorithm needs to be idempotent, be fast, have good distrbution to prevent collisions
+#   - With values in an array, hash % length gives you index of element in array
+# - Can use an array of buckets (array of arrays) to deal with collisions
+#   - First find bucket in O(1), then find element in bucket in O(n)
+#   - When buckets start getting too full, you can add more buckets and redistribute the elements
+#
+
 class HashMap
   LOAD_LIMIT = 0.9
   START_SIZE = 10

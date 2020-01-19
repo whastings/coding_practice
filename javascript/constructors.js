@@ -1,27 +1,32 @@
-var assert = require('assert');
+const assert = require('assert');
 
-// Enforce constructor invocation when `new` is forgotten:
-var Robot = function(name) {
+const Robot = function(name) {
+  // Enforce constructor invocation when `new` is forgotten:
   if (!(this instanceof Robot)) {
     return new Robot(name);
   }
   this.name = name;
 };
 
-var r1 = new Robot('Volts'),
-    r2 = Robot('Bolts');
+const r1 = new Robot('Volts');
+const r2 = Robot('Bolts');
 
 assert.strictEqual(r1 instanceof Robot, true);
 assert.strictEqual(r1.name, 'Volts');
+assert.strictEqual(r1.constructor, Robot)
 assert.strictEqual(r2 instanceof Robot, true);
 assert.strictEqual(r2.name, 'Bolts');
+assert.strictEqual(r2.constructor, Robot)
+
+assert.strictEqual(r1.__proto__, Robot.prototype)
+assert.strictEqual(Robot.prototype.constructor, Robot)
 
 // Return arbitrary object:
-var Robot2 = function(name) {
+const Robot2 = function(name) {
   return new Robot(name);
 };
 
-var r3 = new Robot2('Zappy');
+const r3 = new Robot2('Zappy');
 
 assert.strictEqual(r3 instanceof Robot2, false);
 assert.strictEqual(r3 instanceof Robot, true);

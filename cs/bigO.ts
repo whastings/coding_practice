@@ -4,6 +4,8 @@
  * - Only cares about the most significant terms
  *   - e.g. x^2 in 3x^2 + x + 1
  * - Cares about worst case scenario for an algorithm (e.g. no only return for a find)
+ * - Time Complexity: When applied to how time to process grows as N grows
+ * - Space Complexity: Same thing but for memory used
  */
 
 const collection = [1, 2, 3, 4, 5, 6]

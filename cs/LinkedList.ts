@@ -73,6 +73,17 @@ class LinkedList<T> {
     this._length += 1
   }
 
+  shift(): T | undefined {
+    const firstValue = this.head?.value
+
+    if (this._length) {
+      this.head = this.head?.next || null
+      this._length -= 1
+    }
+
+    return firstValue
+  }
+
   private getNode(index: number): Node<T> | null {
     if (index < 0 || index >= this._length) {
       return null

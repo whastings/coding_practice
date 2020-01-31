@@ -112,4 +112,31 @@ describe('LinkedList', () => {
       expect(list.pop()).toBeUndefined()
     })
   })
+
+  describe('shift()', () => {
+    it('removes the element from the beginning of the list', () => {
+      const list = makeNumsList()
+
+      expect(list.shift()).toEqual(2)
+      expect(list.length).toEqual(5)
+      expect(list.shift()).toEqual(4)
+      expect(list.length).toEqual(4)
+    })
+
+    it('does not error out for an empty list', () => {
+      const emptyList = new LinkedList<number>()
+
+      expect(emptyList.shift()).toBeUndefined()
+      expect(emptyList.length).toEqual(0)
+    })
+
+    it('does not error out for a list of length 1', () => {
+      const list = new LinkedList<number>()
+      list.push(2)
+
+      list.shift()
+      expect(list.get(0)).toBeUndefined()
+      expect(list.length).toBe(0)
+    })
+  })
 })

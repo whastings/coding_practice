@@ -99,6 +99,8 @@ describe('LinkedList', () => {
     it('does not error out for an empty list', () => {
       const emptyList = new LinkedList<number>()
 
+      emptyList.delete(0)
+
       expect(emptyList.get(0)).toBeUndefined()
     })
 

@@ -21,21 +21,23 @@ class LinkedList<T> {
   }
 
   delete(index: number): void {
-    const nodeToDelete = this.getNode(index)
+    const previousNode = this.getNode(index - 1)
+    const nodeToDelete = (index === 0) ? this.head : previousNode?.next
 
     if (!nodeToDelete) {
       return
     }
 
     const nextNode = nodeToDelete.next
+
+    if (previousNode) {
+      previousNode.next = nextNode
+    }
+
     if (index === 0) {
       this.head = nextNode
     }
 
-    const previousNode = this.getNode(index - 1)
-    if (previousNode) {
-      previousNode.next = nextNode
-    }
     if (index === (this._length - 1)) {
       this.tail = previousNode
     }
@@ -49,14 +51,7 @@ class LinkedList<T> {
 
   pop(): T | undefined {
     const lastValue = this.tail?.value
-
-    const newTail = this.getNode(this._length - 2)
-    if (newTail) {
-      newTail.next = null
-      this.tail = newTail
-      this._length -= 1
-    }
-
+    this.delete(this._length - 1)
     return lastValue
   }
 

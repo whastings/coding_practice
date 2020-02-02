@@ -8,7 +8,7 @@
  *   - But are O(n) at worst case (e.g. adding already sorted list)
  */
 
-interface BstNode<T> {
+export interface BstNode<T> {
   value: T,
   right: BstNode<T> | null,
   left: BstNode<T> | null,

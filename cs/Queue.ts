@@ -11,7 +11,11 @@
 import LinkedList from './LinkedList'
 
 class Queue<T> {
-  elements: LinkedList<T> = new LinkedList()
+  private elements: LinkedList<T> = new LinkedList<T>()
+
+  get length(): number {
+    return this.elements.length
+  }
 
   dequeue(): T | undefined {
     return this.elements.shift()

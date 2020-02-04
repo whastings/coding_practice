@@ -139,6 +139,9 @@ describe('LinkedList', () => {
       list.shift()
       expect(list.get(0)).toBeUndefined()
       expect(list.length).toBe(0)
+
+      list.push(3)
+      expect(list.shift()).toEqual(3)
     })
   })
 })

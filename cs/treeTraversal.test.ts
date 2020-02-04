@@ -3,6 +3,7 @@ import {
   traverseDepthFirstPreorder,
   traverseDepthFirstInOrder,
   traverseDepthFirstPostOrder,
+  traverseBreadthFirst,
 } from './treeTraversal'
 
 const makeTree = () => {
@@ -50,5 +51,18 @@ describe('traverseDepthFirstPostOrder()', () => {
     })
 
     expect(result).toEqual([2, 3, 6, 7, 5, 4, 9, 11, 10, 12, 8])
+  })
+})
+
+describe('traverseBreadthFirst', () => {
+  it('traverses the tree correctly', () => {
+    const tree = makeTree()
+    const result: number[] = []
+
+    traverseBreadthFirst(tree, (value: number) => {
+      result.push(value)
+    })
+
+    expect(result).toEqual([8, 4, 12, 3, 5, 10, 2, 7, 9, 11, 6])
   })
 })

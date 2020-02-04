@@ -3,6 +3,7 @@
  */
 
 import BinarySearchTree, { BstNode } from './BinarySearchTree'
+import Queue from './Queue'
 
 /**
  * Depth-First, Preorder
@@ -99,4 +100,36 @@ export const traverseDepthFirstPostOrder = <T>(
   }
 
   processNode(tree.root)
+}
+
+/**
+ * Breadth-first
+ *
+ * - Steps:
+ *   - Process node
+ *   - Add node's children to queue
+ *   - Repeat for each node in queue until queue is empty
+ * - Good for pathfinding
+ */
+export const traverseBreadthFirst = <T>(
+  tree: BinarySearchTree<T>,
+  operationFn: (value: T) => void,
+) => {
+  if (!tree.root) {
+    return
+  }
+
+  const queue = new Queue<BstNode<T>>()
+  queue.enqueue(tree.root)
+
+  while (queue.length > 0) {
+    const nextNode = queue.dequeue()!
+    operationFn(nextNode.value)
+    if (nextNode.left) {
+      queue.enqueue(nextNode.left)
+    }
+    if (nextNode.right) {
+      queue.enqueue(nextNode.right)
+    }
+  }
 }

@@ -75,6 +75,9 @@ class LinkedList<T> {
       this.head = this.head?.next || null
       this._length -= 1
     }
+    if (!this.head) {
+      this.tail = null
+    }
 
     return firstValue
   }

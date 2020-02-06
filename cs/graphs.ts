@@ -23,13 +23,13 @@ export const traverse = <T>(
     const nextDegreeNodes: GraphNode<T>[] = []
 
     currentDegreeNodes.forEach((nextNode) => {
-      if (visitedNodes.has(nextNode)) {
-        return
-      }
-
       operationFn(nextNode.value)
-      visitedNodes.add(nextNode)
-      nextNode.edges.forEach((node) => nextDegreeNodes.push(node))
+      nextNode.edges.forEach((node) => {
+        if (!visitedNodes.has(node)) {
+          visitedNodes.add(node)
+          nextDegreeNodes.push(node)
+        }
+      })
     })
 
     if (nextDegreeNodes.length) {

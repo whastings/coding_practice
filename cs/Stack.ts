@@ -11,8 +11,12 @@
 class Stack<T> {
   private elements: T[] = []
 
-  pop(): T | null {
-    return this.elements.pop() || null
+  get length() {
+    return this.elements.length
+  }
+
+  pop(): T | undefined {
+    return this.elements.pop()
   }
 
   push(value: T) {

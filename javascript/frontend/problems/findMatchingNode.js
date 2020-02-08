@@ -9,7 +9,7 @@ const findMatchingNode = (searchNode, domTree2) => {
     currentNode = parentNode
   }
 
-  return childrenIndexes.reverse().reduce((currentNode, currentIndex) => {
+  return childrenIndexes.reduceRight((currentNode, currentIndex) => {
     return currentNode.children[currentIndex]
   }, domTree2)
 }

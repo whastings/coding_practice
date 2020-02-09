@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Node</title>
+</head>
+<body>
+  <div id="one">
+    Foo
+
+    Bar
+    <div id="two">
+      Baz
+      <div id="three"></div><div id="four"></div><div id="five"></div>
+      Qux
+    </div></div><!-- Prevent ending text node -->
+
+  <script type="module">
+    const div1 = document.querySelector('#one')
+    const div2 = document.querySelector('#two')
+    const div3 = document.querySelector('#three')
+    const div4 = document.querySelector('#four')
+    const div5 = document.querySelector('#five')
+    const text1 = div1.firstChild
+    const textLast = div2.lastChild
+
+    console.group('nodeType')
+      console.log('div1.nodeType === Node.ELEMENT_NODE', div1.nodeType === Node.ELEMENT_NODE)
+      console.log('text1.nodeType === Node.TEXT_NODE', text1.nodeType === Node.TEXT_NODE)
+    console.groupEnd('nodeType')
+
+    console.group('parentNode')
+      console.log('div2.parentNode === div1', div2.parentNode === div1)
+    console.groupEnd('parentNode')
+
+    console.group('Children')
+      console.log('div1.firstChild === text1', div1.firstChild === text1)
+      console.log('div1.lastChild === div2', div1.lastChild === div2)
+      console.log('div1.childNodes', div1.childNodes)
+    console.groupEnd('Children')
+
+    console.group('Siblings')
+      console.log('div4.previousSibling === div3', div4.previousSibling === div3)
+      console.log('div4.nextSibling === div5', div4.nextSibling === div5)
+    console.groupEnd('Siblings')
+
+    console.group('contains()')
+      console.log('div1.contains(div2)', div1.contains(div2))
+      console.log('div1.contains(div5)', div1.contains(div5))
+    console.groupEnd('contains()')
+
+    console.group('hasChildNodes()')
+      console.log('div1.hasChildNodes()', div1.hasChildNodes())
+      console.log('div5.hasChildNodes()', div5.hasChildNodes())
+    console.groupEnd('hasChildNodes()')
+
+    console.group('appendChild()')
+      const div6 = document.createElement('div')
+      div1.appendChild(div6)
+      console.log('div1.lastChild === div6', div1.lastChild === div6)
+    console.groupEnd('appendChild()')
+
+    console.group('insertBefore()')
+      const div0 = document.createElement('div')
+      div1.insertBefore(div0, div1.firstChild)
+      console.log('div1.firstChild === div0', div1.firstChild === div0)
+    console.groupEnd('insertBefore()')
+
+    console.group('removeChild()')
+      div1.removeChild(div6)
+      console.log('div1.lastChild === div2', div1.lastChild === div2)
+    console.groupEnd('removeChild()')
+
+    console.group('replaceChild()')
+      const div7 = document.createElement('div')
+      div1.replaceChild(div7, div2)
+      console.log('div1.lastChild === div7', div1.lastChild === div7)
+    console.groupEnd('replaceChild()')
+  </script>
+</body>
+</html>

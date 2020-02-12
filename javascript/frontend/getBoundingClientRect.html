@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>getBoundingClientRect()</title>
+  <style>
+    .box1,
+    .box2 {
+      background-color: blue;
+      height: 200px;
+      width: 200px;
+    }
+
+    .box2 {
+      margin-top: 1000px;
+    }
+  </style>
+</head>
+<body>
+  <div class="box1"></div>
+  <div class="box2"></div>
+  <script type="module">
+    const box1 = document.querySelector('.box1')
+    const box2 = document.querySelector('.box2')
+
+    const getDocumentOffset = (box) => {
+      const rect = box.getBoundingClientRect()
+      return {
+        x: rect.x + window.scrollX,
+        y: rect.y + window.scrollY,
+      }
+    }
+
+    console.group('Box 1')
+      console.log('box1.getBoundingClientRect().x', box1.getBoundingClientRect().x)
+      console.log('box1.getBoundingClientRect().y', box1.getBoundingClientRect().y)
+      console.log('box1.getBoundingClientRect().height', box1.getBoundingClientRect().height)
+      console.log('box1.getBoundingClientRect().width', box1.getBoundingClientRect().width)
+      console.log('box1.getBoundingClientRect().bottom', box1.getBoundingClientRect().bottom)
+      console.log('box1.getBoundingClientRect().right', box1.getBoundingClientRect().right)
+      console.log('getDocumentOffset(box1)', getDocumentOffset(box1))
+    console.groupEnd('Box 1')
+
+    console.group('Box 2')
+      console.log('box2.getBoundingClientRect().x', box2.getBoundingClientRect().x)
+      console.log('box2.getBoundingClientRect().y', box2.getBoundingClientRect().y)
+      console.log('box2.getBoundingClientRect().height', box2.getBoundingClientRect().height)
+      console.log('box2.getBoundingClientRect().width', box2.getBoundingClientRect().width)
+      console.log('box2.getBoundingClientRect().bottom', box2.getBoundingClientRect().bottom)
+      console.log('box2.getBoundingClientRect().right', box2.getBoundingClientRect().right)
+      console.log('getDocumentOffset(box2)', getDocumentOffset(box2))
+    console.groupEnd('Box 2')
+  </script>
+</body>
+</html>

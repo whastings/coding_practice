@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NodeList</title>
+</head>
+<body>
+  <div class="foo"></div>
+  <div class="bar"></div>
+  <div class="foo"></div>
+
+  <script type="module">
+    const bodyChildren = document.body.childNodes
+    const barNodes = document.querySelectorAll('.bar')
+
+    const newElement = document.createElement('div')
+    newElement.className = 'bar'
+    document.body.appendChild(newElement)
+
+    console.group('Live NodeList')
+    console.log('bodyChildren[bodyChildren.length - 1] === newElement', bodyChildren[bodyChildren.length - 1] === newElement)
+    console.groupEnd('Live NodeList')
+
+    console.group('Static NodeList')
+    console.log('barNodes.length', barNodes.length)
+    console.groupEnd('Static NodeList')
+  </script>
+</body>
+</html>

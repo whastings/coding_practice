@@ -33,32 +33,48 @@ class MaxBinaryHeap<T> {
     const numNodes = nodes.length
     const midIndex = Math.floor(numNodes / 2)
 
-    const heapify = (index: number): void => {
-      const leftChildIndex = (2 * index) + 1
-      const rightChildIndex = (2 * index) + 2
-      const greatestChildIndex = [index, leftChildIndex, rightChildIndex]
-        .filter((index) => index < nodes.length)
-        .sort((index1, index2) => nodes[index1].value > nodes[index2].value ? 1 : -1)
-        .pop()
-
-      if (greatestChildIndex !== undefined && greatestChildIndex !== index) {
-        const currentNode = nodes[index]
-        nodes[index] = nodes[greatestChildIndex]
-        nodes[greatestChildIndex] = currentNode
-        heapify(greatestChildIndex)
-      }
-    }
-
     for (let i = midIndex; i >= 0; i--) {
-      heapify(i)
+      this.heapify(nodes, i)
     }
 
     return new MaxBinaryHeap<T>(nodes)
   }
 
+  private static heapify<T>(nodes: HeapNode<T>[], index: number, numNodes = nodes.length): void {
+    const leftChildIndex = (2 * index) + 1
+    const rightChildIndex = (2 * index) + 2
+    const greatestChildIndex = [index, leftChildIndex, rightChildIndex]
+      .filter((index) => index < numNodes)
+      .sort((index1, index2) => nodes[index1].value > nodes[index2].value ? 1 : -1)
+      .pop()
+
+    if (greatestChildIndex !== undefined && greatestChildIndex !== index) {
+      const currentNode = nodes[index]
+      nodes[index] = nodes[greatestChildIndex]
+      nodes[greatestChildIndex] = currentNode
+      this.heapify(nodes, greatestChildIndex, numNodes)
+    }
+  }
+
   private constructor(
     private nodes: HeapNode<T>[],
   ) {}
+
+  // Loop from end of nodes down to beginning
+  //   Swap first node and current end node
+  //   Call heapify on first node
+  heapSort(): T[] {
+    const nodes = this.nodes.slice()
+
+    for (let i = (nodes.length - 1); i > 0; i--) {
+      const lastNode = nodes[i]
+      nodes[i] = nodes[0]
+      nodes[0] = lastNode
+      MaxBinaryHeap.heapify(nodes, 0, i)
+    }
+
+    return nodes.map((node) => node.value)
+  }
 
   toArray(): T[] {
     return this.nodes.map((node) => node.value)

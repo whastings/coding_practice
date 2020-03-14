@@ -4,6 +4,7 @@ import { createFragmentContainer } from 'react-relay'
 import graphql from 'babel-plugin-relay/macro'
 
 import type { ReposList_viewerReposData } from './__generated__/ReposList_viewerReposData.graphql'
+import RepoListItem from './RepoListItem'
 
 type Props = {
   viewerReposData: ReposList_viewerReposData,
@@ -19,9 +20,7 @@ const ReposList = (props: Props) => {
   return (
     <ul>
       {repositories.nodes.map((repo) => (repo && (
-        <li key={repo.id}>
-          {repo.name}
-        </li>
+        <RepoListItem key={repo.id} repo={repo} />
       )))}
     </ul>
   )
@@ -35,10 +34,7 @@ export default createFragmentContainer(
         repositories(first: 10) {
           nodes {
             id
-            name
-            owner {
-              login
-            }
+            ...RepoListItem_repo
           }
           pageInfo {
             endCursor

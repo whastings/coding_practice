@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 1db93a56e5f5cfb215c9e22cdff5c3da
+ * @relayHash 57e5d34e1dffae1c71fb38e357404beb
  */
 
 /* eslint-disable */
@@ -34,16 +34,20 @@ query AppQuery {
   }
 }
 
+fragment RepoListItem_repo on Repository {
+  name
+  owner {
+    __typename
+    login
+    id
+  }
+}
+
 fragment ReposList_viewerReposData on User {
   repositories(first: 10) {
     nodes {
       id
-      name
-      owner {
-        __typename
-        login
-        id
-      }
+      ...RepoListItem_repo
     }
     pageInfo {
       endCursor
@@ -202,7 +206,7 @@ return {
     "operationKind": "query",
     "name": "AppQuery",
     "id": null,
-    "text": "query AppQuery {\n  viewer {\n    id\n    login\n    ...ReposList_viewerReposData\n  }\n}\n\nfragment ReposList_viewerReposData on User {\n  repositories(first: 10) {\n    nodes {\n      id\n      name\n      owner {\n        __typename\n        login\n        id\n      }\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n",
+    "text": "query AppQuery {\n  viewer {\n    id\n    login\n    ...ReposList_viewerReposData\n  }\n}\n\nfragment RepoListItem_repo on Repository {\n  name\n  owner {\n    __typename\n    login\n    id\n  }\n}\n\nfragment ReposList_viewerReposData on User {\n  repositories(first: 10) {\n    nodes {\n      id\n      ...RepoListItem_repo\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n",
     "metadata": {}
   }
 };

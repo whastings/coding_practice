@@ -8,6 +8,7 @@
 
 /*::
 import type { ReaderFragment } from 'relay-runtime';
+type RepoListItem_repo$ref = any;
 import type { FragmentReference } from "relay-runtime";
 declare export opaque type ReposList_viewerReposData$ref: FragmentReference;
 declare export opaque type ReposList_viewerReposData$fragmentType: ReposList_viewerReposData$ref;
@@ -15,10 +16,7 @@ export type ReposList_viewerReposData = {|
   +repositories: {|
     +nodes: ?$ReadOnlyArray<?{|
       +id: string,
-      +name: string,
-      +owner: {|
-        +login: string
-      |},
+      +$fragmentRefs: RepoListItem_repo$ref,
     |}>,
     +pageInfo: {|
       +endCursor: ?string,
@@ -75,29 +73,9 @@ const node/*: ReaderFragment*/ = {
               "storageKey": null
             },
             {
-              "kind": "ScalarField",
-              "alias": null,
-              "name": "name",
-              "args": null,
-              "storageKey": null
-            },
-            {
-              "kind": "LinkedField",
-              "alias": null,
-              "name": "owner",
-              "storageKey": null,
-              "args": null,
-              "concreteType": null,
-              "plural": false,
-              "selections": [
-                {
-                  "kind": "ScalarField",
-                  "alias": null,
-                  "name": "login",
-                  "args": null,
-                  "storageKey": null
-                }
-              ]
+              "kind": "FragmentSpread",
+              "name": "RepoListItem_repo",
+              "args": null
             }
           ]
         },
@@ -131,6 +109,6 @@ const node/*: ReaderFragment*/ = {
   ]
 };
 // prettier-ignore
-(node/*: any*/).hash = 'cc400f53a55710d74d61700ab9cd89e3';
+(node/*: any*/).hash = '5c2dd833c0c9b6575db01e182d73f180';
 
 module.exports = node;

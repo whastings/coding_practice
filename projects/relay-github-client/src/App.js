@@ -5,19 +5,21 @@ import { QueryRenderer } from 'react-relay'
 
 import relayEnvironment from './relayEnvironment'
 import './App.css';
+import ReposList from './sections/reposList/ReposList'
 
 const VIEWER_QUERY = graphql`
   query AppQuery {
     viewer {
       id
       login
+      ...ReposList_viewerReposData
     }
   }
 `
 
 function App() {
   return (
-    <div className="App">
+    <div>
       <QueryRenderer
         environment={relayEnvironment}
         query={VIEWER_QUERY}
@@ -29,7 +31,10 @@ function App() {
           }
 
           return (
-            <div>Logged in as: {props.viewer.login}</div>
+            <main>
+              <div>Logged in as: {props.viewer.login}</div>
+              <ReposList viewerReposData={props.viewer} />
+            </main>
           )
         }}
       />

@@ -12,7 +12,7 @@ const VIEWER_QUERY = graphql`
     viewer {
       id
       login
-      ...ReposList_viewerReposData
+      ...ReposList_viewerReposData @arguments(count: 10)
     }
   }
 `
@@ -23,6 +23,7 @@ function App() {
       <QueryRenderer
         environment={relayEnvironment}
         query={VIEWER_QUERY}
+        variables={{}}
         render={({ error, props }) => {
           if (!props) {
             return (

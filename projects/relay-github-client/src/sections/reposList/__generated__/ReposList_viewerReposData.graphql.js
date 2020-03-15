@@ -14,9 +14,12 @@ declare export opaque type ReposList_viewerReposData$ref: FragmentReference;
 declare export opaque type ReposList_viewerReposData$fragmentType: ReposList_viewerReposData$ref;
 export type ReposList_viewerReposData = {|
   +repositories: {|
-    +nodes: ?$ReadOnlyArray<?{|
-      +id: string,
-      +$fragmentRefs: RepoListItem_repo$ref,
+    +edges: ?$ReadOnlyArray<?{|
+      +cursor: string,
+      +node: ?{|
+        +id: string,
+        +$fragmentRefs: RepoListItem_repo$ref,
+      |},
     |}>,
     +pageInfo: {|
       +endCursor: ?string,
@@ -38,44 +41,87 @@ const node/*: ReaderFragment*/ = {
   "kind": "Fragment",
   "name": "ReposList_viewerReposData",
   "type": "User",
-  "metadata": null,
-  "argumentDefinitions": [],
+  "metadata": {
+    "connection": [
+      {
+        "count": "count",
+        "cursor": "cursor",
+        "direction": "forward",
+        "path": [
+          "repositories"
+        ]
+      }
+    ]
+  },
+  "argumentDefinitions": [
+    {
+      "kind": "LocalArgument",
+      "name": "count",
+      "type": "Int",
+      "defaultValue": 10
+    },
+    {
+      "kind": "LocalArgument",
+      "name": "cursor",
+      "type": "String",
+      "defaultValue": null
+    }
+  ],
   "selections": [
     {
       "kind": "LinkedField",
-      "alias": null,
-      "name": "repositories",
-      "storageKey": "repositories(first:10)",
-      "args": [
-        {
-          "kind": "Literal",
-          "name": "first",
-          "value": 10
-        }
-      ],
+      "alias": "repositories",
+      "name": "__ReposList_repositories_connection",
+      "storageKey": null,
+      "args": null,
       "concreteType": "RepositoryConnection",
       "plural": false,
       "selections": [
         {
           "kind": "LinkedField",
           "alias": null,
-          "name": "nodes",
+          "name": "edges",
           "storageKey": null,
           "args": null,
-          "concreteType": "Repository",
+          "concreteType": "RepositoryEdge",
           "plural": true,
           "selections": [
             {
               "kind": "ScalarField",
               "alias": null,
-              "name": "id",
+              "name": "cursor",
               "args": null,
               "storageKey": null
             },
             {
-              "kind": "FragmentSpread",
-              "name": "RepoListItem_repo",
-              "args": null
+              "kind": "LinkedField",
+              "alias": null,
+              "name": "node",
+              "storageKey": null,
+              "args": null,
+              "concreteType": "Repository",
+              "plural": false,
+              "selections": [
+                {
+                  "kind": "ScalarField",
+                  "alias": null,
+                  "name": "id",
+                  "args": null,
+                  "storageKey": null
+                },
+                {
+                  "kind": "ScalarField",
+                  "alias": null,
+                  "name": "__typename",
+                  "args": null,
+                  "storageKey": null
+                },
+                {
+                  "kind": "FragmentSpread",
+                  "name": "RepoListItem_repo",
+                  "args": null
+                }
+              ]
             }
           ]
         },
@@ -109,6 +155,6 @@ const node/*: ReaderFragment*/ = {
   ]
 };
 // prettier-ignore
-(node/*: any*/).hash = '5c2dd833c0c9b6575db01e182d73f180';
+(node/*: any*/).hash = 'bc779a63d3081359e459f63e989a8c4f';
 
 module.exports = node;

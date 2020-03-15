@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 755fe01a42ad23ac6cc7b146bcc0a171
+ * @relayHash 00e5dc64e17372003ec132ce372325ba
  */
 
 /* eslint-disable */
@@ -10,27 +10,30 @@
 /*::
 import type { ConcreteRequest } from 'relay-runtime';
 type ReposList_viewerReposData$ref = any;
-export type AppQueryVariables = {||};
-export type AppQueryResponse = {|
+export type ReposListPaginationQueryVariables = {|
+  count: number,
+  cursor?: ?string,
+|};
+export type ReposListPaginationQueryResponse = {|
   +viewer: {|
-    +id: string,
-    +login: string,
-    +$fragmentRefs: ReposList_viewerReposData$ref,
+    +$fragmentRefs: ReposList_viewerReposData$ref
   |}
 |};
-export type AppQuery = {|
-  variables: AppQueryVariables,
-  response: AppQueryResponse,
+export type ReposListPaginationQuery = {|
+  variables: ReposListPaginationQueryVariables,
+  response: ReposListPaginationQueryResponse,
 |};
 */
 
 
 /*
-query AppQuery {
+query ReposListPaginationQuery(
+  $count: Int!
+  $cursor: String
+) {
   viewer {
+    ...ReposList_viewerReposData_1G22uz
     id
-    login
-    ...ReposList_viewerReposData_1KmBw7
   }
 }
 
@@ -43,8 +46,8 @@ fragment RepoListItem_repo on Repository {
   }
 }
 
-fragment ReposList_viewerReposData_1KmBw7 on User {
-  repositories(first: 10) {
+fragment ReposList_viewerReposData_1G22uz on User {
+  repositories(first: $count, after: $cursor) {
     edges {
       cursor
       node {
@@ -62,27 +65,39 @@ fragment ReposList_viewerReposData_1KmBw7 on User {
 */
 
 const node/*: ConcreteRequest*/ = (function(){
-var v0 = {
+var v0 = [
+  {
+    "kind": "LocalArgument",
+    "name": "count",
+    "type": "Int!",
+    "defaultValue": null
+  },
+  {
+    "kind": "LocalArgument",
+    "name": "cursor",
+    "type": "String",
+    "defaultValue": null
+  }
+],
+v1 = [
+  {
+    "kind": "Variable",
+    "name": "after",
+    "variableName": "cursor"
+  },
+  {
+    "kind": "Variable",
+    "name": "first",
+    "variableName": "count"
+  }
+],
+v2 = {
   "kind": "ScalarField",
   "alias": null,
   "name": "id",
   "args": null,
   "storageKey": null
 },
-v1 = {
-  "kind": "ScalarField",
-  "alias": null,
-  "name": "login",
-  "args": null,
-  "storageKey": null
-},
-v2 = [
-  {
-    "kind": "Literal",
-    "name": "first",
-    "value": 10
-  }
-],
 v3 = {
   "kind": "ScalarField",
   "alias": null,
@@ -94,10 +109,10 @@ return {
   "kind": "Request",
   "fragment": {
     "kind": "Fragment",
-    "name": "AppQuery",
+    "name": "ReposListPaginationQuery",
     "type": "Query",
     "metadata": null,
-    "argumentDefinitions": [],
+    "argumentDefinitions": (v0/*: any*/),
     "selections": [
       {
         "kind": "LinkedField",
@@ -108,16 +123,19 @@ return {
         "concreteType": "User",
         "plural": false,
         "selections": [
-          (v0/*: any*/),
-          (v1/*: any*/),
           {
             "kind": "FragmentSpread",
             "name": "ReposList_viewerReposData",
             "args": [
               {
-                "kind": "Literal",
+                "kind": "Variable",
                 "name": "count",
-                "value": 10
+                "variableName": "count"
+              },
+              {
+                "kind": "Variable",
+                "name": "cursor",
+                "variableName": "cursor"
               }
             ]
           }
@@ -127,8 +145,8 @@ return {
   },
   "operation": {
     "kind": "Operation",
-    "name": "AppQuery",
-    "argumentDefinitions": [],
+    "name": "ReposListPaginationQuery",
+    "argumentDefinitions": (v0/*: any*/),
     "selections": [
       {
         "kind": "LinkedField",
@@ -139,14 +157,12 @@ return {
         "concreteType": "User",
         "plural": false,
         "selections": [
-          (v0/*: any*/),
-          (v1/*: any*/),
           {
             "kind": "LinkedField",
             "alias": null,
             "name": "repositories",
-            "storageKey": "repositories(first:10)",
-            "args": (v2/*: any*/),
+            "storageKey": null,
+            "args": (v1/*: any*/),
             "concreteType": "RepositoryConnection",
             "plural": false,
             "selections": [
@@ -175,7 +191,7 @@ return {
                     "concreteType": "Repository",
                     "plural": false,
                     "selections": [
-                      (v0/*: any*/),
+                      (v2/*: any*/),
                       {
                         "kind": "ScalarField",
                         "alias": null,
@@ -193,8 +209,14 @@ return {
                         "plural": false,
                         "selections": [
                           (v3/*: any*/),
-                          (v1/*: any*/),
-                          (v0/*: any*/)
+                          {
+                            "kind": "ScalarField",
+                            "alias": null,
+                            "name": "login",
+                            "args": null,
+                            "storageKey": null
+                          },
+                          (v2/*: any*/)
                         ]
                       },
                       (v3/*: any*/)
@@ -233,25 +255,26 @@ return {
             "kind": "LinkedHandle",
             "alias": null,
             "name": "repositories",
-            "args": (v2/*: any*/),
+            "args": (v1/*: any*/),
             "handle": "connection",
             "key": "ReposList_repositories",
             "filters": null
-          }
+          },
+          (v2/*: any*/)
         ]
       }
     ]
   },
   "params": {
     "operationKind": "query",
-    "name": "AppQuery",
+    "name": "ReposListPaginationQuery",
     "id": null,
-    "text": "query AppQuery {\n  viewer {\n    id\n    login\n    ...ReposList_viewerReposData_1KmBw7\n  }\n}\n\nfragment RepoListItem_repo on Repository {\n  name\n  owner {\n    __typename\n    login\n    id\n  }\n}\n\nfragment ReposList_viewerReposData_1KmBw7 on User {\n  repositories(first: 10) {\n    edges {\n      cursor\n      node {\n        id\n        ...RepoListItem_repo\n        __typename\n      }\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n",
+    "text": "query ReposListPaginationQuery(\n  $count: Int!\n  $cursor: String\n) {\n  viewer {\n    ...ReposList_viewerReposData_1G22uz\n    id\n  }\n}\n\nfragment RepoListItem_repo on Repository {\n  name\n  owner {\n    __typename\n    login\n    id\n  }\n}\n\nfragment ReposList_viewerReposData_1G22uz on User {\n  repositories(first: $count, after: $cursor) {\n    edges {\n      cursor\n      node {\n        id\n        ...RepoListItem_repo\n        __typename\n      }\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n",
     "metadata": {}
   }
 };
 })();
 // prettier-ignore
-(node/*: any*/).hash = '9a814edd97774d3e0b36d17bd19bd9d9';
+(node/*: any*/).hash = 'fa5faf7b423d367264c2d280a6f3a913';
 
 module.exports = node;

@@ -38,6 +38,7 @@
   "devDependencies": {
     "@octokit/graphql-schema": "^6.70.0",
     "babel-plugin-relay": "^9.0.0",
+    "flow-typed": "^3.0.0",
     "graphql": "^14.6.0",
     "relay-compiler": "^9.0.0",
     "relay-config": "^9.0.0"

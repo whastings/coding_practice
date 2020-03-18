@@ -39,6 +39,27 @@ class BinarySearchTree<T> {
 
     currentNode[side] = { value, left: null, right: null }
   }
+
+  contains(searchValue: T): boolean {
+    const search = (node: BstNode<T>): boolean => {
+      if (node.value === searchValue) {
+        return true
+      }
+      if (node.left && search(node.left)) {
+        return true
+      }
+      if (node.right && search(node.right)) {
+        return true
+      }
+      return false
+    }
+
+    if (!this.root) {
+      return false
+    }
+
+    return search(this.root)
+  }
 }
 
 export default BinarySearchTree

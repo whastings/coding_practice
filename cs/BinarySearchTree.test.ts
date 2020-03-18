@@ -1,14 +1,16 @@
 import BinarySearchTree from './BinarySearchTree'
 
 describe('BinarySearchTree', () => {
-  it('creates a correct tree', () => {
+  const makeTree = () => {
     const nums = [3, 7, 4, 6, 5, 1, 10, 2, 9, 8]
     const tree = new BinarySearchTree<number>()
     nums.map((num) => tree.add(num))
+    return tree
+  }
+
+  it('creates a correct tree', () => {
+    const tree = makeTree()
     const root = tree.root
-    if (!root) {
-      throw new Error()
-    }
 
     expect(root?.value).toEqual(3)
 
@@ -38,5 +40,14 @@ describe('BinarySearchTree', () => {
     expect(root?.right?.right?.left?.left?.value).toEqual(8)
     expect(root?.right?.right?.left?.left?.right).toBeNull()
     expect(root?.right?.right?.left?.left?.left).toBeNull()
+  })
+
+  describe('contains()', () => {
+    it('returns a boolean indicating whether an element is present in the tree', () => {
+      const tree = makeTree()
+
+      expect(tree.contains(9)).toBe(true)
+      expect(tree.contains(90)).toBe(false)
+    })
   })
 })

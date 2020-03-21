@@ -48,35 +48,36 @@ describe('traverse()', () => {
   })
 })
 
+const makeAdjacencyGraph = <T>(graphType: 'matrix' | 'list') => {
+  const graph = (graphType === 'matrix') ? new AdjacencyMatrixGraph<string>()
+    : new AdjacencyListGraph<string>()
+  const nodeA = new AdjacencyNode<string>('a')
+  const nodeB = new AdjacencyNode<string>('b')
+  const nodeC = new AdjacencyNode<string>('c')
+  const nodeD = new AdjacencyNode<string>('d')
+  const nodeE = new AdjacencyNode<string>('e')
+  const nodeF = new AdjacencyNode<string>('f')
+  const nodeG = new AdjacencyNode<string>('g')
+
+  const nodes = [nodeA, nodeB, nodeC, nodeD, nodeE, nodeF, nodeG]
+  nodes.forEach((node) => graph.addNode(node))
+  graph.addEdge(nodeA, nodeB)
+  graph.addEdge(nodeA, nodeC)
+  graph.addEdge(nodeB, nodeD)
+  graph.addEdge(nodeB, nodeE)
+  graph.addEdge(nodeC, nodeD)
+  graph.addEdge(nodeC, nodeF)
+  graph.addEdge(nodeE, nodeG)
+  graph.addEdge(nodeF, nodeG)
+
+  return { graph, nodeC, nodeD }
+}
+
 describe('AdjacencyMatrixGraph', () => {
-  const makeGraph = () => {
-    const graph = new AdjacencyMatrixGraph()
-    const nodeA = new AdjacencyNode<string>('a')
-    const nodeB = new AdjacencyNode<string>('b')
-    const nodeC = new AdjacencyNode<string>('c')
-    const nodeD = new AdjacencyNode<string>('d')
-    const nodeE = new AdjacencyNode<string>('e')
-    const nodeF = new AdjacencyNode<string>('f')
-    const nodeG = new AdjacencyNode<string>('g')
-
-    const nodes = [nodeA, nodeB, nodeC, nodeD, nodeE, nodeF, nodeG]
-    nodes.forEach((node) => graph.addNode(node))
-    graph.addEdge(nodeA, nodeB)
-    graph.addEdge(nodeA, nodeC)
-    graph.addEdge(nodeB, nodeD)
-    graph.addEdge(nodeB, nodeE)
-    graph.addEdge(nodeC, nodeD)
-    graph.addEdge(nodeC, nodeF)
-    graph.addEdge(nodeE, nodeG)
-    graph.addEdge(nodeF, nodeG)
-
-    return { graph, nodeC, nodeD }
-  }
-
   it('stores graph edges using a matrix', () => {
-    const { graph } = makeGraph()
+    const { graph } = makeAdjacencyGraph('matrix')
 
-    expect(graph.toArray()).toEqual([
+    expect(graph.toJS()).toEqual([
       //     a   b   c   d   e   f   g
       /*a*/ [0,  1,  1,  0,  0,  0,  0],
       /*b*/ [1,  0,  0,  1,  1,  0,  0],
@@ -90,11 +91,11 @@ describe('AdjacencyMatrixGraph', () => {
 
   describe('removeNode', () => {
     it('removes a node and its connections from the graph', () => {
-      const { graph, nodeD } = makeGraph()
+      const { graph, nodeD } = makeAdjacencyGraph('matrix')
 
       graph.removeNode(nodeD)
 
-      expect(graph.toArray()).toEqual([
+      expect(graph.toJS()).toEqual([
         //     a   b   c   e   f   g
         /*a*/ [0,  1,  1,  0,  0,  0],
         /*b*/ [1,  0,  0,  1,  0,  0],
@@ -108,11 +109,11 @@ describe('AdjacencyMatrixGraph', () => {
 
   describe('removeEdge', () => {
     it('removes an edge from between two nodes', () => {
-      const { graph, nodeC, nodeD } = makeGraph()
+      const { graph, nodeC, nodeD } = makeAdjacencyGraph('matrix')
 
       graph.removeEdge(nodeC, nodeD)
 
-      expect(graph.toArray()).toEqual([
+      expect(graph.toJS()).toEqual([
         //     a   b   c   d   e   f   g
         /*a*/ [0,  1,  1,  0,  0,  0,  0],
         /*b*/ [1,  0,  0,  1,  1,  0,  0],
@@ -122,6 +123,57 @@ describe('AdjacencyMatrixGraph', () => {
         /*f*/ [0,  0,  1,  0,  0,  0,  1],
         /*g*/ [0,  0,  0,  0,  1,  1,  0],
       ])
+    })
+  })
+})
+
+describe('AdjacencyListGraph', () => {
+  it('stores a graph using lists', () => {
+    const { graph } = makeAdjacencyGraph('list')
+
+    expect(graph.toJS()).toEqual({
+      a: ['b', 'c'],
+      b: ['a', 'd', 'e'],
+      c: ['a', 'd', 'f'],
+      d: ['b', 'c'],
+      e: ['b', 'g'],
+      f: ['c', 'g'],
+      g: ['e', 'f'],
+    })
+  })
+
+  describe('removeNode', () => {
+    it('removes a node and its connections from the graph', () => {
+      const { graph, nodeD } = makeAdjacencyGraph('list')
+
+      graph.removeNode(nodeD)
+
+      expect(graph.toJS()).toEqual({
+        a: ['b', 'c'],
+        b: ['a', 'e'],
+        c: ['a', 'f'],
+        e: ['b', 'g'],
+        f: ['c', 'g'],
+        g: ['e', 'f'],
+      })
+    })
+  })
+
+  describe('removeEdge', () => {
+    it('removes an edge from between two nodes', () => {
+      const { graph, nodeC, nodeD } = makeAdjacencyGraph('list')
+
+      graph.removeEdge(nodeC, nodeD)
+
+      expect(graph.toJS()).toEqual({
+        a: ['b', 'c'],
+        b: ['a', 'd', 'e'],
+        c: ['a', 'f'],
+        d: ['b'],
+        e: ['b', 'g'],
+        f: ['c', 'g'],
+        g: ['e', 'f'],
+      })
     })
   })
 })

@@ -69,8 +69,82 @@ export class AdjacencyMatrixGraph<T> {
     this.edgeLists[index2][index1] = 0
   }
 
-  toArray(): number[][] {
+  toJS(): number[][] {
     return this.edgeLists
+  }
+}
+
+/**
+ * Adjacency List Graph
+ *
+ * - Stores relationships with an array of connections for each vertex
+ *   1: [2]
+ *   2: [1, 3]
+ *   3: [2]
+ */
+export class AdjacencyListGraph<T> {
+  private nodesMap = new Map<
+    AdjacencyNode<T>,
+    Set<AdjacencyNode<T>>
+  >()
+
+  addNode(node: AdjacencyNode<T>): void {
+    this.nodesMap.set(node, new Set())
+  }
+
+  addEdge(node1: AdjacencyNode<T>, node2: AdjacencyNode<T>): void {
+    const node1Edges = this.nodesMap.get(node1)
+    const node2Edges = this.nodesMap.get(node2)
+
+    if (!node1Edges || !node2Edges) {
+      return
+    }
+
+    node1Edges.add(node2)
+    node2Edges.add(node1)
+  }
+
+  removeNode(node: AdjacencyNode<T>): void {
+    const nodeEdges = this.nodesMap.get(node)
+
+    if (!nodeEdges) {
+      return
+    }
+
+    nodeEdges.forEach((edgeNode) => {
+      const edgeNodeEdges = this.nodesMap.get(edgeNode)
+      if (edgeNodeEdges) {
+        edgeNodeEdges.delete(node)
+      }
+    })
+
+    this.nodesMap.delete(node)
+  }
+
+  removeEdge(node1: AdjacencyNode<T>, node2: AdjacencyNode<T>): void {
+    const node1Edges = this.nodesMap.get(node1)
+    if (node1Edges) {
+      node1Edges.delete(node2)
+    }
+
+    const node2Edges = this.nodesMap.get(node2)
+    if (node2Edges) {
+      node2Edges.delete(node1)
+    }
+  }
+
+  toJS() {
+    const nodesObj: { [node: string]: T[] } = {}
+
+    for (let [node, edges] of this.nodesMap.entries()) {
+      const edgesArray = []
+      for (let edgeNode of edges.values()) {
+        edgesArray.push(edgeNode.value)
+      }
+      nodesObj[String(node.value)] = edgesArray
+    }
+
+    return nodesObj
   }
 }
 

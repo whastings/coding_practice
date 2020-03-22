@@ -8,7 +8,7 @@
 
 /*::
 import type { ReaderFragment } from 'relay-runtime';
-type RepoListItem_repo$ref = any;
+import type { RepoListItem_repo$ref } from "./RepoListItem_repo.graphql";
 import type { FragmentReference } from "relay-runtime";
 declare export opaque type ReposList_viewerReposData$ref: FragmentReference;
 declare export opaque type ReposList_viewerReposData$fragmentType: ReposList_viewerReposData$ref;

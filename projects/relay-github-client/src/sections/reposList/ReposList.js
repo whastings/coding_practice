@@ -4,11 +4,11 @@ import { createPaginationContainer} from 'react-relay'
 import graphql from 'babel-plugin-relay/macro'
 import type { RelayPaginationProp } from 'react-relay'
 
-import type { ReposList_viewerReposData } from './__generated__/ReposList_viewerReposData.graphql'
+import type { ReposList_viewerReposData } from '__generated__/ReposList_viewerReposData.graphql'
 import RepoListItem from './RepoListItem'
 
 type Props = {
-  relay?: RelayPaginationProp,
+  relay: RelayPaginationProp,
   viewerReposData: ReposList_viewerReposData,
 }
 
@@ -16,10 +16,6 @@ const ReposList = (props: Props) => {
   const { repositories } = props.viewerReposData
 
   if (!repositories.edges) {
-    return null
-  }
-
-  if (!props.relay) {
     return null
   }
 

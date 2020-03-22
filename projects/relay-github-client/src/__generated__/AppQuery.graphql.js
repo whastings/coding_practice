@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 755fe01a42ad23ac6cc7b146bcc0a171
+ * @relayHash 2577da2ad9a97890505dfaa0e7d08aba
  */
 
 /* eslint-disable */
@@ -9,7 +9,7 @@
 
 /*::
 import type { ConcreteRequest } from 'relay-runtime';
-type ReposList_viewerReposData$ref = any;
+import type { ReposList_viewerReposData$ref } from "./ReposList_viewerReposData.graphql";
 export type AppQueryVariables = {||};
 export type AppQueryResponse = {|
   +viewer: {|

@@ -42,5 +42,10 @@
     "graphql": "^14.6.0",
     "relay-compiler": "^9.0.0",
     "relay-config": "^9.0.0"
+  },
+  "babelMacros": {
+    "relay": {
+      "artifactDirectory": "./src/__generated__"
+    }
   }
 }

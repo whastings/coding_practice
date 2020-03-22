@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 00e5dc64e17372003ec132ce372325ba
+ * @relayHash 1266107119539a8aa74f98d5a66e9db6
  */
 
 /* eslint-disable */
@@ -9,7 +9,7 @@
 
 /*::
 import type { ConcreteRequest } from 'relay-runtime';
-type ReposList_viewerReposData$ref = any;
+import type { ReposList_viewerReposData$ref } from "./ReposList_viewerReposData.graphql";
 export type ReposListPaginationQueryVariables = {|
   count: number,
   cursor?: ?string,

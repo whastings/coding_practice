@@ -3,7 +3,7 @@ import React from 'react'
 import { createFragmentContainer } from 'react-relay'
 import graphql from 'babel-plugin-relay/macro'
 
-import type { RepoListItem_repo } from './__generated__/RepoListItem_repo.graphql'
+import type { RepoListItem_repo } from '__generated__/RepoListItem_repo.graphql'
 
 type Props = {
   repo: RepoListItem_repo,

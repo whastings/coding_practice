@@ -6,6 +6,7 @@ import { QueryRenderer } from 'react-relay'
 import relayEnvironment from './relayEnvironment'
 import './App.css';
 import ReposList from './sections/reposList/ReposList'
+import type { AppQueryResponse } from './__generated__/AppQuery.graphql'
 
 const VIEWER_QUERY = graphql`
   query AppQuery {
@@ -24,17 +25,18 @@ function App() {
         environment={relayEnvironment}
         query={VIEWER_QUERY}
         variables={{}}
-        render={({ error, props }) => {
+        render={({ props }) => {
           if (!props) {
             return (
               <div>Loading...</div>
             )
           }
+          const data = (props: AppQueryResponse)
 
           return (
             <main>
-              <div>Logged in as: {props.viewer.login}</div>
-              <ReposList viewerReposData={props.viewer} />
+              <div>Logged in as: {data.viewer.login}</div>
+              <ReposList viewerReposData={data.viewer} />
             </main>
           )
         }}

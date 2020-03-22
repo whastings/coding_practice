@@ -12,6 +12,7 @@ import type {
   RepoListItemRemoveStarMutationResponse,
   RepoListItemRemoveStarMutationVariables,
 } from '__generated__/RepoListItemRemoveStarMutation.graphql'
+import RepoDetailsContainer from 'sections/repoDetails/RepoDetailsContainer'
 
 const ADD_STAR_MUTATION = graphql`
   mutation RepoListItemAddStarMutation($starrableId: ID!) {
@@ -40,6 +41,7 @@ type Props = {
 
 const RepoListItem = (props: Props) => {
   const [isMutationLoading, setIsMutationLoading] = useState(false)
+  const [isShowingDetails, setIsShowingDetails] = useState(false)
 
   const handleMutationFinished = () => setIsMutationLoading(false)
 
@@ -79,7 +81,13 @@ const RepoListItem = (props: Props) => {
         marginBottom: 10,
       }}
     >
-      {props.repo.name}
+      <button
+        type="button"
+        onClick={() => setIsShowingDetails(!isShowingDetails)}
+      >
+        {isShowingDetails ? '-' : '+'}
+      </button>
+      &nbsp;{props.repo.name}
       &nbsp;&ndash;
       Stars: {props.repo.stargazers.totalCount}
       &nbsp;&ndash;&nbsp;
@@ -90,6 +98,13 @@ const RepoListItem = (props: Props) => {
       >
         {props.repo.viewerHasStarred ? 'Unstar' : 'Star'}
       </button>
+
+      {isShowingDetails && (
+        <RepoDetailsContainer
+          name={props.repo.name}
+          owner={props.repo.owner.login}
+        />
+      )}
     </li>
   )
 }

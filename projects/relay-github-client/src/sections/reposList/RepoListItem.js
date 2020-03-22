@@ -1,5 +1,5 @@
 // @flow
-import React from 'react'
+import React, { useState } from 'react'
 import { createFragmentContainer, commitMutation, type RelayProp } from 'react-relay'
 import graphql from 'babel-plugin-relay/macro'
 
@@ -39,6 +39,10 @@ type Props = {
 }
 
 const RepoListItem = (props: Props) => {
+  const [isMutationLoading, setIsMutationLoading] = useState(false)
+
+  const handleMutationFinished = () => setIsMutationLoading(false)
+
   const addRepoStar = () => {
     const variables: RepoListItemAddStarMutationVariables = {
       starrableId: props.repo.id,
@@ -48,8 +52,10 @@ const RepoListItem = (props: Props) => {
       {
         mutation: ADD_STAR_MUTATION,
         variables: (variables: {}), // TODO: Why did we need to cast this?
+        onCompleted: handleMutationFinished,
       },
     )
+    setIsMutationLoading(true)
   }
 
   const removeRepoStar = () => {
@@ -61,8 +67,10 @@ const RepoListItem = (props: Props) => {
       {
         mutation: REMOVE_STAR_MUTATION,
         variables: (variables: {}), // TODO: Why did we need to cast this?
+        onCompleted: handleMutationFinished,
       },
     )
+    setIsMutationLoading(true)
   }
 
   return (
@@ -78,6 +86,7 @@ const RepoListItem = (props: Props) => {
       <button
         type="button"
         onClick={props.repo.viewerHasStarred ? removeRepoStar : addRepoStar}
+        disabled={isMutationLoading}
       >
         {props.repo.viewerHasStarred ? 'Unstar' : 'Star'}
       </button>

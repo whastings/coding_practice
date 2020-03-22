@@ -1,21 +1,24 @@
-// flow-typed signature: a15857a357c5747dfcd3280d841b02a7
-// flow-typed version: c6154227d1/react-relay_v1.x.x/flow_>=v0.104.x
+// flow-typed signature: 311012da78555b97190c86fa4c196bf3
+// flow-typed version: 443dcee08c/react-relay_v1.x.x/flow_>=v0.47.x
+
+// https://raw.githubusercontent.com/mrtnzlml/quick-payments/8a0fa46a490647aec676fc823c88079e8319dee5/frontend/flow-typed/npm/react-relay_v1.x.x.js
 
 import * as React from 'react';
 
-declare module "react-relay" {
-  declare export type RecordState = "EXISTENT" | "NONEXISTENT" | "UNKNOWN";
+import {FragmentReference} from 'relay-runtime';
+
+declare module 'react-relay' {
+  declare export type RecordState = 'EXISTENT' | 'NONEXISTENT' | 'UNKNOWN';
 
   declare export type onCompleted = (
     response: ?Object,
-    errors: ?Array<PayloadError>
+    errors: ?Array<PayloadError>,
   ) => void;
   declare export type onError = (error: Error) => void;
 
   declare export type CommitOptions = {
     onCompleted: onCompleted,
     onError: onError,
-    ...
   };
 
   /**
@@ -24,37 +27,33 @@ declare module "react-relay" {
    */
   declare export type ConcreteBatchCallVariable = {
     jsonPath: string,
-    kind: "BatchCallVariable",
+    kind: 'BatchCallVariable',
     sourceQueryID: string,
-    ...
   };
   declare export type ConcreteCall = {
-    kind: "Call",
-    metadata: { type?: ?string, ... },
+    kind: 'Call',
+    metadata: {
+      type?: ?string,
+    },
     name: string,
     value: ?ConcreteValue,
-    ...
   };
   declare export type ConcreteCallValue = {
     callValue: mixed,
-    kind: "CallValue",
-    ...
+    kind: 'CallValue',
   };
   declare export type ConcreteCallVariable = {
     callVariableName: string,
-    kind: "CallVariable",
-    ...
+    kind: 'CallVariable',
   };
   declare export type ConcreteDirective = {
     args: Array<ConcreteDirectiveArgument>,
-    kind: "Directive",
+    kind: 'Directive',
     name: string,
-    ...
   };
   declare export type ConcreteDirectiveArgument = {
     name: string,
     value: ?ConcreteDirectiveValue,
-    ...
   };
   declare export type ConcreteDirectiveValue =
     | ConcreteCallValue
@@ -71,42 +70,41 @@ declare module "react-relay" {
     isGenerated?: boolean,
     isPlural?: boolean,
     isRequisite?: boolean,
-    ...
   };
   declare export type ConcreteFragmentMetadata = {
     isAbstract?: boolean,
     pattern?: boolean,
     plural?: boolean,
-    ...
   };
   declare export type ConcreteMutation = {
     calls: Array<ConcreteCall>,
     children?: ?Array<?ConcreteSelection>,
     directives?: ?Array<ConcreteDirective>,
-    kind: "Mutation",
-    metadata: { inputType?: ?string, ... },
+    kind: 'Mutation',
+    metadata: {
+      inputType?: ?string,
+    },
     name: string,
     responseType: string,
-    ...
   };
-  declare export type ConcreteOperationMetadata = { inputType?: ?string, ... };
+  declare export type ConcreteOperationMetadata = {
+    inputType?: ?string,
+  };
   declare export type ConcreteQuery = {
     calls?: ?Array<ConcreteCall>,
     children?: ?Array<?ConcreteSelection>,
     directives?: ?Array<ConcreteDirective>,
     fieldName: string,
     isDeferred?: boolean,
-    kind: "Query",
+    kind: 'Query',
     metadata: {
       identifyingArgName?: ?string,
       identifyingArgType?: ?string,
       isAbstract?: ?boolean,
       isPlural?: ?boolean,
-      ...
     },
     name: string,
     type: string,
-    ...
   };
   declare export type ConcreteQueryMetadata = {
     identifyingArgName: ?string,
@@ -114,17 +112,17 @@ declare module "react-relay" {
     isAbstract: ?boolean,
     isDeferred: ?boolean,
     isPlural: ?boolean,
-    ...
   };
   declare export type ConcreteSubscription = {
     calls: Array<ConcreteCall>,
     children?: ?Array<?ConcreteSelection>,
     directives?: ?Array<ConcreteDirective>,
-    kind: "Subscription",
+    kind: 'Subscription',
     name: string,
     responseType: string,
-    metadata: { inputType?: ?string, ... },
-    ...
+    metadata: {
+      inputType?: ?string,
+    },
   };
   declare export type ConcreteValue =
     | ConcreteBatchCallVariable
@@ -136,35 +134,31 @@ declare module "react-relay" {
    * The output of a graphql-tagged fragment definition.
    */
   declare export type ConcreteFragmentDefinition = {
-    kind: "FragmentDefinition",
+    kind: 'FragmentDefinition',
     argumentDefinitions: Array<ConcreteArgumentDefinition>,
     node: ConcreteFragment,
-    ...
   };
 
   declare export type ConcreteLocalArgumentDefinition = {
-    kind: "LocalArgument",
+    kind: 'LocalArgument',
     name: string,
     defaultValue: mixed,
-    ...
   };
 
   declare export type ConcreteRootArgumentDefinition = {
-    kind: "RootArgument",
+    kind: 'RootArgument',
     name: string,
-    ...
   };
 
   /**
    * The output of a graphql-tagged operation definition.
    */
   declare export type ConcreteOperationDefinition = {
-    kind: "OperationDefinition",
+    kind: 'OperationDefinition',
     argumentDefinitions: Array<ConcreteLocalArgumentDefinition>,
     name: string,
-    operation: "mutation" | "query" | "subscription",
+    operation: 'mutation' | 'query' | 'subscription',
     node: ConcreteFragment | ConcreteMutation | ConcreteSubscription,
-    ...
   };
 
   declare export type ConcreteArgument = ConcreteLiteral | ConcreteVariable;
@@ -184,87 +178,77 @@ declare module "react-relay" {
    * are still conceptually tied to one source query.
    */
   declare export type ConcreteBatch = {
-    kind: "Batch",
+    kind: 'Batch',
     fragment: ConcreteFragment,
     id: ?string,
-    metadata: { [key: string]: mixed, ... },
+    metadata: {[key: string]: mixed},
     name: string,
     query: ConcreteRoot,
     text: ?string,
-    ...
   };
   declare export type ConcreteCondition = {
-    kind: "Condition",
+    kind: 'Condition',
     passingValue: boolean,
     condition: string,
     selections: Array<ConcreteSelection>,
-    ...
   };
   declare export type ConcreteField = ConcreteScalarField | ConcreteLinkedField;
   declare export type ConcreteFragment = {
     argumentDefinitions: Array<ConcreteArgumentDefinition>,
-    kind: "Fragment",
-    metadata: ?{ [key: string]: mixed, ... },
+    kind: 'Fragment',
+    metadata: ?{[key: string]: mixed},
     name: string,
     selections: Array<ConcreteSelection>,
     type: string,
-    ...
   };
   declare export type ConcreteFragmentSpread = {
     args: ?Array<ConcreteArgument>,
-    kind: "FragmentSpread",
+    kind: 'FragmentSpread',
     name: string,
-    ...
   };
   declare export type ConcreteHandle =
     | ConcreteScalarHandle
     | ConcreteLinkedHandle;
   declare export type ConcreteRootArgument = {
-    kind: "RootArgument",
+    kind: 'RootArgument',
     name: string,
     type: ?string,
-    ...
   };
   declare export type ConcreteInlineFragment = {
-    kind: "InlineFragment",
+    kind: 'InlineFragment',
     selections: Array<ConcreteSelection>,
     type: string,
-    ...
   };
   declare export type ConcreteLinkedField = {
     alias: ?string,
     args: ?Array<ConcreteArgument>,
     concreteType: ?string,
-    kind: "LinkedField",
+    kind: 'LinkedField',
     name: string,
     plural: boolean,
     selections: Array<ConcreteSelection>,
     storageKey: ?string,
-    ...
   };
   declare export type ConcreteLinkedHandle = {
     alias: ?string,
     args: ?Array<ConcreteArgument>,
-    kind: "LinkedHandle",
+    kind: 'LinkedHandle',
     name: string,
     handle: string,
     key: string,
     filters: ?Array<string>,
-    ...
   };
   declare export type ConcreteLiteral = {
-    kind: "Literal",
+    kind: 'Literal',
     name: string,
     type: ?string,
     value: mixed,
-    ...
   };
   declare export type ConcreteLocalArgument = {
     defaultValue: mixed,
-    kind: "LocalArgument",
+    kind: 'LocalArgument',
     name: string,
     type: string,
-    ...
   };
   declare export type ConcreteNode =
     | ConcreteCondition
@@ -274,29 +258,26 @@ declare module "react-relay" {
     | ConcreteRoot;
   declare export type ConcreteRoot = {
     argumentDefinitions: Array<ConcreteLocalArgument>,
-    kind: "Root",
+    kind: 'Root',
     name: string,
-    operation: "mutation" | "query" | "subscription",
+    operation: 'mutation' | 'query' | 'subscription',
     selections: Array<ConcreteSelection>,
-    ...
   };
   declare export type ConcreteScalarField = {
     alias: ?string,
     args: ?Array<ConcreteArgument>,
-    kind: "ScalarField",
+    kind: 'ScalarField',
     name: string,
     storageKey: ?string,
-    ...
   };
   declare export type ConcreteScalarHandle = {
     alias: ?string,
     args: ?Array<ConcreteArgument>,
-    kind: "ScalarHandle",
+    kind: 'ScalarHandle',
     name: string,
     handle: string,
     key: string,
     filters: ?Array<string>,
-    ...
   };
   declare export type ConcreteSelection =
     | ConcreteCondition
@@ -305,11 +286,10 @@ declare module "react-relay" {
     | ConcreteHandle
     | ConcreteInlineFragment;
   declare export type ConcreteVariable = {
-    kind: "Variable",
+    kind: 'Variable',
     name: string,
     type: ?string,
     variableName: string,
-    ...
   };
   declare export type ConcreteSelectableNode = ConcreteFragment | ConcreteRoot;
   declare export type GeneratedNode = ConcreteBatch | ConcreteFragment;
@@ -318,31 +298,60 @@ declare module "react-relay" {
   declare export type GraphQLTaggedNode =
     | (() => ConcreteFragment | ConcreteBatch)
     | {
-    modern: () => ConcreteFragment | ConcreteBatch,
-    classic: () => ConcreteFragmentDefinition | ConcreteOperationDefinition,
-    ...
-  };
+        modern: () => ConcreteFragment | ConcreteBatch,
+        classic: () => ConcreteFragmentDefinition | ConcreteOperationDefinition,
+      };
 
   declare export function graphql(strings: Array<string>): GraphQLTaggedNode;
 
-  declare export type GeneratedNodeMap = { [key: string]: GraphQLTaggedNode, ... };
+  declare export type GeneratedNodeMap = {[key: string]: GraphQLTaggedNode};
+
+  declare export type RelayProp = {
+    environment: Environment,
+  };
+
+  declare export type $FragmentRef<T> = {
+    +$fragmentRefs: $PropertyType<T, '$refType'>,
+  };
+
+  // prettier-ignore
+  declare export type $RelayProps<Props, RelayPropT> = $ObjMap<
+    $Diff<Props, {relay: RelayPropT | void}>,
+    & (<T: {+$refType: empty}>( T) =>  T)
+    & (<T: {+$refType: empty}>(?T) => ?T)
+    & (<TRef: FragmentReference, T: {+$refType: TRef}>(                 T ) =>                  $FragmentRef<T> )
+    & (<TRef: FragmentReference, T: {+$refType: TRef}>(?                T ) => ?                $FragmentRef<T> )
+    & (<TRef: FragmentReference, T: {+$refType: TRef}>( $ReadOnlyArray< T>) =>  $ReadOnlyArray< $FragmentRef<T>>)
+    & (<TRef: FragmentReference, T: {+$refType: TRef}>(?$ReadOnlyArray< T>) => ?$ReadOnlyArray< $FragmentRef<T>>)
+    & (<TRef: FragmentReference, T: {+$refType: TRef}>( $ReadOnlyArray<?T>) =>  $ReadOnlyArray<?$FragmentRef<T>>)
+    & (<TRef: FragmentReference, T: {+$refType: TRef}>(?$ReadOnlyArray<?T>) => ?$ReadOnlyArray<?$FragmentRef<T>>)
+    & (<T>(T) => T),
+  >
 
   declare export function createFragmentContainer<
-    TBase: React$ComponentType<*>
+    Props: {},
+    TComponent: React$ComponentType<Props>,
   >(
-    Component: TBase,
-    fragmentSpec: GraphQLTaggedNode | GeneratedNodeMap
-  ): TBase;
+    Component: TComponent,
+    fragmentSpec: GeneratedNodeMap,
+  ): React$ComponentType<
+    $RelayProps<React$ElementConfig<TComponent>, RelayProp>,
+  >;
 
-  declare export function createRefetchContainer<TBase: React$ComponentType<*>>(
-    Component: TBase,
-    fragmentSpec: GraphQLTaggedNode | GeneratedNodeMap,
-    taggedNode: GraphQLTaggedNode
-  ): TBase;
+  declare export function createRefetchContainer<
+    Props: {},
+    TComponent: React$ComponentType<Props>,
+  >(
+    Component: TComponent,
+    fragmentSpec: GeneratedNodeMap,
+    taggedNode: GraphQLTaggedNode,
+  ): React$ComponentType<
+    $RelayProps<React$ElementConfig<TComponent>, RelayRefetchProp>,
+  >;
 
   declare type FragmentVariablesGetter = (
     prevVars: Variables,
-    totalCount: number
+    totalCount: number,
   ) => Variables;
 
   declare export type PageInfo = {
@@ -350,42 +359,46 @@ declare module "react-relay" {
     hasNextPage: boolean,
     hasPreviousPage: boolean,
     startCursor: ?string,
-    ...
   };
 
   declare export type ConnectionData = {
     edges?: ?Array<any>,
     pageInfo?: ?PageInfo,
-    ...
   };
 
   declare export type ConnectionConfig = {
-    direction?: "backward" | "forward",
+    direction?: 'backward' | 'forward',
     getConnectionFromProps?: (props: Object) => ?ConnectionData,
     getFragmentVariables?: FragmentVariablesGetter,
     getVariables: (
       props: Object,
-      paginationInfo: {
-        count: number,
-        cursor: ?string,
-        ...
-      },
-      fragmentVariables: Variables
+      paginationInfo: {count: number, cursor: ?string},
+      fragmentVariables: Variables,
     ) => Variables,
     query: GraphQLTaggedNode,
-    ...
   };
 
   declare export function createPaginationContainer<
-    TBase: React$ComponentType<*>
+    Props: {},
+    TComponent: React$ComponentType<Props>,
   >(
-    Component: TBase,
-    fragmentSpec: GraphQLTaggedNode | GeneratedNodeMap,
-    connectionConfig: ConnectionConfig
-  ): TBase;
+    Component: TComponent,
+    fragmentSpec: GeneratedNodeMap,
+    connectionConfig: ConnectionConfig,
+  ): React$ComponentType<
+    $RelayProps<React$ElementConfig<TComponent>, RelayPaginationProp>,
+  >;
 
-  declare type Variable = string | null | boolean | number | Variables | void | Array<Variable>;
-  declare export type Variables = ?{ [string]: Variable, ... };
+  declare type Variable =
+    | string
+    | null
+    | boolean
+    | number
+    | Variables
+    | void
+    | Array<Variable>
+    | {};
+  declare export type Variables = ?{[string]: Variable};
   declare export type DataID = string;
 
   declare type TEnvironment = Environment;
@@ -407,7 +420,7 @@ declare module "react-relay" {
     TFragment,
     TGraphQLTaggedNode,
     TNode,
-    TOperation
+    TOperation,
   >;
 
   declare export interface IRecordSource<TRecord> {
@@ -428,7 +441,7 @@ declare module "react-relay" {
 
     load(
       dataID: DataID,
-      callback: (error: ?Error, record: ?Record) => void
+      callback: (error: ?Error, record: ?Record) => void,
     ): void;
 
     size(): number;
@@ -488,7 +501,7 @@ declare module "react-relay" {
     resolve(
       target: MutableRecordSource,
       selector: Selector,
-      callback: AsyncLoadCallback
+      callback: AsyncLoadCallback,
     ): void;
 
     /**
@@ -505,7 +518,7 @@ declare module "react-relay" {
      */
     subscribe(
       snapshot: Snapshot,
-      callback: (snapshot: Snapshot) => void
+      callback: (snapshot: Snapshot) => void,
     ): Disposable;
   }
 
@@ -527,7 +540,7 @@ declare module "react-relay" {
     getOrCreateLinkedRecord(
       name: string,
       typeName: string,
-      args?: ?Variables
+      args?: ?Variables,
     ): RecordProxy;
 
     getType(): string;
@@ -537,13 +550,13 @@ declare module "react-relay" {
     setLinkedRecord(
       record: RecordProxy,
       name: string,
-      args?: ?Variables
+      args?: ?Variables,
     ): RecordProxy;
 
     setLinkedRecords(
       records: Array<?RecordProxy>,
       name: string,
-      args?: ?Variables
+      args?: ?Variables,
     ): RecordProxy;
 
     setValue(value: mixed, name: string, args?: ?Variables): RecordProxy;
@@ -597,13 +610,13 @@ declare module "react-relay" {
     getLinkedRecordID(
       record: TRecord,
       name: string,
-      args?: ?Variables
+      args?: ?Variables,
     ): ?DataID;
 
     getLinkedRecordIDs(
       record: TRecord,
       name: string,
-      args?: ?Variables
+      args?: ?Variables,
     ): ?Array<?DataID>;
   }
 
@@ -618,7 +631,6 @@ declare module "react-relay" {
   declare export type CacheConfig = {
     force?: ?boolean,
     poll?: ?number,
-    ...
   };
 
   /**
@@ -626,22 +638,24 @@ declare module "react-relay" {
    * use-case is as a return value for subscriptions, where calling `dispose()`
    * would cancel the subscription.
    */
-  declare export type Disposable = { dispose(): void, ... };
+  declare export type Disposable = {
+    dispose(): void,
+  };
 
   /**
    * Arbitrary data e.g. received by a container as props.
    */
-  declare export type Props = { [key: string]: mixed, ... };
+  declare export type Props = {[key: string]: mixed};
 
   /*
    * An individual cached graph object.
    */
-  declare export type Record = { [key: string]: mixed, ... };
+  declare export type Record = {[key: string]: mixed};
 
   /**
    * A collection of records keyed by id.
    */
-  declare export type RecordMap<T> = { [dataID: DataID]: ?T, ... };
+  declare export type RecordMap<T> = {[dataID: DataID]: ?T};
 
   /**
    * A selector defines the starting point for a traversal into the graph for the
@@ -651,7 +665,6 @@ declare module "react-relay" {
     dataID: DataID,
     node: TNode,
     variables: Variables,
-    ...
   };
 
   /**
@@ -660,19 +673,18 @@ declare module "react-relay" {
   declare export type CSnapshot<TNode, TRecord> = CSelector<TNode> & {
     data: ?SelectorData,
     seenRecords: RecordMap<TRecord>,
-    ...
   };
 
   /**
    * The results of a selector given a store/RecordSource.
    */
-  declare export type SelectorData = { [key: string]: mixed, ... };
+  declare export type SelectorData = {[key: string]: mixed};
 
   /**
    * The results of reading the results of a FragmentMap given some input
    * `Props`.
    */
-  declare export type FragmentSpecResults = { [key: string]: mixed, ... };
+  declare export type FragmentSpecResults = {[key: string]: mixed};
 
   /**
    * A utility for resolving and subscribing to the results of a fragment spec
@@ -709,7 +721,7 @@ declare module "react-relay" {
     setVariables(variables: Variables): void;
   }
 
-  declare export type CFragmentMap<TFragment> = { [key: string]: TFragment, ... };
+  declare export type CFragmentMap<TFragment> = {[key: string]: TFragment};
 
   /**
    * An operation selector describes a specific instance of a GraphQL operation
@@ -725,7 +737,6 @@ declare module "react-relay" {
     node: TOperation,
     root: CSelector<TNode>,
     variables: Variables,
-    ...
   };
 
   /**
@@ -738,7 +749,7 @@ declare module "react-relay" {
     TGraphQLTaggedNode,
     TNode,
     TOperation,
-    TPayload
+    TPayload,
   > {
     /**
      * Read the results of a selector from in-memory records in the store.
@@ -752,7 +763,7 @@ declare module "react-relay" {
      */
     subscribe(
       snapshot: CSnapshot<TNode>,
-      callback: (snapshot: CSnapshot<TNode>) => void
+      callback: (snapshot: CSnapshot<TNode>) => void,
     ): Disposable;
 
     /**
@@ -780,7 +791,7 @@ declare module "react-relay" {
       onCompleted?: ?() => void,
       onError?: ?(error: Error) => void,
       onNext?: ?(payload: TPayload) => void,
-      operation: COperationSelector<TNode, TOperation>
+      operation: COperationSelector<TNode, TOperation>,
     |}): Disposable;
 
     /**
@@ -796,7 +807,7 @@ declare module "react-relay" {
       onCompleted?: ?() => void,
       onError?: ?(error: Error) => void,
       onNext?: ?(payload: TPayload) => void,
-      operation: COperationSelector<TNode, TOperation>
+      operation: COperationSelector<TNode, TOperation>,
     |}): Disposable;
 
     unstable_internal: CUnstableEnvironmentCore<
@@ -804,7 +815,7 @@ declare module "react-relay" {
       TFragment,
       TGraphQLTaggedNode,
       TNode,
-      TOperation
+      TOperation,
     >;
   }
 
@@ -813,7 +824,7 @@ declare module "react-relay" {
     TFragment,
     TGraphQLTaggedNode,
     TNode,
-    TOperation
+    TOperation,
   > {
     /**
      * Create an instance of a FragmentSpecResolver.
@@ -827,7 +838,7 @@ declare module "react-relay" {
       containerName: string,
       fragments: CFragmentMap<TFragment>,
       props: Props,
-      callback: () => void
+      callback: () => void,
     ) => FragmentSpecResolver;
 
     /**
@@ -838,7 +849,7 @@ declare module "react-relay" {
      */
     createOperationSelector: (
       operation: TOperation,
-      variables: Variables
+      variables: Variables,
     ) => COperationSelector<TNode, TOperation>;
 
     /**
@@ -871,12 +882,12 @@ declare module "react-relay" {
      *
      * ```
      * fragment Parent on User {
-   *   id
-   *   ...Child
-   * }
+     *   id
+     *   ...Child
+     * }
      * fragment Child on User {
-   *   name
-   * }
+     *   name
+     * }
      * ```
      *
      * And given some object `parent` that is the results of `Parent` for id "4",
@@ -891,7 +902,7 @@ declare module "react-relay" {
     getSelector: (
       operationVariables: Variables,
       fragment: TFragment,
-      prop: mixed
+      prop: mixed,
     ) => ?CSelector<TNode>;
 
     /**
@@ -903,7 +914,7 @@ declare module "react-relay" {
     getSelectorList: (
       operationVariables: Variables,
       fragment: TFragment,
-      props: Array<mixed>
+      props: Array<mixed>,
     ) => ?Array<CSelector<TNode>>;
 
     /**
@@ -917,8 +928,8 @@ declare module "react-relay" {
     getSelectorsFromObject: (
       operationVariables: Variables,
       fragments: CFragmentMap<TFragment>,
-      props: Props
-    ) => { [key: string]: ?(CSelector<TNode> | Array<CSelector<TNode>>), ... };
+      props: Props,
+    ) => {[key: string]: ?(CSelector<TNode> | Array<CSelector<TNode>>)};
 
     /**
      * Given a mapping of keys -> results and a mapping of keys -> fragments,
@@ -929,8 +940,8 @@ declare module "react-relay" {
      */
     getDataIDsFromObject: (
       fragments: CFragmentMap<TFragment>,
-      props: Props
-    ) => { [key: string]: ?(DataID | Array<DataID>), ... };
+      props: Props,
+    ) => {[key: string]: ?(DataID | Array<DataID>)};
 
     /**
      * Given a mapping of keys -> results and a mapping of keys -> fragments,
@@ -943,7 +954,7 @@ declare module "react-relay" {
     getVariablesFromObject: (
       operationVariables: Variables,
       fragments: CFragmentMap<TFragment>,
-      props: Props
+      props: Props,
     ) => Variables;
   }
 
@@ -954,7 +965,6 @@ declare module "react-relay" {
   declare export type CRelayContext<TEnvironment> = {
     environment: TEnvironment,
     variables: Variables,
-    ...
   };
 
   /**
@@ -968,7 +978,7 @@ declare module "react-relay" {
       TGraphQLTaggedNode,
       TNode,
       TOperation,
-      TPayload
+      TPayload,
     > {
     /**
      * Applies an optimistic mutation to the store without committing it to the
@@ -979,7 +989,7 @@ declare module "react-relay" {
       configs: Array<RelayMutationConfig>,
       operation: ConcreteOperationDefinition,
       optimisticResponse: Object,
-      variables: Variables
+      variables: Variables,
     |}): Disposable;
 
     /**
@@ -995,7 +1005,7 @@ declare module "react-relay" {
       optimisticOperation?: ?ConcreteOperationDefinition,
       optimisticResponse?: ?Object,
       variables: Variables,
-      uploadables?: UploadableMap
+      uploadables?: UploadableMap,
     |}): Disposable;
   }
 
@@ -1003,7 +1013,6 @@ declare module "react-relay" {
     onCompleted?: ?() => void,
     onError?: ?(error: Error) => void,
     onNext?: ?(data: T) => void,
-    ...
   };
 
   /**
@@ -1012,8 +1021,7 @@ declare module "react-relay" {
    */
   declare export type FragmentPointer = {
     __id: DataID,
-    __fragments: { [fragmentName: string]: Variables, ... },
-    ...
+    __fragments: {[fragmentName: string]: Variables},
   };
 
   /**
@@ -1021,21 +1029,25 @@ declare module "react-relay" {
    */
   declare export type AsyncLoadCallback = (loadingState: LoadingState) => void;
   declare export type LoadingState = $Exact<{
-    status: "aborted" | "complete" | "error" | "missing",
+    status: 'aborted' | 'complete' | 'error' | 'missing',
     error?: Error,
-    ...
   }>;
 
   /**
    * A map of records affected by an update operation.
    */
-  declare export type UpdatedRecords = { [dataID: DataID]: boolean, ... };
+  declare export type UpdatedRecords = {[dataID: DataID]: boolean};
 
   /**
    * A function that updates a store (via a proxy) given the results of a "handle"
    * field payload.
    */
-  declare export type Handler = { update: (store: RecordSourceProxy, fieldPayload: HandleFieldPayload) => void, ... };
+  declare export type Handler = {
+    update: (
+      store: RecordSourceProxy,
+      fieldPayload: HandleFieldPayload,
+    ) => void,
+  };
 
   /**
    * A payload that is used to initialize or update a "handle" field with
@@ -1053,7 +1065,6 @@ declare module "react-relay" {
     // The (storage) key at which the handle's data should be written by the
     // handler.
     handleKey: string,
-    ...
   }>;
 
   /**
@@ -1067,29 +1078,38 @@ declare module "react-relay" {
    * order to easily access the root fields of a query/mutation.
    */
   declare export type SelectorStoreUpdater = (
-    store: RecordSourceSelectorProxy
+    store: RecordSourceSelectorProxy,
   ) => void;
 
   declare export type CallValue = ?(
-    | (boolean | number | string | { [key: string]: CallValue, ... } | Array<CallValue>));
+    | boolean
+    | number
+    | string
+    | {[key: string]: CallValue}
+    | Array<CallValue>
+  );
 
-  declare export type RangeBehaviorsFunction = (connectionArgs: { [argName: string]: CallValue, ... }) =>
-    | "APPEND"
-    | "IGNORE"
-    | "PREPEND"
-    | "REFETCH"
-    | "REMOVE"
-    | "NODE_DELETE_HANDLER"
-    | "RANGE_ADD_HANDLER"
-    | "RANGE_DELETE_HANDLER"
-    | "HANDLER_TYPES"
-    | "OPTIMISTIC_UPDATE"
-    | "SERVER_UPDATE"
-    | "POLLER_UPDATE"
-    | "UPDATE_TYPES"
-    | "RANGE_OPERATIONS";
+  declare export type RangeBehaviorsFunction = (connectionArgs: {
+    [argName: string]: CallValue,
+  }) =>
+    | 'APPEND'
+    | 'IGNORE'
+    | 'PREPEND'
+    | 'REFETCH'
+    | 'REMOVE'
+    | 'NODE_DELETE_HANDLER'
+    | 'RANGE_ADD_HANDLER'
+    | 'RANGE_DELETE_HANDLER'
+    | 'HANDLER_TYPES'
+    | 'OPTIMISTIC_UPDATE'
+    | 'SERVER_UPDATE'
+    | 'POLLER_UPDATE'
+    | 'UPDATE_TYPES'
+    | 'RANGE_OPERATIONS';
 
-  declare export type RangeBehaviorsObject = { [key: string]: "APPEND" | "IGNORE" | "PREPEND" | "REFETCH" | "REMOVE", ... };
+  declare export type RangeBehaviorsObject = {
+    [key: string]: 'APPEND' | 'IGNORE' | 'PREPEND' | 'REFETCH' | 'REMOVE',
+  };
 
   declare export type RangeBehaviors =
     | RangeBehaviorsFunction
@@ -1099,52 +1119,45 @@ declare module "react-relay" {
 
   declare export type RelayMutationConfig =
     | {
-    type: "FIELDS_CHANGE",
-    fieldIDs: { [fieldName: string]: DataID | Array<DataID>, ... },
-    ...
-  }
+        type: 'FIELDS_CHANGE',
+        fieldIDs: {[fieldName: string]: DataID | Array<DataID>},
+      }
     | {
-    type: "RANGE_ADD",
-    parentName?: string,
-    parentID?: string,
-    connectionInfo?: Array<{
-      key: string,
-      filters?: Variables,
-      rangeBehavior: string,
-      ...
-    }>,
-    connectionName?: string,
-    edgeName: string,
-    rangeBehaviors?: RangeBehaviors,
-    ...
-  }
+        type: 'RANGE_ADD',
+        parentName?: string,
+        parentID?: string,
+        connectionInfo?: Array<{
+          key: string,
+          filters?: Variables,
+          rangeBehavior: string,
+        }>,
+        connectionName?: string,
+        edgeName: string,
+        rangeBehaviors?: RangeBehaviors,
+      }
     | {
-    type: "NODE_DELETE",
-    parentName?: string,
-    parentID?: string,
-    connectionName?: string,
-    deletedIDFieldName: string,
-    ...
-  }
+        type: 'NODE_DELETE',
+        parentName?: string,
+        parentID?: string,
+        connectionName?: string,
+        deletedIDFieldName: string,
+      }
     | {
-    type: "RANGE_DELETE",
-    parentName?: string,
-    parentID?: string,
-    connectionKeys?: Array<{
-      key: string,
-      filters?: Variables,
-      ...
-    }>,
-    connectionName?: string,
-    deletedIDFieldName: string | Array<string>,
-    pathToConnection: Array<string>,
-    ...
-  }
+        type: 'RANGE_DELETE',
+        parentName?: string,
+        parentID?: string,
+        connectionKeys?: Array<{
+          key: string,
+          filters?: Variables,
+        }>,
+        connectionName?: string,
+        deletedIDFieldName: string | Array<string>,
+        pathToConnection: Array<string>,
+      }
     | {
-    type: "REQUIRED_CHILDREN",
-    children: Array<RelayConcreteNode>,
-    ...
-  };
+        type: 'REQUIRED_CHILDREN',
+        children: Array<RelayConcreteNode>,
+      };
 
   declare export type MutationConfig<T> = {|
     configs?: Array<RelayMutationConfig>,
@@ -1155,20 +1168,19 @@ declare module "react-relay" {
     onError?: ?(error: Error) => void,
     optimisticUpdater?: ?SelectorStoreUpdater,
     optimisticResponse?: Object,
-    updater?: ?SelectorStoreUpdater
+    updater?: ?SelectorStoreUpdater,
   |};
 
   // a.k.a commitRelayModernMutation
   declare export function commitMutation<T>(
     environment: Environment,
-    config: MutationConfig<T>
+    config: MutationConfig<T>,
   ): Disposable;
 
   declare export type ReadyState = {
     error: ?Error,
     props: ?Object,
     retry: ?() => void,
-    ...
   };
 
   /**
@@ -1190,68 +1202,60 @@ declare module "react-relay" {
     // stub
   }
 
-  declare export type RelayQuerySet = { [queryName: string]: ?RelayQueryRoot, ... };
+  declare export type RelayQuerySet = {[queryName: string]: ?RelayQueryRoot};
   declare export type ReadyStateChangeCallback = (
-    readyState: ReadyState
+    readyState: ReadyState,
   ) => void;
-  declare export type Abortable = { abort(): void, ... };
+  declare export type Abortable = {
+    abort(): void,
+  };
   declare export type StoreReaderData = Object;
   declare export type StoreReaderOptions = {
     traverseFragmentReferences?: boolean,
     traverseGeneratedFields?: boolean,
-    ...
   };
   declare export type FragmentResolver = {
     dispose(): void,
     resolve(
       fragment: RelayQueryFragment,
-      dataIDs: DataID | Array<DataID>
+      dataIDs: DataID | Array<DataID>,
     ): ?(StoreReaderData | Array<?StoreReaderData>),
-    ...
   };
 
   declare export interface RelayEnvironmentInterface {
     forceFetch(
       querySet: RelayQuerySet,
-      onReadyStateChange: ReadyStateChangeCallback
+      onReadyStateChange: ReadyStateChangeCallback,
     ): Abortable;
     getFragmentResolver(
       fragment: RelayQueryFragment,
-      onNext: () => void
+      onNext: () => void,
     ): FragmentResolver;
     getStoreData(): RelayStoreData;
     primeCache(
       querySet: RelayQuerySet,
-      onReadyStateChange: ReadyStateChangeCallback
+      onReadyStateChange: ReadyStateChangeCallback,
     ): Abortable;
     read(
       node: RelayQueryNode,
       dataID: DataID,
-      options?: StoreReaderOptions
+      options?: StoreReaderOptions,
     ): ?StoreReaderData;
     readQuery(
       root: RelayQueryRoot,
-      options?: StoreReaderOptions
+      options?: StoreReaderOptions,
     ): Array<?StoreReaderData>;
   }
 
   declare export type ClassicEnvironment = RelayEnvironmentInterface;
 
-  declare export type QueryRendererPropType = {
+  declare export class QueryRenderer extends React$Component<{
     cacheConfig?: ?CacheConfig,
-    dataFrom?: $Keys<{
-      NETWORK_ONLY: 'NETWORK_ONLY',
-      STORE_THEN_NETWORK: 'STORE_THEN_NETWORK',
-      ...
-    }>,
     environment: Environment | ClassicEnvironment,
     query: ?GraphQLTaggedNode,
     render: (readyState: ReadyState) => ?React$Element<*>,
     variables: Variables,
-    ...
-  };
-
-  declare export class QueryRenderer extends React$Component<QueryRendererPropType> {}
+  }> {}
 
   // https://github.com/facebook/relay/blob/master/packages/relay-runtime/network/RelayNetworkTypes.js
   /**
@@ -1272,16 +1276,14 @@ declare module "react-relay" {
     requestStream: RequestStreamFunction;
   }
 
-  declare export type PayloadData = { [key: string]: mixed, ... };
+  declare export type PayloadData = {[key: string]: mixed};
 
   declare export type PayloadError = {
     message: string,
     locations?: Array<{
       line: number,
       column: number,
-      ...
     }>,
-    ...
   };
 
   /**
@@ -1291,7 +1293,7 @@ declare module "react-relay" {
   declare export type QueryPayload = {|
     data?: ?PayloadData,
     errors?: Array<PayloadError>,
-    rerunVariables?: Variables
+    rerunVariables?: Variables,
   |};
 
   /**
@@ -1301,7 +1303,7 @@ declare module "react-relay" {
   declare export type RelayResponsePayload = {|
     fieldPayloads?: ?Array<HandleFieldPayload>,
     source: MutableRecordSource,
-    errors: ?Array<PayloadError>
+    errors: ?Array<PayloadError>,
   |};
 
   declare export type PromiseOrValue<T> = Promise<T> | T | Error;
@@ -1314,7 +1316,7 @@ declare module "react-relay" {
     operation: ConcreteBatch,
     variables: Variables,
     cacheConfig: ?CacheConfig,
-    uploadables?: UploadableMap
+    uploadables?: UploadableMap,
   ) => PromiseOrValue<QueryPayload>;
 
   /**
@@ -1325,7 +1327,7 @@ declare module "react-relay" {
     operation: ConcreteBatch,
     variables: Variables,
     cacheConfig: ?CacheConfig,
-    observer: Observer<QueryPayload>
+    observer: Observer<QueryPayload>,
   ) => Disposable;
 
   /**
@@ -1338,7 +1340,7 @@ declare module "react-relay" {
     operation: ConcreteBatch,
     variables: Variables,
     cacheConfig: ?CacheConfig,
-    observer: Observer<RelayResponsePayload>
+    observer: Observer<RelayResponsePayload>,
   ) => Disposable;
 
   /**
@@ -1349,58 +1351,57 @@ declare module "react-relay" {
     operation: ConcreteBatch,
     variables: Variables,
     cacheConfig?: ?CacheConfig,
-    uploadables?: UploadableMap
+    uploadables?: UploadableMap,
   ) => PromiseOrValue<RelayResponsePayload>;
 
   declare export type Uploadable = File | Blob;
-  declare export type UploadableMap = { [key: string]: Uploadable, ... };
+  declare export type UploadableMap = {[key: string]: Uploadable};
 
   declare export type RerunParam = {
     param: string,
     import: string,
     max_runs: number,
-    ...
   };
 
-  declare export type RelayProp = { environment: Environment, ... };
-
-  declare export type RelayPaginationProp = RelayProp & {
+  declare export type RelayPaginationProp = {
+    ...RelayProp,
     hasMore: () => boolean,
     isLoading: () => boolean,
     loadMore: (
       pageSize: number,
-      callback: (error: ?Error) => void,
-      options?: RefetchOptions
+      callback: ?(error: ?Error) => void,
+      options?: RefetchOptions,
     ) => ?Disposable,
     refetchConnection: (
       totalCount: number,
       callback: (error: ?Error) => void,
-      refetchVariables: ?Variables
+      refetchVariables: ?Variables,
     ) => ?Disposable,
-    ...
   };
 
-  declare export type RelayRefetchProp = RelayProp & { refetch: (
-    refetchVariables:
-      | Variables
-      | ((fragmentVariables: Variables) => Variables),
-    renderVariables: ?Variables,
-    callback: ?(error: ?Error) => void,
-    options?: RefetchOptions
-  ) => Disposable, ... };
+  declare export type RelayRefetchProp = {
+    ...RelayProp,
+    refetch: (
+      refetchVariables:
+        | Variables
+        | ((fragmentVariables: Variables) => Variables),
+      renderVariables: ?Variables,
+      callback: ?(error: ?Error) => void,
+      options?: RefetchOptions,
+    ) => Disposable,
+  };
 
   declare export type RefetchOptions = {
     force?: boolean,
     rerunParamExperimental?: RerunParam,
-    ...
   };
 }
 
-declare module "react-relay/compat" {
+declare module 'react-relay/compat' {
   declare module.exports: any;
 }
 
-declare module "react-relay/classic" {
+declare module 'react-relay/classic' {
   declare module.exports: any;
 }
 
@@ -2093,5 +2094,15 @@ declare module 'react-relay/lib/writeRelayQueryPayload' {
 }
 
 declare module 'react-relay/lib/writeRelayUpdatePayload' {
+  declare module.exports: any;
+}
+
+// Manually added:
+
+declare module 'relay-runtime/lib/RelayNetworkLogger' {
+  declare module.exports: any;
+}
+
+declare module 'relay-runtime/lib/RelayQueryResponseCache' {
   declare module.exports: any;
 }

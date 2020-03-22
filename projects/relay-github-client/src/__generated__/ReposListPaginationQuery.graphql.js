@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 1266107119539a8aa74f98d5a66e9db6
+ * @relayHash a87c0e94feb4732b42c7f37e8b88aa6c
  */
 
 /* eslint-disable */
@@ -38,11 +38,16 @@ query ReposListPaginationQuery(
 }
 
 fragment RepoListItem_repo on Repository {
+  id
   name
   owner {
     __typename
     login
     id
+  }
+  viewerHasStarred
+  stargazers {
+    totalCount
   }
 }
 
@@ -219,6 +224,31 @@ return {
                           (v2/*: any*/)
                         ]
                       },
+                      {
+                        "kind": "ScalarField",
+                        "alias": null,
+                        "name": "viewerHasStarred",
+                        "args": null,
+                        "storageKey": null
+                      },
+                      {
+                        "kind": "LinkedField",
+                        "alias": null,
+                        "name": "stargazers",
+                        "storageKey": null,
+                        "args": null,
+                        "concreteType": "StargazerConnection",
+                        "plural": false,
+                        "selections": [
+                          {
+                            "kind": "ScalarField",
+                            "alias": null,
+                            "name": "totalCount",
+                            "args": null,
+                            "storageKey": null
+                          }
+                        ]
+                      },
                       (v3/*: any*/)
                     ]
                   }
@@ -269,7 +299,7 @@ return {
     "operationKind": "query",
     "name": "ReposListPaginationQuery",
     "id": null,
-    "text": "query ReposListPaginationQuery(\n  $count: Int!\n  $cursor: String\n) {\n  viewer {\n    ...ReposList_viewerReposData_1G22uz\n    id\n  }\n}\n\nfragment RepoListItem_repo on Repository {\n  name\n  owner {\n    __typename\n    login\n    id\n  }\n}\n\nfragment ReposList_viewerReposData_1G22uz on User {\n  repositories(first: $count, after: $cursor) {\n    edges {\n      cursor\n      node {\n        id\n        ...RepoListItem_repo\n        __typename\n      }\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n",
+    "text": "query ReposListPaginationQuery(\n  $count: Int!\n  $cursor: String\n) {\n  viewer {\n    ...ReposList_viewerReposData_1G22uz\n    id\n  }\n}\n\nfragment RepoListItem_repo on Repository {\n  id\n  name\n  owner {\n    __typename\n    login\n    id\n  }\n  viewerHasStarred\n  stargazers {\n    totalCount\n  }\n}\n\nfragment ReposList_viewerReposData_1G22uz on User {\n  repositories(first: $count, after: $cursor) {\n    edges {\n      cursor\n      node {\n        id\n        ...RepoListItem_repo\n        __typename\n      }\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n",
     "metadata": {}
   }
 };

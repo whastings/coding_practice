@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 2577da2ad9a97890505dfaa0e7d08aba
+ * @relayHash d55af4c54b3ed95d4c2df58445b4ec65
  */
 
 /* eslint-disable */
@@ -35,11 +35,16 @@ query AppQuery {
 }
 
 fragment RepoListItem_repo on Repository {
+  id
   name
   owner {
     __typename
     login
     id
+  }
+  viewerHasStarred
+  stargazers {
+    totalCount
   }
 }
 
@@ -197,6 +202,31 @@ return {
                           (v0/*: any*/)
                         ]
                       },
+                      {
+                        "kind": "ScalarField",
+                        "alias": null,
+                        "name": "viewerHasStarred",
+                        "args": null,
+                        "storageKey": null
+                      },
+                      {
+                        "kind": "LinkedField",
+                        "alias": null,
+                        "name": "stargazers",
+                        "storageKey": null,
+                        "args": null,
+                        "concreteType": "StargazerConnection",
+                        "plural": false,
+                        "selections": [
+                          {
+                            "kind": "ScalarField",
+                            "alias": null,
+                            "name": "totalCount",
+                            "args": null,
+                            "storageKey": null
+                          }
+                        ]
+                      },
                       (v3/*: any*/)
                     ]
                   }
@@ -246,7 +276,7 @@ return {
     "operationKind": "query",
     "name": "AppQuery",
     "id": null,
-    "text": "query AppQuery {\n  viewer {\n    id\n    login\n    ...ReposList_viewerReposData_1KmBw7\n  }\n}\n\nfragment RepoListItem_repo on Repository {\n  name\n  owner {\n    __typename\n    login\n    id\n  }\n}\n\nfragment ReposList_viewerReposData_1KmBw7 on User {\n  repositories(first: 10) {\n    edges {\n      cursor\n      node {\n        id\n        ...RepoListItem_repo\n        __typename\n      }\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n",
+    "text": "query AppQuery {\n  viewer {\n    id\n    login\n    ...ReposList_viewerReposData_1KmBw7\n  }\n}\n\nfragment RepoListItem_repo on Repository {\n  id\n  name\n  owner {\n    __typename\n    login\n    id\n  }\n  viewerHasStarred\n  stargazers {\n    totalCount\n  }\n}\n\nfragment ReposList_viewerReposData_1KmBw7 on User {\n  repositories(first: 10) {\n    edges {\n      cursor\n      node {\n        id\n        ...RepoListItem_repo\n        __typename\n      }\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n",
     "metadata": {}
   }
 };

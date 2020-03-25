@@ -14,6 +14,14 @@ declare export opaque type RepoDetails_repo$fragmentType: RepoDetails_repo$ref;
 export type RepoDetails_repo = {|
   +id: string,
   +name: string,
+  +issues: {|
+    +edges: ?$ReadOnlyArray<?{|
+      +node: ?{|
+        +id: string,
+        +title: string,
+      |}
+    |}>
+  |},
   +$refType: RepoDetails_repo$ref,
 |};
 export type RepoDetails_repo$data = RepoDetails_repo;
@@ -25,30 +33,124 @@ export type RepoDetails_repo$key = {
 */
 
 
-const node/*: ReaderFragment*/ = {
+const node/*: ReaderFragment*/ = (function(){
+var v0 = {
+  "kind": "ScalarField",
+  "alias": null,
+  "name": "id",
+  "args": null,
+  "storageKey": null
+};
+return {
   "kind": "Fragment",
   "name": "RepoDetails_repo",
   "type": "Repository",
-  "metadata": null,
+  "metadata": {
+    "connection": [
+      {
+        "count": null,
+        "cursor": null,
+        "direction": "backward",
+        "path": [
+          "issues"
+        ]
+      }
+    ]
+  },
   "argumentDefinitions": [],
   "selections": [
-    {
-      "kind": "ScalarField",
-      "alias": null,
-      "name": "id",
-      "args": null,
-      "storageKey": null
-    },
+    (v0/*: any*/),
     {
       "kind": "ScalarField",
       "alias": null,
       "name": "name",
       "args": null,
       "storageKey": null
+    },
+    {
+      "kind": "LinkedField",
+      "alias": "issues",
+      "name": "__RepoDetails_issues_connection",
+      "storageKey": null,
+      "args": null,
+      "concreteType": "IssueConnection",
+      "plural": false,
+      "selections": [
+        {
+          "kind": "LinkedField",
+          "alias": null,
+          "name": "edges",
+          "storageKey": null,
+          "args": null,
+          "concreteType": "IssueEdge",
+          "plural": true,
+          "selections": [
+            {
+              "kind": "LinkedField",
+              "alias": null,
+              "name": "node",
+              "storageKey": null,
+              "args": null,
+              "concreteType": "Issue",
+              "plural": false,
+              "selections": [
+                (v0/*: any*/),
+                {
+                  "kind": "ScalarField",
+                  "alias": null,
+                  "name": "title",
+                  "args": null,
+                  "storageKey": null
+                },
+                {
+                  "kind": "ScalarField",
+                  "alias": null,
+                  "name": "__typename",
+                  "args": null,
+                  "storageKey": null
+                }
+              ]
+            },
+            {
+              "kind": "ScalarField",
+              "alias": null,
+              "name": "cursor",
+              "args": null,
+              "storageKey": null
+            }
+          ]
+        },
+        {
+          "kind": "LinkedField",
+          "alias": null,
+          "name": "pageInfo",
+          "storageKey": null,
+          "args": null,
+          "concreteType": "PageInfo",
+          "plural": false,
+          "selections": [
+            {
+              "kind": "ScalarField",
+              "alias": null,
+              "name": "hasPreviousPage",
+              "args": null,
+              "storageKey": null
+            },
+            {
+              "kind": "ScalarField",
+              "alias": null,
+              "name": "startCursor",
+              "args": null,
+              "storageKey": null
+            }
+          ]
+        }
+      ]
     }
   ]
 };
+})();
 // prettier-ignore
-(node/*: any*/).hash = '1bc076b859e3561997a5110b3cc32351';
+(node/*: any*/).hash = '698e29901792202685b79b3b0ad17b2e';
 
 module.exports = node;

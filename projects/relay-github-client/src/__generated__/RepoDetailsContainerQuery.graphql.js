@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash e0a15a1cfb6b78e08f4d069f9faab42c
+ * @relayHash 59af85a6433ef319984987f8bcb9d818
  */
 
 /* eslint-disable */
@@ -40,6 +40,20 @@ query RepoDetailsContainerQuery(
 fragment RepoDetails_repo on Repository {
   id
   name
+  issues(last: 10) {
+    edges {
+      node {
+        id
+        title
+        __typename
+      }
+      cursor
+    }
+    pageInfo {
+      hasPreviousPage
+      startCursor
+    }
+  }
 }
 */
 
@@ -68,6 +82,20 @@ v1 = [
     "kind": "Variable",
     "name": "owner",
     "variableName": "owner"
+  }
+],
+v2 = {
+  "kind": "ScalarField",
+  "alias": null,
+  "name": "id",
+  "args": null,
+  "storageKey": null
+},
+v3 = [
+  {
+    "kind": "Literal",
+    "name": "last",
+    "value": 10
   }
 ];
 return {
@@ -111,19 +139,102 @@ return {
         "concreteType": "Repository",
         "plural": false,
         "selections": [
-          {
-            "kind": "ScalarField",
-            "alias": null,
-            "name": "id",
-            "args": null,
-            "storageKey": null
-          },
+          (v2/*: any*/),
           {
             "kind": "ScalarField",
             "alias": null,
             "name": "name",
             "args": null,
             "storageKey": null
+          },
+          {
+            "kind": "LinkedField",
+            "alias": null,
+            "name": "issues",
+            "storageKey": "issues(last:10)",
+            "args": (v3/*: any*/),
+            "concreteType": "IssueConnection",
+            "plural": false,
+            "selections": [
+              {
+                "kind": "LinkedField",
+                "alias": null,
+                "name": "edges",
+                "storageKey": null,
+                "args": null,
+                "concreteType": "IssueEdge",
+                "plural": true,
+                "selections": [
+                  {
+                    "kind": "LinkedField",
+                    "alias": null,
+                    "name": "node",
+                    "storageKey": null,
+                    "args": null,
+                    "concreteType": "Issue",
+                    "plural": false,
+                    "selections": [
+                      (v2/*: any*/),
+                      {
+                        "kind": "ScalarField",
+                        "alias": null,
+                        "name": "title",
+                        "args": null,
+                        "storageKey": null
+                      },
+                      {
+                        "kind": "ScalarField",
+                        "alias": null,
+                        "name": "__typename",
+                        "args": null,
+                        "storageKey": null
+                      }
+                    ]
+                  },
+                  {
+                    "kind": "ScalarField",
+                    "alias": null,
+                    "name": "cursor",
+                    "args": null,
+                    "storageKey": null
+                  }
+                ]
+              },
+              {
+                "kind": "LinkedField",
+                "alias": null,
+                "name": "pageInfo",
+                "storageKey": null,
+                "args": null,
+                "concreteType": "PageInfo",
+                "plural": false,
+                "selections": [
+                  {
+                    "kind": "ScalarField",
+                    "alias": null,
+                    "name": "hasPreviousPage",
+                    "args": null,
+                    "storageKey": null
+                  },
+                  {
+                    "kind": "ScalarField",
+                    "alias": null,
+                    "name": "startCursor",
+                    "args": null,
+                    "storageKey": null
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "kind": "LinkedHandle",
+            "alias": null,
+            "name": "issues",
+            "args": (v3/*: any*/),
+            "handle": "connection",
+            "key": "RepoDetails_issues",
+            "filters": null
           }
         ]
       }
@@ -133,7 +244,7 @@ return {
     "operationKind": "query",
     "name": "RepoDetailsContainerQuery",
     "id": null,
-    "text": "query RepoDetailsContainerQuery(\n  $name: String!\n  $owner: String!\n) {\n  repository(name: $name, owner: $owner) {\n    ...RepoDetails_repo\n    id\n  }\n}\n\nfragment RepoDetails_repo on Repository {\n  id\n  name\n}\n",
+    "text": "query RepoDetailsContainerQuery(\n  $name: String!\n  $owner: String!\n) {\n  repository(name: $name, owner: $owner) {\n    ...RepoDetails_repo\n    id\n  }\n}\n\nfragment RepoDetails_repo on Repository {\n  id\n  name\n  issues(last: 10) {\n    edges {\n      node {\n        id\n        title\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      hasPreviousPage\n      startCursor\n    }\n  }\n}\n",
     "metadata": {}
   }
 };

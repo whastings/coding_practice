@@ -14,7 +14,7 @@ const CREATE_ISSUE_MUTATION = graphql`
     createIssue(input: { repositoryId: $repoId, title: $title, body: $body }) {
       issue {
         id
-        title
+        ...IssueListItem_issue
       }
     }
   }

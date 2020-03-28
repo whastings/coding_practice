@@ -5,6 +5,7 @@ import graphql from 'babel-plugin-relay/macro'
 
 import type { RepoDetails_repo } from '__generated__/RepoDetails_repo.graphql'
 
+import IssueListItem from './IssueListItem'
 import RepoIssueForm from './RepoIssueForm'
 
 type Props = {
@@ -21,9 +22,7 @@ const RepoDetails = (props: Props) => {
       <h3>Recent Issues</h3>
       <ul>
         {issueEdges && issueEdges.map((issueEdge) => issueEdge && issueEdge.node && (
-          <li key={issueEdge.node.id}>
-            {issueEdge.node.title}
-          </li>
+          <IssueListItem key={issueEdge.node.id} issue={issueEdge.node} />
         ))}
       </ul>
       <h3>New Issue</h3>
@@ -43,7 +42,7 @@ export default createFragmentContainer(
           edges {
             node {
               id
-              title
+              ...IssueListItem_issue
             }
           }
         }

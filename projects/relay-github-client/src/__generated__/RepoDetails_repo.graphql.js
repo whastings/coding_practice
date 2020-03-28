@@ -8,6 +8,7 @@
 
 /*::
 import type { ReaderFragment } from 'relay-runtime';
+import type { IssueListItem_issue$ref } from "./IssueListItem_issue.graphql";
 import type { FragmentReference } from "relay-runtime";
 declare export opaque type RepoDetails_repo$ref: FragmentReference;
 declare export opaque type RepoDetails_repo$fragmentType: RepoDetails_repo$ref;
@@ -18,7 +19,7 @@ export type RepoDetails_repo = {|
     +edges: ?$ReadOnlyArray<?{|
       +node: ?{|
         +id: string,
-        +title: string,
+        +$fragmentRefs: IssueListItem_issue$ref,
       |}
     |}>
   |},
@@ -98,16 +99,14 @@ return {
                 {
                   "kind": "ScalarField",
                   "alias": null,
-                  "name": "title",
+                  "name": "__typename",
                   "args": null,
                   "storageKey": null
                 },
                 {
-                  "kind": "ScalarField",
-                  "alias": null,
-                  "name": "__typename",
-                  "args": null,
-                  "storageKey": null
+                  "kind": "FragmentSpread",
+                  "name": "IssueListItem_issue",
+                  "args": null
                 }
               ]
             },
@@ -151,6 +150,6 @@ return {
 };
 })();
 // prettier-ignore
-(node/*: any*/).hash = '698e29901792202685b79b3b0ad17b2e';
+(node/*: any*/).hash = 'b17b1b536496fa352caeeebd80206696';
 
 module.exports = node;

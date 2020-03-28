@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 59af85a6433ef319984987f8bcb9d818
+ * @relayHash 5c2ced8ae25a37bbe652af6740db5aca
  */
 
 /* eslint-disable */
@@ -37,6 +37,10 @@ query RepoDetailsContainerQuery(
   }
 }
 
+fragment IssueListItem_issue on Issue {
+  title
+}
+
 fragment RepoDetails_repo on Repository {
   id
   name
@@ -44,7 +48,7 @@ fragment RepoDetails_repo on Repository {
     edges {
       node {
         id
-        title
+        ...IssueListItem_issue
         __typename
       }
       cursor
@@ -244,7 +248,7 @@ return {
     "operationKind": "query",
     "name": "RepoDetailsContainerQuery",
     "id": null,
-    "text": "query RepoDetailsContainerQuery(\n  $name: String!\n  $owner: String!\n) {\n  repository(name: $name, owner: $owner) {\n    ...RepoDetails_repo\n    id\n  }\n}\n\nfragment RepoDetails_repo on Repository {\n  id\n  name\n  issues(last: 10) {\n    edges {\n      node {\n        id\n        title\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      hasPreviousPage\n      startCursor\n    }\n  }\n}\n",
+    "text": "query RepoDetailsContainerQuery(\n  $name: String!\n  $owner: String!\n) {\n  repository(name: $name, owner: $owner) {\n    ...RepoDetails_repo\n    id\n  }\n}\n\nfragment IssueListItem_issue on Issue {\n  title\n}\n\nfragment RepoDetails_repo on Repository {\n  id\n  name\n  issues(last: 10) {\n    edges {\n      node {\n        id\n        ...IssueListItem_issue\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      hasPreviousPage\n      startCursor\n    }\n  }\n}\n",
     "metadata": {}
   }
 };

@@ -4,7 +4,6 @@
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
     "flow-bin": "^0.120.1",
     "react": "^16.13.0",
@@ -37,11 +36,13 @@
   },
   "devDependencies": {
     "@octokit/graphql-schema": "^6.70.0",
+    "@testing-library/react": "^9.5.0",
     "babel-plugin-relay": "^9.0.0",
     "flow-typed": "^3.0.0",
     "graphql": "^14.6.0",
     "relay-compiler": "^9.0.0",
-    "relay-config": "^9.0.0"
+    "relay-config": "^9.0.0",
+    "relay-test-utils": "^9.0.0"
   },
   "babelMacros": {
     "relay": {

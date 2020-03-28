@@ -18,11 +18,15 @@ const VIEWER_QUERY = graphql`
   }
 `
 
-function App() {
+type Props = {
+  relayEnvironment: typeof relayEnvironment,
+}
+
+function App(props: Props) {
   return (
     <div>
       <QueryRenderer
-        environment={relayEnvironment}
+        environment={props.relayEnvironment}
         query={VIEWER_QUERY}
         variables={{}}
         render={({ props }) => {
@@ -43,6 +47,10 @@ function App() {
       />
     </div>
   );
+}
+
+App.defaultProps = {
+  relayEnvironment,
 }
 
 export default App;

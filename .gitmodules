@@ -4,3 +4,6 @@
 [submodule "projects/flux_todo_app"]
 	path = projects/flux_todo_app
 	url = git@github.com:whastings-practice/flux_todo_app.git
+[submodule "react/egghead-suspense-tutorial"]
+	path = react/egghead-suspense-tutorial
+	url = git@github.com:whastings-practice/concurrent-react.git

@@ -1,19 +1,23 @@
 import React, { useContext, useEffect, useRef } from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 import styles from './Tab.module.css';
-import { TabsContext } from './Tabs';
+import TabsContext from './TabsContext';
 
-const Tab = ({ children, index }) => {
+interface Props {
+  children: React.ReactNode,
+  index?: number,
+}
+
+const Tab: React.FC<Props> = ({ children, index }) => {
   const { activeTabIndex, incrementTabIndex, setActiveTabIndex, tabsName } = useContext(TabsContext);
-  const buttonRef = useRef(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
   const hasMountedRef = useRef(false);
   const isActive = activeTabIndex === index;
   const id = `${tabsName}-${index}-tab`;
   const panelId = `${tabsName}-${index}-panel`;
 
-  const handleKeyDown = (event) => {
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>) => {
     if (event.key === 'ArrowLeft') {
       incrementTabIndex(-1);
     } else if (event.key === 'ArrowRight') {
@@ -22,11 +26,15 @@ const Tab = ({ children, index }) => {
   };
 
   useEffect(() => {
-    if (hasMountedRef.current && isActive) {
+    if (hasMountedRef.current && isActive && buttonRef.current != null) {
       buttonRef.current.focus();
     }
   }, [isActive, buttonRef, hasMountedRef]);
   useEffect(() => { hasMountedRef.current = true; }, []);
+
+  if (index == null) {
+    throw new Error('Index must be provided');
+  }
 
   return (
     <button
@@ -34,7 +42,7 @@ const Tab = ({ children, index }) => {
       ref={buttonRef}
       type="button"
       role="tab"
-      tabIndex={isActive ? null : -1}
+      tabIndex={isActive ? undefined : -1}
       aria-controls={panelId}
       aria-selected={isActive}
       onClick={() => setActiveTabIndex(index)}
@@ -49,9 +57,5 @@ const Tab = ({ children, index }) => {
   )
 };
 
-Tab.propTypes = {
-  children: PropTypes.node.isRequired,
-  index: PropTypes.number,
-};
-
+export type TabType = typeof Tab;
 export default Tab;

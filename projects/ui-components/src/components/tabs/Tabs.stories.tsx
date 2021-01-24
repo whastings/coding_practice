@@ -12,7 +12,7 @@ export default {
 
 export const Basic = () => {
   return (
-    <Tabs name="Basic Tabs">
+    <Tabs name="basic-tabs">
       <TabsList>
         <Tab>One</Tab>
         <Tab>Two</Tab>

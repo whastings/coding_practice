@@ -1,12 +1,21 @@
 import React, { useContext } from 'react';
-import PropTypes from 'prop-types';
 
-import { TabsContext } from './Tabs';
+import TabsContext from './TabsContext';
 import styles from './TabPanel.module.css';
 
-const TabPanel = ({ children, index }) => {
+interface Props {
+  children: React.ReactNode,
+  index?: number,
+}
+
+const TabPanel: React.FC<Props> = ({ children, index }) => {
   const { activeTabIndex, tabsName } = useContext(TabsContext);
   const isActive = activeTabIndex === index;
+
+  if (index == null) {
+    throw new Error('Index must be provided');
+  }
+
   const id = `${tabsName}-${index}-panel`;
   const tabId = `${tabsName}-${index}-tab`;
 
@@ -20,9 +29,5 @@ const TabPanel = ({ children, index }) => {
 // For some reason the displayName is undefined in tests
 TabPanel.displayName = 'TabPanel';
 
-TabPanel.propTypes = {
-  children: PropTypes.node.isRequired,
-  index: PropTypes.number,
-};
-
+export type TabPanelType = typeof TabPanel;
 export default TabPanel;

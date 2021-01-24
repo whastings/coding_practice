@@ -1,14 +1,20 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import styles from './TabsList.module.css';
+import { TabType } from './Tab';
 
-const TabsList = ({ children }) => {
+type Child = React.ReactElement<TabType>;
+
+interface Props {
+  children: Child[],
+}
+
+const TabsList: React.FC<Props> = ({ children }: Props) => {
   let nextTabIndex = 0;
   const renderedChildren = React.Children.map(children, (child) => {
-    const props = { index: nextTabIndex };
+    const props = { ...child.props, index: nextTabIndex };
     nextTabIndex += 1;
-    return React.cloneElement(child, props);
+    return React.cloneElement(child as Child, props);
   });
 
   return (
@@ -22,8 +28,5 @@ const TabsList = ({ children }) => {
   )
 };
 
-TabsList.propTypes = {
-  children: PropTypes.node.isRequired,
-};
-
+export type TabsListType = typeof TabsList;
 export default TabsList;

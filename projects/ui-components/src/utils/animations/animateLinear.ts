@@ -3,28 +3,29 @@ export interface Options {
   durationMs: number,
 }
 
-const FRAME_DURATION = 16.6;
-
 function animateLinear(element: HTMLElement, options: Options): void {
-  let startTime: DOMHighResTimeStamp;
+  const pixelsPerSec = options.distancePx / (options.durationMs / 1000);
   let distanceTraveled = 0;
+  let previousFrameTime: DOMHighResTimeStamp;
 
   const initialWillChangeValue = element.style.willChange;
   element.style.willChange = 'transform';
 
   const animate = (timestamp: DOMHighResTimeStamp): void => {
-    if (startTime === undefined) {
-      startTime = timestamp;
+    if (previousFrameTime === undefined) {
+      previousFrameTime = timestamp;
+      window.requestAnimationFrame(animate);
+      return;
     }
 
-    const elapsedTime = timestamp - startTime;
-    const timeRemaining = options.durationMs - elapsedTime;
-    const distanceRemaining = options.distancePx - distanceTraveled;
-    const framesRemaining = timeRemaining / FRAME_DURATION;
-    const distanceToTravel = distanceRemaining / framesRemaining;
-    distanceTraveled += distanceToTravel;
-    const currentValue = Math.min(options.distancePx, distanceTraveled);
+    // e.g. 1000 / 16.6 = 60ish
+    const currentFPS = 1000 / (timestamp - previousFrameTime);
+    previousFrameTime = timestamp;
 
+    const distanceToTravel = pixelsPerSec / currentFPS;
+    distanceTraveled += distanceToTravel;
+
+    const currentValue = Math.min(options.distancePx, distanceTraveled);
     element.style.transform = `translateX(${currentValue}px)`;
 
     if (currentValue < options.distancePx) {

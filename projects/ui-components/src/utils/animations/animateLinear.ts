@@ -9,6 +9,9 @@ function animateLinear(element: HTMLElement, options: Options): void {
   let startTime: DOMHighResTimeStamp;
   let distanceTraveled = 0;
 
+  const initialWillChangeValue = element.style.willChange;
+  element.style.willChange = 'transform';
+
   const animate = (timestamp: DOMHighResTimeStamp): void => {
     if (startTime === undefined) {
       startTime = timestamp;
@@ -26,6 +29,8 @@ function animateLinear(element: HTMLElement, options: Options): void {
 
     if (currentValue < options.distancePx) {
       window.requestAnimationFrame(animate);
+    } else {
+      element.style.willChange = initialWillChangeValue;
     }
   };
 

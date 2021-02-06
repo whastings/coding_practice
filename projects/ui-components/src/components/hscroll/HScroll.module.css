@@ -1,0 +1,10 @@
+.container {
+  display: flex;
+  min-height: 250px;
+  overflow: hidden;
+  position: relative;
+}
+
+.slider {
+  display: flex;
+}

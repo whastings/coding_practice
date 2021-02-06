@@ -1,0 +1,14 @@
+.button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1;
+}
+
+.buttonPrev {
+  left: 15px;
+}
+
+.buttonNext {
+  right: 15px;
+}

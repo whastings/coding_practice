@@ -16,7 +16,10 @@ function Wrapper(props: Options) {
   const [count, increment] = useReducer(countReducer, 0);
 
   useEffect(() => {
-    animateLinear(divRef.current, props);
+    const div = divRef.current;
+    if (div != null) {
+      animateLinear(div, props);
+    }
   }, [count]);
 
   return (

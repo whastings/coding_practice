@@ -6,7 +6,7 @@ import { TabType } from './Tab';
 type Child = React.ReactElement<TabType>;
 
 interface Props {
-  children: Child[],
+  children: Child[];
 }
 
 const TabsList: React.FC<Props> = ({ children }: Props) => {
@@ -18,14 +18,10 @@ const TabsList: React.FC<Props> = ({ children }: Props) => {
   });
 
   return (
-    <div
-      role="tablist"
-      className={styles.container}
-      aria-label="Page Contents"
-    >
+    <div role="tablist" className={styles.container} aria-label="Page Contents">
       {renderedChildren}
     </div>
-  )
+  );
 };
 
 export type TabsListType = typeof TabsList;

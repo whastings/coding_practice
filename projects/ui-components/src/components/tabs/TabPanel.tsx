@@ -4,8 +4,8 @@ import TabsContext from './TabsContext';
 import styles from './TabPanel.module.css';
 
 interface Props {
-  children: React.ReactNode,
-  index?: number,
+  children: React.ReactNode;
+  index?: number;
 }
 
 const TabPanel: React.FC<Props> = ({ children, index }) => {
@@ -20,7 +20,13 @@ const TabPanel: React.FC<Props> = ({ children, index }) => {
   const tabId = `${tabsName}-${index}-tab`;
 
   return (
-    <div id={id} role="tabpanel" hidden={!isActive} className={styles.container} aria-labelledby={tabId}>
+    <div
+      id={id}
+      role="tabpanel"
+      hidden={!isActive}
+      className={styles.container}
+      aria-labelledby={tabId}
+    >
       {isActive && children}
     </div>
   );

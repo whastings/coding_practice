@@ -18,15 +18,9 @@ export const Basic = () => {
         <Tab>Two</Tab>
         <Tab>Three</Tab>
       </TabsList>
-      <TabPanel>
-        This is the first tab
-      </TabPanel>
-      <TabPanel>
-        This is the second tab
-      </TabPanel>
-      <TabPanel>
-        This is the third tab
-      </TabPanel>
+      <TabPanel>This is the first tab</TabPanel>
+      <TabPanel>This is the second tab</TabPanel>
+      <TabPanel>This is the third tab</TabPanel>
     </Tabs>
   );
 };

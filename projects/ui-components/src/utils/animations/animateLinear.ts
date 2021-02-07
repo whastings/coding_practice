@@ -1,6 +1,6 @@
 export interface Options {
-  distancePx: number,
-  durationMs: number,
+  distancePx: number;
+  durationMs: number;
 }
 
 function animateLinear(element: HTMLElement, options: Options): void {

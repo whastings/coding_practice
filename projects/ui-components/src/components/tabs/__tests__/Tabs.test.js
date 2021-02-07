@@ -15,16 +15,10 @@ describe('Tabs', () => {
           <Tab>Tab 2</Tab>
           <Tab>Tab 3</Tab>
         </TabsList>
-        <TabPanel>
-          Tab Panel 1
-        </TabPanel>
-        <TabPanel>
-          Tab Panel 2
-        </TabPanel>
-        <TabPanel>
-          Tab Panel 3
-        </TabPanel>
-      </Tabs>
+        <TabPanel>Tab Panel 1</TabPanel>
+        <TabPanel>Tab Panel 2</TabPanel>
+        <TabPanel>Tab Panel 3</TabPanel>
+      </Tabs>,
     );
     return {
       ...result,

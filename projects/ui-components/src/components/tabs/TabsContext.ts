@@ -1,10 +1,10 @@
 import React from 'react';
 
 interface Context {
-  activeTabIndex: number,
-  incrementTabIndex: (index: number) => void,
-  setActiveTabIndex: (index: number) => void,
-  tabsName: string,
+  activeTabIndex: number;
+  incrementTabIndex: (index: number) => void;
+  setActiveTabIndex: (index: number) => void;
+  tabsName: string;
 }
 
 const TabsContext = React.createContext<Context>({

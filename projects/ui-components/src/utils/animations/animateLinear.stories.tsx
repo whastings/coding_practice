@@ -22,9 +22,7 @@ function Wrapper(props: Options) {
     }
   }, [count]);
 
-  return (
-    <div key={count} onClick={increment} ref={divRef} style={styles} />
-  );
+  return <div key={count} onClick={increment} ref={divRef} style={styles} />;
 }
 
 export default {

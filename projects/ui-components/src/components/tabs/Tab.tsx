@@ -5,12 +5,17 @@ import styles from './Tab.module.css';
 import TabsContext from './TabsContext';
 
 interface Props {
-  children: React.ReactNode,
-  index?: number,
+  children: React.ReactNode;
+  index?: number;
 }
 
 const Tab: React.FC<Props> = ({ children, index }) => {
-  const { activeTabIndex, incrementTabIndex, setActiveTabIndex, tabsName } = useContext(TabsContext);
+  const {
+    activeTabIndex,
+    incrementTabIndex,
+    setActiveTabIndex,
+    tabsName,
+  } = useContext(TabsContext);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const hasMountedRef = useRef(false);
   const isActive = activeTabIndex === index;
@@ -30,7 +35,9 @@ const Tab: React.FC<Props> = ({ children, index }) => {
       buttonRef.current.focus();
     }
   }, [isActive, buttonRef, hasMountedRef]);
-  useEffect(() => { hasMountedRef.current = true; }, []);
+  useEffect(() => {
+    hasMountedRef.current = true;
+  }, []);
 
   if (index == null) {
     throw new Error('Index must be provided');
@@ -47,14 +54,11 @@ const Tab: React.FC<Props> = ({ children, index }) => {
       aria-selected={isActive}
       onClick={() => setActiveTabIndex(index)}
       onKeyDown={handleKeyDown}
-      className={classNames(
-        styles.button,
-        { [styles.buttonActive]: isActive },
-      )}
+      className={classNames(styles.button, { [styles.buttonActive]: isActive })}
     >
       {children}
     </button>
-  )
+  );
 };
 
 export type TabType = typeof Tab;

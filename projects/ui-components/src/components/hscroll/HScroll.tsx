@@ -13,7 +13,7 @@ const CARD_WIDTH = 200;
 const HScroll: React.FC<Props> = ({ children }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const widthRef = useRef(1);
-  const [pageNum, setPageNum] = useState(1);
+  const [sliderOffset, setSliderOffset] = useState(0);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -27,30 +27,34 @@ const HScroll: React.FC<Props> = ({ children }) => {
 
   const numChildren = React.Children.count(children);
   const sliderWidth = numChildren * CARD_WIDTH;
-  const numPages = sliderWidth / widthRef.current;
-  const sliderScroll = (pageNum - 1) * widthRef.current * -1;
+  const maxSliderOffset = sliderWidth - widthRef.current;
+
   const sliderStyles = {
-    transform: `translateX(${sliderScroll}px)`,
+    transform: `translateX(${sliderOffset * -1}px)`,
     width: sliderWidth,
   };
 
   const scrollNext = () => {
-    setPageNum((prevPageNum) => prevPageNum + 1);
+    setSliderOffset((prevOffset) => {
+      return Math.min(prevOffset + widthRef.current, maxSliderOffset);
+    });
   };
   const scrollPrev = () => {
-    setPageNum((prevPageNum) => prevPageNum - 1);
+    setSliderOffset((prevOffset) => {
+      return Math.max(prevOffset - widthRef.current, 0);
+    });
   };
 
   return (
     <div className={styles.container} ref={containerRef}>
       <HScrollNavButton
         direction={HScrollNavDirection.PREVIOUS}
-        hidden={pageNum === 1}
+        hidden={sliderOffset === 0}
         onClick={scrollPrev}
       />
       <HScrollNavButton
         direction={HScrollNavDirection.NEXT}
-        hidden={pageNum === numPages}
+        hidden={sliderOffset === maxSliderOffset}
         onClick={scrollNext}
       />
       <div className={styles.slider} style={sliderStyles}>

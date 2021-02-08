@@ -1,5 +1,5 @@
 import React from 'react';
-import { Meta } from '@storybook/react/types-6-0';
+import { Meta, Story } from '@storybook/react/types-6-0';
 
 import HScroll from './HScroll';
 import HScrollCard from './HScrollCard';
@@ -9,7 +9,11 @@ export default {
   component: HScroll,
 } as Meta;
 
-export const Basic = () => {
+interface WrapperProps {
+  numCards: number;
+}
+
+const Wrapper: React.FC<WrapperProps> = ({ numCards }) => {
   return (
     <div
       style={{
@@ -17,13 +21,17 @@ export const Basic = () => {
       }}
     >
       <HScroll>
-        <HScrollCard>1</HScrollCard>
-        <HScrollCard>2</HScrollCard>
-        <HScrollCard>3</HScrollCard>
-        <HScrollCard>4</HScrollCard>
-        <HScrollCard>5</HScrollCard>
-        <HScrollCard>6</HScrollCard>
+        {Array.from(new Array(numCards)).map((_, i) => (
+          <HScrollCard key={i}>{i + 1}</HScrollCard>
+        ))}
       </HScroll>
     </div>
   );
+};
+
+const Template: Story<WrapperProps> = (args) => <Wrapper {...args} />;
+
+export const Basic = Template.bind({});
+Basic.args = {
+  numCards: 6,
 };

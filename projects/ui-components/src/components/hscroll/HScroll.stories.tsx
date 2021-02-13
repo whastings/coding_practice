@@ -11,16 +11,18 @@ export default {
 
 interface WrapperProps {
   numCards: number;
+  numCardsDisplayed: number;
 }
 
-const Wrapper: React.FC<WrapperProps> = ({ numCards }) => {
+const Wrapper: React.FC<WrapperProps> = ({ numCards, numCardsDisplayed }) => {
   return (
     <div
       style={{
+        border: '1px #000 solid',
         width: 400,
       }}
     >
-      <HScroll>
+      <HScroll numCardsDisplayed={numCardsDisplayed}>
         {Array.from(new Array(numCards)).map((_, i) => (
           <HScrollCard key={i}>{i + 1}</HScrollCard>
         ))}
@@ -33,5 +35,6 @@ const Template: Story<WrapperProps> = (args) => <Wrapper {...args} />;
 
 export const Basic = Template.bind({});
 Basic.args = {
-  numCards: 6,
+  numCards: 8,
+  numCardsDisplayed: 2,
 };

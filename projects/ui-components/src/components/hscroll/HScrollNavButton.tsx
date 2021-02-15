@@ -1,5 +1,7 @@
 import React from 'react';
 
+import ChevronLeftIcon from '../../assets/icons/ChevronLeftIcon.svg';
+import ChevronRightIcon from '../../assets/icons/ChevronRightIcon.svg';
 import HScrollNavDirection from './HScrollNavDirection';
 import styles from './HScrollNavButton.module.css';
 import classNames from '../../utils/classNames';
@@ -15,7 +17,7 @@ const getButtonText = (direction: HScrollNavDirection): string => {
     case HScrollNavDirection.NEXT:
       return 'Next';
     case HScrollNavDirection.PREVIOUS:
-      return 'Prev';
+      return 'Previous';
   }
 };
 
@@ -28,17 +30,28 @@ const getButtonClass = (direction: HScrollNavDirection): string => {
   }
 };
 
+const getButtonIcon = (direction: HScrollNavDirection): React.ReactElement => {
+  switch (direction) {
+    case HScrollNavDirection.NEXT:
+      return <ChevronRightIcon width={32} height={32} />;
+    case HScrollNavDirection.PREVIOUS:
+      return <ChevronLeftIcon />;
+  }
+};
+
 const HScrollNavButton: React.FC<Props> = ({ direction, hidden, onClick }) => {
   const buttonText = getButtonText(direction);
   const buttonClass = getButtonClass(direction);
+  const buttonIcon = getButtonIcon(direction);
 
   return (
     <button
+      aria-label={buttonText}
       className={classNames(styles.button, buttonClass)}
       hidden={hidden}
       onClick={onClick}
     >
-      {buttonText}
+      {buttonIcon}
     </button>
   );
 };

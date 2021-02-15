@@ -18,7 +18,8 @@ const Wrapper: React.FC<WrapperProps> = ({ numCards, numCardsDisplayed }) => {
   return (
     <div
       style={{
-        border: '1px #000 solid',
+        border: '1px var(--color-divider) solid',
+        fontFamily: 'var(--font-sans)',
         width: 400,
       }}
     >

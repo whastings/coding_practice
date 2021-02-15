@@ -10,4 +10,5 @@
   display: flex;
   flex-shrink: 0;
   padding: 16px 8px;
+  transition: transform 0.5s ease-in-out;
 }

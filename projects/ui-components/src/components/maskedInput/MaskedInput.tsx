@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 
 export enum InputTypes {
+  DATE,
   PHONE,
 }
 
@@ -12,26 +13,41 @@ interface Props {
 
 type Formatter = (value: string) => string;
 
+const DATE_OFFSETS = [4, 7];
+const DATE_SEPARATOR = '/';
+
 const PHONE_OFFSETS = [3, 7];
 const PHONE_SEPARATOR = '-';
 
-const formatPhone: Formatter = (value) => {
-  const sanitizedValue = value.replace(/[^0-9]/g, '').slice(0, 10);
-
-  const formattedValue = PHONE_OFFSETS.reduce((currentValue, offset) => {
+const addSeparators = (
+  value: string,
+  separator: string,
+  offsets: Array<number>,
+): string => {
+  return offsets.reduce((currentValue, offset) => {
     if (currentValue.length >= offset) {
       const beginning = currentValue.slice(0, offset);
       const end = currentValue.slice(offset);
-      return beginning + PHONE_SEPARATOR + end;
+      return beginning + separator + end;
     }
     return currentValue;
-  }, sanitizedValue);
+  }, value);
+};
 
-  return formattedValue;
+const formatDate: Formatter = (value) => {
+  const sanitizedValue = value.replace(/[^0-9]/g, '').slice(0, 8);
+  return addSeparators(sanitizedValue, DATE_SEPARATOR, DATE_OFFSETS);
+};
+
+const formatPhone: Formatter = (value) => {
+  const sanitizedValue = value.replace(/[^0-9]/g, '').slice(0, 10);
+  return addSeparators(sanitizedValue, PHONE_SEPARATOR, PHONE_OFFSETS);
 };
 
 const getFormatter = (inputType: InputTypes): Formatter => {
   switch (inputType) {
+    case InputTypes.DATE:
+      return formatDate;
     case InputTypes.PHONE:
       return formatPhone;
   }

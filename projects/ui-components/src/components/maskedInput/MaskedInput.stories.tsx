@@ -8,6 +8,10 @@ export default {
   component: MaskedInput,
 } as Meta;
 
+export const Date = () => {
+  return <MaskedInput id="date-input" label="Date" type={InputTypes.DATE} />;
+};
+
 export const Phone = () => {
   return (
     <MaskedInput

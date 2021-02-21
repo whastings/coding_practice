@@ -53,13 +53,30 @@ const getFormatter = (inputType: InputTypes): Formatter => {
   }
 };
 
+const getSeparator = (inputType: InputTypes): string => {
+  switch (inputType) {
+    case InputTypes.DATE:
+      return DATE_SEPARATOR;
+    case InputTypes.PHONE:
+      return PHONE_SEPARATOR;
+  }
+};
+
 const MaskedInput: React.FC<Props> = ({ id, label, type }) => {
   const [value, setValue] = useState('');
 
   const formatValue = getFormatter(type);
+  const separator = getSeparator(type);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = event.target.value;
+
+    const lastCharDeleted = newValue === value.slice(0, value.length - 1);
+    if (lastCharDeleted && value.slice(value.length - 1) === separator) {
+      setValue(newValue.slice(0, newValue.length - 1));
+      return;
+    }
+
     const formattedValue = formatValue(newValue);
     setValue(formattedValue);
   };

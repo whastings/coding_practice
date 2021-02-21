@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 export enum InputTypes {
   DATE,
@@ -64,6 +64,18 @@ const getSeparator = (inputType: InputTypes): string => {
 
 const MaskedInput: React.FC<Props> = ({ id, label, type }) => {
   const [value, setValue] = useState('');
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  const cursorPositionRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    const cursorPosition = cursorPositionRef.current;
+    const input = inputRef.current;
+
+    if (cursorPosition != null && input != null) {
+      input.setSelectionRange(cursorPosition, cursorPosition);
+      cursorPositionRef.current = null;
+    }
+  });
 
   const formatValue = getFormatter(type);
   const separator = getSeparator(type);
@@ -79,12 +91,17 @@ const MaskedInput: React.FC<Props> = ({ id, label, type }) => {
 
     const formattedValue = formatValue(newValue);
     setValue(formattedValue);
+
+    const cursorPosition = event.target.selectionStart;
+    if (cursorPosition <= newValue.length - 1) {
+      cursorPositionRef.current = cursorPosition;
+    }
   };
 
   return (
     <>
       <label htmlFor={id}>{label}</label>
-      <input id={id} onChange={handleChange} value={value} />
+      <input id={id} onChange={handleChange} ref={inputRef} value={value} />
     </>
   );
 };

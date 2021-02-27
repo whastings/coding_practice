@@ -62,6 +62,33 @@ const getSeparator = (inputType: InputTypes): string => {
   }
 };
 
+const handleDeletedSeparator = (
+  newValue: string,
+  oldValue: string,
+  separator: string,
+): string => {
+  if (newValue.length !== oldValue.length - 1) {
+    return newValue;
+  }
+
+  for (let i = 0; i < oldValue.length; i++) {
+    if (oldValue[i] !== separator) {
+      continue;
+    }
+
+    const beforeSeparatorOldValue = oldValue.slice(0, i);
+    const beforeSeparatorNewValue = newValue.slice(0, i);
+    if (
+      beforeSeparatorNewValue === beforeSeparatorOldValue &&
+      newValue[i] !== separator
+    ) {
+      return newValue.slice(0, i - 1) + newValue.slice(i);
+    }
+  }
+
+  return newValue;
+};
+
 const MaskedInput: React.FC<Props> = ({ id, label, type }) => {
   const [value, setValue] = useState('');
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -82,19 +109,16 @@ const MaskedInput: React.FC<Props> = ({ id, label, type }) => {
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = event.target.value;
-
-    const lastCharDeleted = newValue === value.slice(0, value.length - 1);
-    if (lastCharDeleted && value.slice(value.length - 1) === separator) {
-      setValue(newValue.slice(0, newValue.length - 1));
-      return;
-    }
-
-    const formattedValue = formatValue(newValue);
+    const adjustedValue = handleDeletedSeparator(newValue, value, separator);
+    const charDeleted = adjustedValue !== newValue;
+    const formattedValue = formatValue(adjustedValue);
     setValue(formattedValue);
 
     const cursorPosition = event.target.selectionStart;
-    if (cursorPosition <= newValue.length - 1) {
-      cursorPositionRef.current = cursorPosition;
+    if (cursorPosition != null && cursorPosition <= newValue.length - 1) {
+      cursorPositionRef.current = charDeleted
+        ? cursorPosition - 1
+        : cursorPosition;
     }
   };
 

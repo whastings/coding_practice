@@ -1,15 +1,14 @@
 import { useEffect, useRef } from 'react';
 
-const useIntersectionObserver = (
-  callback: (entries: IntersectionObserverEntry[]) => void,
-  options: IntersectionObserverInit | undefined = undefined,
+const useResizeObserver = (
+  callback: (entries: ResizeObserverEntry[]) => void,
 ) => {
   const elementRef = useRef<HTMLDivElement | null>(null);
   const callbackRef = useRef(callback);
   const observerRef = useRef(
-    new IntersectionObserver((entries) => {
+    new ResizeObserver((entries: ResizeObserverEntry[]) => {
       callbackRef.current(entries);
-    }, options),
+    }),
   );
 
   useEffect(() => {
@@ -29,4 +28,4 @@ const useIntersectionObserver = (
   return elementRef;
 };
 
-export default useIntersectionObserver;
+export default useResizeObserver;

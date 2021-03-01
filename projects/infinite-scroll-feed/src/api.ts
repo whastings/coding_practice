@@ -1,6 +1,6 @@
 export interface FeedItem {
-  fields: {
-    thumbnail: string;
+  fields?: {
+    thumbnail?: string;
   };
   id: string;
   webTitle: string;
@@ -8,16 +8,24 @@ export interface FeedItem {
 
 interface FeedAPIData {
   response: {
+    currentPage: number;
+    pages: number;
     results: FeedItem[];
     status: string;
   };
 }
 
+export interface APIResult {
+  currentPage: number;
+  hasMore: boolean;
+  items: FeedItem[];
+}
+
 const API_KEY = process.env.REACT_APP_GUARDIAN_API_KEY;
 const API_URL = `https://content.guardianapis.com/search?api-key=${API_KEY}&show-fields=thumbnail`;
 
-export const fetchFeedItems = async (): Promise<FeedItem[]> => {
-  const response = await window.fetch(API_URL, {
+export const fetchFeedData = async (nextPage: number): Promise<APIResult> => {
+  const response = await window.fetch(`${API_URL}&page=${nextPage}`, {
     method: 'GET',
     headers: {
       'content-type': 'application/json;charset=UTF-8',
@@ -30,5 +38,6 @@ export const fetchFeedItems = async (): Promise<FeedItem[]> => {
     throw new Error('API request failed');
   }
 
-  return data.response.results;
+  const { currentPage, pages, results } = data.response;
+  return { currentPage, hasMore: currentPage < pages, items: results };
 };

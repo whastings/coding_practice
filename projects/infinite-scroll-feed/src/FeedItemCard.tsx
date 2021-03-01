@@ -8,12 +8,16 @@ interface Props {
 }
 
 const FeedItemCard: React.FC<Props> = ({ item }) => {
+  const thumbnail = item.fields?.thumbnail;
+
   return (
     <div className={styles.container}>
       <div className={styles.content}>
         <h2 className={styles.heading}>{item.webTitle}</h2>
       </div>
-      <img className={styles.thumbnail} src={item.fields.thumbnail} />
+      {thumbnail != null && (
+        <img alt="" className={styles.thumbnail} src={thumbnail} />
+      )}
     </div>
   );
 };

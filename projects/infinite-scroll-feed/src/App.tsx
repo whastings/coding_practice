@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-import { APIResult, fetchFeedData } from './api';
 import styles from './App.module.css';
 import FeedItemCard from './FeedItemCard';
+import useFeedData from './useFeedData';
 import useIntersectionObserver from './useIntersectionObserver';
 
 interface RenderedRange {
@@ -46,13 +46,8 @@ const useFeedCardObserver = (
 };
 
 function App() {
-  const [feedData, setFeedData] = useState<APIResult>({
-    currentPage: 0,
-    hasMore: true,
-    items: [],
-  });
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const wasLoadingRef = useRef(false);
+  const { feedData, fetchNextPage, isLoading } = useFeedData();
+  const wasLoadingRef = useRef(isLoading);
   const [renderedRange, setRenderedRange] = useState<RenderedRange>({
     startIndex: 0,
     endIndex: NUM_CARDS_RENDERED - 1,
@@ -62,16 +57,6 @@ function App() {
     new Array(NUM_CARDS_RENDERED).fill(0).map((_, i) => i),
   );
   const endCardIntersectingRef = useRef(false);
-
-  const fetchNextPage = async () => {
-    setIsLoading(true);
-    const newData = await fetchFeedData(feedData.currentPage + 1);
-    setFeedData((oldFeedData) => ({
-      ...newData,
-      items: [...oldFeedData.items, ...newData.items],
-    }));
-    setIsLoading(false);
-  };
 
   const setCardDimension = (rect: DOMRect, feedIndex: number): void => {
     const dimensions = feedCardDimensionsRef.current;

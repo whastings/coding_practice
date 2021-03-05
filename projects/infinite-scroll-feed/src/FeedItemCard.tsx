@@ -22,7 +22,7 @@ const FeedItemCard = forwardRef<HTMLDivElement, Props>(
       }
       const containerRect = containerRef.current.getBoundingClientRect();
       onRender(containerRect, feedIndex);
-    }, []);
+    }, [feedIndex, onRender]);
 
     const observerRef = useResizeObserver((entries) => {
       const [entry] = entries;

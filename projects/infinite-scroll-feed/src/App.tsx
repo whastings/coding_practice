@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 import styles from './App.module.css';
 import FeedItemCard from './FeedItemCard';
@@ -58,10 +58,13 @@ function App() {
   );
   const endCardIntersectingRef = useRef(false);
 
-  const setCardDimension = (rect: DOMRect, feedIndex: number): void => {
-    const dimensions = feedCardDimensionsRef.current;
-    dimensions[feedIndex] = rect.height;
-  };
+  const setCardDimension = useCallback(
+    (rect: DOMRect, feedIndex: number): void => {
+      const dimensions = feedCardDimensionsRef.current;
+      dimensions[feedIndex] = rect.height;
+    },
+    [feedCardDimensionsRef],
+  );
 
   const endMarkerRef = useIntersectionObserver(
     (entries) => {
@@ -112,7 +115,7 @@ function App() {
     if (feedData.items.length === 0) {
       fetchNextPage();
     }
-  }, [feedData.items]);
+  }, [feedData, fetchNextPage]);
 
   useEffect(() => {
     const wasLoading = wasLoadingRef.current;
@@ -128,7 +131,7 @@ function App() {
         endIndex: renderedRange.endIndex + 2,
       });
     }
-  });
+  }, [feedData, isLoading, renderedRange]);
 
   const getCardRef = (cardIndex: number) => {
     if (cardIndex === 0) {

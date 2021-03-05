@@ -16,12 +16,14 @@ const useResizeObserver = (
   });
 
   useEffect(() => {
+    const observer = observerRef.current;
+
     if (elementRef.current != null) {
-      observerRef.current.observe(elementRef.current);
+      observer.observe(elementRef.current);
     }
 
     return () => {
-      observerRef.current.disconnect();
+      observer.disconnect();
     };
   });
 

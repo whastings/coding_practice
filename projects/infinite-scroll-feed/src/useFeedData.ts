@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 
 import { APIResult, fetchFeedData } from './api';
 
@@ -10,7 +10,7 @@ function useFeedData() {
   });
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const fetchNextPage = async () => {
+  const fetchNextPage = useCallback(async () => {
     setIsLoading(true);
     const newData = await fetchFeedData(feedData.currentPage + 1);
     setFeedData((oldFeedData) => ({
@@ -18,7 +18,7 @@ function useFeedData() {
       items: [...oldFeedData.items, ...newData.items],
     }));
     setIsLoading(false);
-  };
+  }, [feedData]);
 
   return {
     feedData,

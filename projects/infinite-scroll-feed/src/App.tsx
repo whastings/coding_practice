@@ -118,6 +118,28 @@ function App() {
     }
   }, [feedData, isLoading, renderedRange]);
 
+  useEffect(() => {
+    const feedCardDimensions = feedCardDimensionsRef.current;
+
+    if (feedCardDimensions.length - 1 < renderedRange.endIndex) {
+      return;
+    }
+
+    const middleCardHeights = feedCardDimensions.slice(
+      renderedRange.startIndex + 2,
+      renderedRange.endIndex - 1,
+    );
+    const middleCardsTotalHeight = sumCardHeights(middleCardHeights);
+
+    if (middleCardsTotalHeight < window.innerHeight) {
+      setRenderedRange({
+        ...renderedRange,
+        endIndex: renderedRange.endIndex + 1,
+      });
+      cardKeysRef.current.push(Math.max(...cardKeysRef.current) + 1);
+    }
+  }, [renderedRange]);
+
   const getCardRef = (cardIndex: number) => {
     if (cardIndex === 0) {
       return firstRenderedCardRef;

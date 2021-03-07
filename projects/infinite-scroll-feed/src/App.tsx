@@ -66,21 +66,6 @@ function App() {
     [feedCardDimensionsRef],
   );
 
-  const endMarkerRef = useIntersectionObserver(
-    (entries) => {
-      const [entry] = entries;
-      if (
-        entry.isIntersecting &&
-        feedData.items.length > 0 &&
-        feedData.hasMore &&
-        !isLoading
-      ) {
-        fetchNextPage();
-      }
-    },
-    { rootMargin: '0px 0px 200px 0px' },
-  );
-
   const firstRenderedCardRef = useFeedCardObserver(
     (wasIntersecting, isIntersecting) => {
       if (!wasIntersecting && isIntersecting && renderedRange.startIndex > 0) {
@@ -97,16 +82,16 @@ function App() {
     (wasIntersecting, isIntersecting) => {
       endCardIntersectingRef.current = isIntersecting;
 
-      if (
-        !wasIntersecting &&
-        isIntersecting &&
-        renderedRange.endIndex < feedData.items.length - 1
-      ) {
-        cardKeysRef.current.push(cardKeysRef.current.shift() as number);
-        setRenderedRange({
-          startIndex: renderedRange.startIndex + 1,
-          endIndex: renderedRange.endIndex + 1,
-        });
+      if (!wasIntersecting && isIntersecting) {
+        if (renderedRange.endIndex < feedData.items.length - 1) {
+          cardKeysRef.current.push(cardKeysRef.current.shift() as number);
+          setRenderedRange({
+            startIndex: renderedRange.startIndex + 1,
+            endIndex: renderedRange.endIndex + 1,
+          });
+        } else if (!isLoading && feedData.hasMore) {
+          fetchNextPage();
+        }
       }
     },
   );
@@ -176,7 +161,6 @@ function App() {
         </div>
       )}
       {isLoading && <div>Loading...</div>}
-      <div ref={endMarkerRef} />
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 
 import styles from './App.module.css';
 import FeedItemCard from './FeedItemCard';
@@ -14,13 +14,15 @@ interface RenderedRange {
   endIndex: number;
 }
 
-const NUM_CARDS_RENDERED = 10;
+const NUM_CARDS_PER_PAGE = 20;
 
 function App() {
-  const { feedData, fetchNextPage, isLoading } = useFeedData();
+  const { feedData, fetchNextPage, isLoading } = useFeedData(
+    NUM_CARDS_PER_PAGE,
+  );
   const [renderedRange] = useState<RenderedRange>({
     startIndex: 0,
-    endIndex: NUM_CARDS_RENDERED - 1,
+    endIndex: NUM_CARDS_PER_PAGE - 1,
   });
   const feedElementsRef = useRef<HTMLDivElement[]>([]);
   const [feedItemsInfo, setFeedItemsInfo] = useState<FeedItemInfo[]>([]);
@@ -73,6 +75,10 @@ function App() {
     return undefined;
   };
 
+  const feedContainerHeight = useMemo(() => {
+    return feedItemsInfo.reduce((sum, { height }) => sum + height, 0);
+  }, [feedItemsInfo]);
+
   const renderedItems =
     feedData.items.length > 0
       ? feedData.items.slice(
@@ -84,7 +90,10 @@ function App() {
   return (
     <div className={styles.app}>
       {renderedItems.length > 0 && (
-        <div className={styles.feedContainer}>
+        <div
+          className={styles.feedContainer}
+          style={{ height: feedContainerHeight }}
+        >
           {renderedItems.map((item, i) => (
             <div
               className={styles.feedCardContainer}

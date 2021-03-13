@@ -24,13 +24,19 @@ export interface APIResult {
 const API_KEY = process.env.REACT_APP_GUARDIAN_API_KEY;
 const API_URL = `https://content.guardianapis.com/search?api-key=${API_KEY}&show-fields=thumbnail`;
 
-export const fetchFeedData = async (nextPage: number): Promise<APIResult> => {
-  const response = await window.fetch(`${API_URL}&page=${nextPage}`, {
-    method: 'GET',
-    headers: {
-      'content-type': 'application/json;charset=UTF-8',
+export const fetchFeedData = async (
+  pageSize: number,
+  nextPage: number,
+): Promise<APIResult> => {
+  const response = await window.fetch(
+    `${API_URL}&page-size=${pageSize}&page=${nextPage}`,
+    {
+      method: 'GET',
+      headers: {
+        'content-type': 'application/json;charset=UTF-8',
+      },
     },
-  });
+  );
 
   const data: FeedAPIData | null = response.ok ? await response.json() : null;
 

@@ -1,100 +1,29 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import styles from './App.module.css';
 import FeedItemCard from './FeedItemCard';
 import useFeedData from './useFeedData';
-import useIntersectionObserver from './useIntersectionObserver';
+
+interface FeedItemInfo {
+  height: number;
+  position: number;
+}
 
 interface RenderedRange {
   startIndex: number;
   endIndex: number;
 }
 
-const CARD_BOTTOM_MARGIN = 20;
-const NUM_CARDS_RENDERED = 5;
-
-const sumCardHeights = (heights: number[]) => {
-  const heightsSum = heights.reduce((sum, num) => sum + num, 0);
-  return heightsSum + heights.length * CARD_BOTTOM_MARGIN;
-};
-
-const getScrollPreservationValues = (
-  cardHeights: number[],
-  renderedRange: RenderedRange,
-) => {
-  const beforeCardHeights = cardHeights.slice(0, renderedRange.startIndex);
-  const afterCardHeights = cardHeights.slice(renderedRange.endIndex + 1);
-
-  return {
-    before: sumCardHeights(beforeCardHeights),
-    after: sumCardHeights(afterCardHeights),
-  };
-};
-
-const useFeedCardObserver = (
-  callback: (wasIntersecting: boolean, isIntersecting: boolean) => void,
-) => {
-  const wasIntersectingRef = useRef(false);
-
-  const observerRef = useIntersectionObserver((entries) => {
-    const [entry] = entries;
-    callback(wasIntersectingRef.current, entry.isIntersecting);
-    wasIntersectingRef.current = entry.isIntersecting;
-  });
-
-  return observerRef;
-};
+const NUM_CARDS_RENDERED = 10;
 
 function App() {
   const { feedData, fetchNextPage, isLoading } = useFeedData();
-  const wasLoadingRef = useRef(isLoading);
-  const [renderedRange, setRenderedRange] = useState<RenderedRange>({
+  const [renderedRange] = useState<RenderedRange>({
     startIndex: 0,
     endIndex: NUM_CARDS_RENDERED - 1,
   });
-  const feedCardDimensionsRef = useRef<number[]>([]);
-  const cardKeysRef = useRef(
-    new Array(NUM_CARDS_RENDERED).fill(0).map((_, i) => i),
-  );
-  const endCardIntersectingRef = useRef(false);
-
-  const setCardDimension = useCallback(
-    (rect: DOMRect, feedIndex: number): void => {
-      const dimensions = feedCardDimensionsRef.current;
-      dimensions[feedIndex] = rect.height;
-    },
-    [feedCardDimensionsRef],
-  );
-
-  const firstRenderedCardRef = useFeedCardObserver(
-    (wasIntersecting, isIntersecting) => {
-      if (!wasIntersecting && isIntersecting && renderedRange.startIndex > 0) {
-        cardKeysRef.current.unshift(cardKeysRef.current.pop() as number);
-        setRenderedRange({
-          startIndex: renderedRange.startIndex - 1,
-          endIndex: renderedRange.endIndex - 1,
-        });
-      }
-    },
-  );
-
-  const lastRenderedCardRef = useFeedCardObserver(
-    (wasIntersecting, isIntersecting) => {
-      endCardIntersectingRef.current = isIntersecting;
-
-      if (!wasIntersecting && isIntersecting) {
-        if (renderedRange.endIndex < feedData.items.length - 1) {
-          cardKeysRef.current.push(cardKeysRef.current.shift() as number);
-          setRenderedRange({
-            startIndex: renderedRange.startIndex + 1,
-            endIndex: renderedRange.endIndex + 1,
-          });
-        } else if (!isLoading && feedData.hasMore) {
-          fetchNextPage();
-        }
-      }
-    },
-  );
+  const feedElementsRef = useRef<HTMLDivElement[]>([]);
+  const [feedItemsInfo, setFeedItemsInfo] = useState<FeedItemInfo[]>([]);
 
   useEffect(() => {
     if (feedData.items.length === 0) {
@@ -103,50 +32,44 @@ function App() {
   }, [feedData, fetchNextPage]);
 
   useEffect(() => {
-    const wasLoading = wasLoadingRef.current;
-    wasLoadingRef.current = isLoading;
-    if (
-      wasLoading &&
-      !isLoading &&
-      endCardIntersectingRef.current &&
-      renderedRange.endIndex < feedData.items.length - 2
-    ) {
-      setRenderedRange({
-        startIndex: renderedRange.startIndex + 2,
-        endIndex: renderedRange.endIndex + 2,
+    setFeedItemsInfo((info) => {
+      feedElementsRef.current.forEach((element, i) => {
+        const feedIndex = i + renderedRange.startIndex;
+        if (info[feedIndex] == null) {
+          const height = element.clientHeight;
+          const previousItemInfo = feedIndex > 0 ? info[feedIndex - 1] : null;
+          const position =
+            previousItemInfo != null
+              ? previousItemInfo.position + previousItemInfo.height
+              : 0;
+          info[feedIndex] = {
+            height,
+            position,
+          };
+        }
       });
-    }
-  }, [feedData, isLoading, renderedRange]);
 
-  useEffect(() => {
-    const feedCardDimensions = feedCardDimensionsRef.current;
+      // TODO: Only set if we actually had to create info for an item
+      return info.slice();
+    });
+  }, [feedData.items.length, renderedRange.startIndex]);
 
-    if (feedCardDimensions.length - 1 < renderedRange.endIndex) {
-      return;
+  const addFeedElementsRef = (
+    element: HTMLDivElement | null,
+    index: number,
+  ): void => {
+    if (element != null) {
+      feedElementsRef.current[index] = element;
+    }
+  };
+
+  const getFeedCardContainerStyles = (index: number) => {
+    const itemInfo = feedItemsInfo[index + renderedRange.startIndex];
+
+    if (itemInfo != null) {
+      return { top: itemInfo.position };
     }
 
-    const middleCardHeights = feedCardDimensions.slice(
-      renderedRange.startIndex + 2,
-      renderedRange.endIndex - 1,
-    );
-    const middleCardsTotalHeight = sumCardHeights(middleCardHeights);
-
-    if (middleCardsTotalHeight < window.innerHeight) {
-      setRenderedRange({
-        ...renderedRange,
-        endIndex: renderedRange.endIndex + 1,
-      });
-      cardKeysRef.current.push(Math.max(...cardKeysRef.current) + 1);
-    }
-  }, [renderedRange]);
-
-  const getCardRef = (cardIndex: number) => {
-    if (cardIndex === 0) {
-      return firstRenderedCardRef;
-    }
-    if (cardIndex === renderedItems.length - 1) {
-      return lastRenderedCardRef;
-    }
     return undefined;
   };
 
@@ -157,28 +80,20 @@ function App() {
           renderedRange.endIndex + 1,
         )
       : [];
-  const scrollPreservationValues = getScrollPreservationValues(
-    feedCardDimensionsRef.current,
-    renderedRange,
-  );
 
   return (
     <div className={styles.app}>
       {renderedItems.length > 0 && (
-        <div
-          style={{
-            paddingTop: scrollPreservationValues.before,
-            paddingBottom: scrollPreservationValues.after,
-          }}
-        >
+        <div className={styles.feedContainer}>
           {renderedItems.map((item, i) => (
-            <FeedItemCard
-              feedIndex={renderedRange.startIndex + i}
-              item={item}
-              key={cardKeysRef.current[i]}
-              onRender={setCardDimension}
-              ref={getCardRef(i)}
-            />
+            <div
+              className={styles.feedCardContainer}
+              key={i}
+              ref={(element) => addFeedElementsRef(element, i)}
+              style={getFeedCardContainerStyles(i)}
+            >
+              <FeedItemCard item={item} />
+            </div>
           ))}
         </div>
       )}

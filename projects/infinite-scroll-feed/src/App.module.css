@@ -1,7 +1,15 @@
 .app {
   align-items: center;
-  background-color: #f0f2f5;
   display: flex;
   flex-direction: column;
-  padding: 20px;
+}
+
+.feedContainer {
+  position: relative;
+  width: 500px;
+}
+
+.feedCardContainer {
+  padding-top: 20px;
+  position: absolute;
 }

@@ -1,8 +1,15 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 
 import styles from './App.module.css';
 import FeedItemCard from './FeedItemCard';
 import useFeedData from './useFeedData';
+import useScrollListener from './useScrollListener';
 
 interface FeedItemInfo {
   height: number;
@@ -57,11 +64,7 @@ function App() {
     });
   }, [feedData.items.length, renderedRange.startIndex]);
 
-  useEffect(() => {
-    if (feedItemsInfo.length === 0) {
-      return;
-    }
-
+  const updateRenderedItems = useCallback(() => {
     const viewportTopPosition = window.scrollY;
     const viewportBottomPosition = window.scrollY + window.innerHeight;
     const feedItemsInViewport: number[] = [];
@@ -90,11 +93,24 @@ function App() {
       feedItemsInfo.length - 1,
       feedItemsInViewport[feedItemsInViewport.length - 1] + NUM_OVERSCAN_ITEMS,
     );
-    setRenderedRange({
-      startIndex,
-      endIndex,
+    setRenderedRange((range) => {
+      if (startIndex !== range.startIndex || endIndex !== range.endIndex) {
+        return { startIndex, endIndex };
+      }
+      return range;
     });
   }, [feedItemsInfo]);
+
+  useEffect(() => {
+    if (feedItemsInfo.length === 0) {
+      return;
+    }
+    updateRenderedItems();
+  }, [feedItemsInfo, updateRenderedItems]);
+
+  useScrollListener(() => {
+    updateRenderedItems();
+  });
 
   const addFeedElementsRef = (
     element: HTMLDivElement | null,

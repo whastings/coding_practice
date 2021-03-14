@@ -15,12 +15,13 @@ interface RenderedRange {
 }
 
 const NUM_CARDS_PER_PAGE = 20;
+const NUM_OVERSCAN_ITEMS = 2;
 
 function App() {
   const { feedData, fetchNextPage, isLoading } = useFeedData(
     NUM_CARDS_PER_PAGE,
   );
-  const [renderedRange] = useState<RenderedRange>({
+  const [renderedRange, setRenderedRange] = useState<RenderedRange>({
     startIndex: 0,
     endIndex: NUM_CARDS_PER_PAGE - 1,
   });
@@ -55,6 +56,45 @@ function App() {
       return info.slice();
     });
   }, [feedData.items.length, renderedRange.startIndex]);
+
+  useEffect(() => {
+    if (feedItemsInfo.length === 0) {
+      return;
+    }
+
+    const viewportTopPosition = window.scrollY;
+    const viewportBottomPosition = window.scrollY + window.innerHeight;
+    const feedItemsInViewport: number[] = [];
+
+    for (let i = 0; i < feedItemsInfo.length; i++) {
+      const itemInfo = feedItemsInfo[i];
+      const itemStartPosition = itemInfo.position;
+      const itemEndPosition = itemInfo.position + itemInfo.height;
+
+      if (itemStartPosition > viewportBottomPosition) {
+        break;
+      }
+
+      if (
+        (itemStartPosition >= viewportTopPosition &&
+          itemStartPosition < viewportBottomPosition) ||
+        (itemEndPosition > viewportTopPosition &&
+          itemEndPosition <= viewportBottomPosition)
+      ) {
+        feedItemsInViewport.push(i);
+      }
+    }
+
+    const startIndex = Math.max(feedItemsInViewport[0] - NUM_OVERSCAN_ITEMS, 0);
+    const endIndex = Math.min(
+      feedItemsInfo.length - 1,
+      feedItemsInViewport[feedItemsInViewport.length - 1] + NUM_OVERSCAN_ITEMS,
+    );
+    setRenderedRange({
+      startIndex,
+      endIndex,
+    });
+  }, [feedItemsInfo]);
 
   const addFeedElementsRef = (
     element: HTMLDivElement | null,

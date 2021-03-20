@@ -21,6 +21,7 @@ interface RenderedRange {
   endIndex: number;
 }
 
+const LOADING_INDICATOR_HEIGHT = 40;
 const NUM_CARDS_PER_PAGE = 20;
 const NUM_OVERSCAN_ITEMS = 2;
 
@@ -38,12 +39,23 @@ function App() {
   useEffect(() => {
     if (feedData.items.length === 0) {
       fetchNextPage();
+    } else {
+      setRenderedRange((range) => ({
+        ...range,
+        endIndex: feedData.items.length - 1,
+      }));
     }
-  }, [feedData, fetchNextPage]);
+  }, [feedData.items.length, fetchNextPage]);
 
   useEffect(() => {
     setFeedItemsInfo((info) => {
-      feedElementsRef.current.forEach((element, i) => {
+      const numItemsRendered =
+        renderedRange.endIndex - renderedRange.startIndex + 1;
+      for (let i = 0; i < numItemsRendered; i++) {
+        const element = feedElementsRef.current[i];
+        if (element == null) {
+          continue;
+        }
         const feedIndex = i + renderedRange.startIndex;
         if (info[feedIndex] == null) {
           const height = element.clientHeight;
@@ -57,12 +69,12 @@ function App() {
             position,
           };
         }
-      });
+      }
 
       // TODO: Only set if we actually had to create info for an item
       return info.slice();
     });
-  }, [feedData.items.length, renderedRange.startIndex]);
+  }, [renderedRange]);
 
   const updateRenderedItems = useCallback(() => {
     const viewportTopPosition = window.scrollY;
@@ -101,6 +113,14 @@ function App() {
     });
   }, [feedItemsInfo]);
 
+  const loadMoreItemsIfNeeded = () => {
+    const viewportBottomPosition = window.scrollY + window.innerHeight;
+    const secondToLastItemInfo = feedItemsInfo[feedItemsInfo.length - 2];
+    if (viewportBottomPosition > secondToLastItemInfo.position && !isLoading) {
+      fetchNextPage();
+    }
+  };
+
   useEffect(() => {
     if (feedItemsInfo.length === 0) {
       return;
@@ -110,6 +130,7 @@ function App() {
 
   useScrollListener(() => {
     updateRenderedItems();
+    loadMoreItemsIfNeeded();
   });
 
   const addFeedElementsRef = (
@@ -131,9 +152,34 @@ function App() {
     return undefined;
   };
 
-  const feedContainerHeight = useMemo(() => {
+  const renderLoadingIndicator = () => {
+    if (isLoading) {
+      const lastRenderedItemInfo = feedItemsInfo[renderedRange.endIndex];
+      const position =
+        lastRenderedItemInfo != null
+          ? lastRenderedItemInfo.position + lastRenderedItemInfo.height
+          : 0;
+      return (
+        <div
+          style={{
+            height: LOADING_INDICATOR_HEIGHT,
+            position: 'absolute',
+            top: position,
+          }}
+        >
+          Loading...
+        </div>
+      );
+    }
+
+    return null;
+  };
+
+  const feedItemsHeight = useMemo(() => {
     return feedItemsInfo.reduce((sum, { height }) => sum + height, 0);
   }, [feedItemsInfo]);
+  const feedContainerHeight =
+    feedItemsHeight + (isLoading ? LOADING_INDICATOR_HEIGHT : 0);
 
   const renderedItems =
     feedData.items.length > 0
@@ -145,24 +191,22 @@ function App() {
 
   return (
     <div className={styles.app}>
-      {renderedItems.length > 0 && (
-        <div
-          className={styles.feedContainer}
-          style={{ height: feedContainerHeight }}
-        >
-          {renderedItems.map((item, i) => (
-            <div
-              className={styles.feedCardContainer}
-              key={i}
-              ref={(element) => addFeedElementsRef(element, i)}
-              style={getFeedCardContainerStyles(i)}
-            >
-              <FeedItemCard item={item} />
-            </div>
-          ))}
-        </div>
-      )}
-      {isLoading && <div>Loading...</div>}
+      <div
+        className={styles.feedContainer}
+        style={{ height: feedContainerHeight }}
+      >
+        {renderedItems.map((item, i) => (
+          <div
+            className={styles.feedCardContainer}
+            key={i}
+            ref={(element) => addFeedElementsRef(element, i)}
+            style={getFeedCardContainerStyles(i)}
+          >
+            <FeedItemCard item={item} />
+          </div>
+        ))}
+        {renderLoadingIndicator()}
+      </div>
     </div>
   );
 }

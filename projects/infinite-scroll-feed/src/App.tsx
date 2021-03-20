@@ -8,20 +8,17 @@ import React, {
 
 import styles from './App.module.css';
 import FeedItemCard from './FeedItemCard';
+import { FeedItemInfo } from './types';
+import FeedLoadingIndicator from './FeedLoadingIndicator';
 import useFeedData from './useFeedData';
 import useScrollListener from './useScrollListener';
-
-interface FeedItemInfo {
-  height: number;
-  position: number;
-}
 
 interface RenderedRange {
   startIndex: number;
   endIndex: number;
 }
 
-const LOADING_INDICATOR_HEIGHT = 40;
+const LOADING_INDICATOR_HEIGHT = 30;
 const NUM_CARDS_PER_PAGE = 20;
 const NUM_OVERSCAN_ITEMS = 2;
 
@@ -152,29 +149,6 @@ function App() {
     return undefined;
   };
 
-  const renderLoadingIndicator = () => {
-    if (isLoading) {
-      const lastRenderedItemInfo = feedItemsInfo[renderedRange.endIndex];
-      const position =
-        lastRenderedItemInfo != null
-          ? lastRenderedItemInfo.position + lastRenderedItemInfo.height
-          : 0;
-      return (
-        <div
-          style={{
-            height: LOADING_INDICATOR_HEIGHT,
-            position: 'absolute',
-            top: position,
-          }}
-        >
-          Loading...
-        </div>
-      );
-    }
-
-    return null;
-  };
-
   const feedItemsHeight = useMemo(() => {
     return feedItemsInfo.reduce((sum, { height }) => sum + height, 0);
   }, [feedItemsInfo]);
@@ -205,7 +179,12 @@ function App() {
             <FeedItemCard item={item} />
           </div>
         ))}
-        {renderLoadingIndicator()}
+        {isLoading && (
+          <FeedLoadingIndicator
+            height={LOADING_INDICATOR_HEIGHT}
+            lastItemInfo={feedItemsInfo[renderedRange.endIndex]}
+          />
+        )}
       </div>
     </div>
   );

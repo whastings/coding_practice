@@ -6,10 +6,8 @@ import React, {
   useState,
 } from 'react';
 
-import {
-  addRenderedItemsInfo,
-  getRenderedItemsRange,
-} from './FeedRenderingUtils';
+import addRenderedItemsInfo from './utils/addRenderedItemsInfo';
+import getRenderedItemsRange from './utils/getRenderedItemsRange';
 import styles from './App.module.css';
 import FeedItemCard from './FeedItemCard';
 import { FeedItemInfo, RenderedRange } from './types';

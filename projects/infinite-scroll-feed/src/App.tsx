@@ -93,6 +93,8 @@ function App() {
     if (feedItemsInfo.length === 0) {
       return;
     }
+    // We just measured more items in the feed, so update which ones
+    // should be rendered.
     updateRenderedItems();
   }, [feedItemsInfo, updateRenderedItems]);
 

@@ -8,7 +8,7 @@ const useScrollListener = (callback: (event: Event) => void) => {
     () =>
       throttle((event: Event) => {
         callbackRef.current(event);
-      }, 300),
+      }, 100),
     [],
   );
 

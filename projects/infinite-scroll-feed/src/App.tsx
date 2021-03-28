@@ -38,8 +38,8 @@ function App() {
     }
   };
 
-  const getFeedCardContainerStyles = (index: number) => {
-    const itemInfo = feedItemsInfo[index + renderedRange.startIndex];
+  const getFeedCardContainerStyles = (feedIndex: number) => {
+    const itemInfo = feedItemsInfo[feedIndex];
     if (itemInfo != null) {
       return { top: itemInfo.position };
     }
@@ -122,16 +122,20 @@ function App() {
         className={styles.feedContainer}
         style={{ height: feedContainerHeight }}
       >
-        {renderedItems.map((item, i) => (
-          <div
-            className={styles.feedCardContainer}
-            key={i}
-            ref={(element) => addFeedElementsRef(element, i)}
-            style={getFeedCardContainerStyles(i)}
-          >
-            <FeedItemCard item={item} />
-          </div>
-        ))}
+        {renderedItems.map((item, i) => {
+          const feedIndex = i + renderedRange.startIndex;
+
+          return (
+            <div
+              className={styles.feedCardContainer}
+              key={feedIndex}
+              ref={(element) => addFeedElementsRef(element, i)}
+              style={getFeedCardContainerStyles(feedIndex)}
+            >
+              <FeedItemCard item={item} />
+            </div>
+          );
+        })}
         {isLoading && (
           <FeedLoadingIndicator
             height={LOADING_INDICATOR_HEIGHT}

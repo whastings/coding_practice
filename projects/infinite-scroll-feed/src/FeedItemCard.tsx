@@ -7,7 +7,7 @@ interface Props {
   item: FeedItem;
 }
 
-const FeedItemCard: React.FC<Props> = ({ item }) => {
+const FeedItemCard = React.memo<Props>(({ item }) => {
   return (
     <div className={styles.container}>
       <div className={styles.content}>
@@ -15,6 +15,6 @@ const FeedItemCard: React.FC<Props> = ({ item }) => {
       </div>
     </div>
   );
-};
+});
 
 export default FeedItemCard;

@@ -15,6 +15,7 @@ export const Default = () => (
       <DraggableListItem>Item 1</DraggableListItem>
       <DraggableListItem>Item 2</DraggableListItem>
       <DraggableListItem>Item 3</DraggableListItem>
+      <DraggableListItem>Item 4</DraggableListItem>
     </DraggableList>
   </div>
 );

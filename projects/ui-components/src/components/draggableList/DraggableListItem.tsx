@@ -26,10 +26,6 @@ function DraggableListItem({
 }: Props) {
   const containerRef = useRef<HTMLDivElement | undefined>();
 
-  if (index == null || onMouseDown == null) {
-    throw new Error('Missing prop!');
-  }
-
   const getStyle = () => {
     if (position != null && size != null) {
       return {
@@ -49,6 +45,10 @@ function DraggableListItem({
 
     if (containerEl == null) {
       throw new Error('Container ref not set');
+    }
+
+    if (onMouseDown == null || index == null) {
+      throw new Error('Missing prop');
     }
 
     const containerRect = containerEl.getBoundingClientRect();
@@ -72,7 +72,7 @@ function DraggableListItem({
         styles.container,
         position != null && styles.moving,
       )}
-      onMouseDown={handleMouseDown}
+      onMouseDown={onMouseDown != null ? handleMouseDown : undefined}
       ref={containerRef}
       style={getStyle()}
     >

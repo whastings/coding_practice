@@ -61,20 +61,27 @@ function DraggableList({ children }: Props) {
 
   const listItems = useMemo(
     () =>
-      React.Children.map<React.ReactElement, ChildType>(children, (child, i) =>
-        React.cloneElement(child, {
-          index: i,
-          onMouseDown: handleItemMouseDown,
-        }),
-      ),
-    [children, handleItemMouseDown],
+      React.Children.map<React.ReactElement | null, ChildType>(
+        children,
+        (child, i) => {
+          if (i === movingItemState.index) {
+            return null;
+          }
+
+          return React.cloneElement(child, {
+            index: i,
+            onMouseDown: handleItemMouseDown,
+          });
+        },
+      ).filter(Boolean),
+    [children, handleItemMouseDown, movingItemState],
   );
   const movingItem =
     movingItemState.index != null && movingItemState.position != null
       ? ReactDOM.createPortal(
-          React.cloneElement(listItems[movingItemState.index], {
+          React.cloneElement(children[movingItemState.index], {
             position: movingItemState.position,
-            size: movingItemState.size,
+            size: movingItemState.size ?? undefined,
           }),
           document.body,
         )

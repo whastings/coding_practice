@@ -70,6 +70,7 @@ function DraggableList({ children }: Props) {
 
         return React.cloneElement(child, {
           index: i,
+          key: i,
           onMouseDown: handleItemMouseDown,
         });
       },
@@ -82,12 +83,21 @@ function DraggableList({ children }: Props) {
       items.splice(
         movingItemState.placeholderIndex,
         0,
-        <DraggableListPlaceholder size={movingItemState.size} />,
+        <DraggableListPlaceholder
+          key="placeholder"
+          size={movingItemState.size}
+        />,
       );
     }
 
     return items.filter(Boolean);
-  }, [children, handleItemMouseDown, movingItemState]);
+  }, [
+    children,
+    handleItemMouseDown,
+    movingItemState.index,
+    movingItemState.placeholderIndex,
+    movingItemState.size,
+  ]);
 
   const movingItem =
     movingItemState.index != null && movingItemState.position != null

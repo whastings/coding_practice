@@ -24,7 +24,7 @@ function DraggableListItem({
   position,
   size,
 }: Props) {
-  const containerRef = useRef<HTMLDivElement | undefined>();
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const getStyle = () => {
     if (position != null && size != null) {

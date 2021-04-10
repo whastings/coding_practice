@@ -4,6 +4,7 @@ import { Position, Size } from './DraggableListType';
 interface MovingItemState {
   index: number | null;
   mouseAnchorPosition: Position | null;
+  placeholderIndex: number | null;
   position: Position | null;
   size: Size | null;
 }
@@ -36,6 +37,7 @@ type Action = MoveAction | StartMovingAction | StopMovingAction;
 const initialState: MovingItemState = {
   index: null,
   mouseAnchorPosition: null,
+  placeholderIndex: null,
   position: null,
   size: null,
 };
@@ -66,6 +68,7 @@ function reducer(state: MovingItemState, action: Action): MovingItemState {
       return {
         index: action.index,
         mouseAnchorPosition: action.mouseAnchorPosition,
+        placeholderIndex: action.index,
         position: getPosition(action.mousePosition, action.mouseAnchorPosition),
         size: action.size,
       };
@@ -73,6 +76,7 @@ function reducer(state: MovingItemState, action: Action): MovingItemState {
       return {
         index: null,
         mouseAnchorPosition: null,
+        placeholderIndex: null,
         position: null,
         size: null,
       };

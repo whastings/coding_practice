@@ -5,6 +5,7 @@ import styles from './DraggableList.module.css';
 import { Type as DraggableListItemType } from './DraggableListItem';
 import { Position, Size } from './DraggableListType';
 import { ActionType, useMovingItemState } from './movingItemState';
+import DraggableListPlaceholder from './DraggableListPlaceholder';
 
 type ChildType = React.ReactComponentElement<DraggableListItemType>;
 
@@ -59,23 +60,35 @@ function DraggableList({ children }: Props) {
     };
   }, [handleMouseMove, handleMouseUp, movingItemState]);
 
-  const listItems = useMemo(
-    () =>
-      React.Children.map<React.ReactElement | null, ChildType>(
-        children,
-        (child, i) => {
-          if (i === movingItemState.index) {
-            return null;
-          }
+  const listItems = useMemo(() => {
+    const items = React.Children.map<React.ReactElement | null, ChildType>(
+      children,
+      (child, i) => {
+        if (i === movingItemState.index) {
+          return null;
+        }
 
-          return React.cloneElement(child, {
-            index: i,
-            onMouseDown: handleItemMouseDown,
-          });
-        },
-      ).filter(Boolean),
-    [children, handleItemMouseDown, movingItemState],
-  );
+        return React.cloneElement(child, {
+          index: i,
+          onMouseDown: handleItemMouseDown,
+        });
+      },
+    );
+
+    if (
+      movingItemState.placeholderIndex != null &&
+      movingItemState.size != null
+    ) {
+      items.splice(
+        movingItemState.placeholderIndex,
+        0,
+        <DraggableListPlaceholder size={movingItemState.size} />,
+      );
+    }
+
+    return items.filter(Boolean);
+  }, [children, handleItemMouseDown, movingItemState]);
+
   const movingItem =
     movingItemState.index != null && movingItemState.position != null
       ? ReactDOM.createPortal(

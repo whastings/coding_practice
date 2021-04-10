@@ -7,10 +7,6 @@
   margin-bottom: 10px;
 }
 
-.container:last-child {
-  margin-bottom: 0;
-}
-
 .moving {
   left: 0;
   position: absolute;

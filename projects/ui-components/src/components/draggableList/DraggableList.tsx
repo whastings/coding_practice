@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 import ReactDOM from 'react-dom';
 
 import styles from './DraggableList.module.css';
@@ -6,6 +6,10 @@ import { Type as DraggableListItemType } from './DraggableListItem';
 import { Position, Size } from './DraggableListType';
 import { ActionType, useMovingItemState } from './movingItemState';
 import DraggableListPlaceholder from './DraggableListPlaceholder';
+import {
+  getDocumentRelativeRect,
+  getNewPlaceholderIndex,
+} from './DraggableListUtils';
 
 type ChildType = React.ReactComponentElement<DraggableListItemType>;
 
@@ -15,6 +19,8 @@ interface Props {
 
 function DraggableList({ children }: Props) {
   const [movingItemState, dispatch] = useMovingItemState();
+  const listElementsRef = useRef<Array<HTMLDivElement | null>>([]);
+  const listElementRectsRef = useRef(new Map<number, DOMRect>());
 
   const handleItemMouseDown = useCallback(
     (
@@ -60,19 +66,68 @@ function DraggableList({ children }: Props) {
     };
   }, [handleMouseMove, handleMouseUp, movingItemState]);
 
+  useEffect(() => {
+    listElementsRef.current.forEach((element, i) => {
+      if (element != null) {
+        listElementRectsRef.current.set(
+          i,
+          getDocumentRelativeRect(element.getBoundingClientRect()),
+        );
+      }
+    });
+  }, [movingItemState.placeholderIndex]);
+
+  useEffect(() => {
+    if (
+      movingItemState.placeholderIndex != null &&
+      movingItemState.position != null &&
+      movingItemState.size != null
+    ) {
+      const newPlaceholderIndex = getNewPlaceholderIndex(
+        listElementsRef.current,
+        listElementRectsRef.current,
+        movingItemState.position,
+        movingItemState.size,
+        movingItemState.placeholderIndex,
+      );
+      if (newPlaceholderIndex != null) {
+        dispatch({
+          index: newPlaceholderIndex,
+          type: ActionType.MOVE_PLACEHOLDER,
+        });
+      }
+    }
+  }, [
+    dispatch,
+    movingItemState.placeholderIndex,
+    movingItemState.position,
+    movingItemState.size,
+  ]);
+
   const listItems = useMemo(() => {
     const items = React.Children.map<React.ReactElement | null, ChildType>(
       children,
       (child, i) => {
         if (i === movingItemState.index) {
+          listElementsRef.current[i] = null;
           return null;
         }
 
-        return React.cloneElement(child, {
-          index: i,
-          key: i,
-          onMouseDown: handleItemMouseDown,
-        });
+        return (
+          <div
+            key={i}
+            ref={(el) => {
+              if (el != null) {
+                listElementsRef.current[i] = el;
+              }
+            }}
+          >
+            {React.cloneElement(child, {
+              index: i,
+              onMouseDown: handleItemMouseDown,
+            })}
+          </div>
+        );
       },
     );
 

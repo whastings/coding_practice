@@ -11,6 +11,7 @@ interface MovingItemState {
 
 export enum ActionType {
   MOVE = 'move',
+  MOVE_PLACEHOLDER = 'move_placeholder',
   START_MOVING = 'start_moving',
   STOP_MOVING = 'stop_moving',
 }
@@ -18,6 +19,11 @@ export enum ActionType {
 interface MoveAction {
   mousePosition: Position;
   type: ActionType.MOVE;
+}
+
+interface MovePlaceholderAction {
+  index: number;
+  type: ActionType.MOVE_PLACEHOLDER;
 }
 
 interface StartMovingAction {
@@ -32,7 +38,11 @@ interface StopMovingAction {
   type: ActionType.STOP_MOVING;
 }
 
-type Action = MoveAction | StartMovingAction | StopMovingAction;
+type Action =
+  | MoveAction
+  | MovePlaceholderAction
+  | StartMovingAction
+  | StopMovingAction;
 
 const initialState: MovingItemState = {
   index: null,
@@ -63,6 +73,11 @@ function reducer(state: MovingItemState, action: Action): MovingItemState {
       return {
         ...state,
         position: getPosition(action.mousePosition, state.mouseAnchorPosition),
+      };
+    case ActionType.MOVE_PLACEHOLDER:
+      return {
+        ...state,
+        placeholderIndex: action.index,
       };
     case ActionType.START_MOVING:
       return {

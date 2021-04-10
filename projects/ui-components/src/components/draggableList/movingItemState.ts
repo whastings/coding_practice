@@ -53,8 +53,10 @@ const getPosition = (
 function reducer(state: MovingItemState, action: Action): MovingItemState {
   switch (action.type) {
     case ActionType.MOVE:
+      // Mouse move events still fire after mouse up until React re-renders,
+      // so ignore those dispatches
       if (state.mouseAnchorPosition == null) {
-        throw new Error('Missing mouse anchor position in state');
+        return state;
       }
       return {
         ...state,

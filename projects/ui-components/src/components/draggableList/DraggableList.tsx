@@ -6,10 +6,8 @@ import DraggableListItem from './DraggableListItem';
 import { Position, Size } from './DraggableListType';
 import { ActionType, useMovingItemState } from './movingItemState';
 import DraggableListPlaceholder from './DraggableListPlaceholder';
-import {
-  getDocumentRelativeRect,
-  getNewPlaceholderIndex,
-} from './DraggableListUtils';
+import { getNewPlaceholderIndex } from './DraggableListUtils';
+import getDocumentRelativeRect from '../../utils/getDocumentRelativeRect';
 
 interface Props<T> {
   list: T[];

@@ -34,3 +34,28 @@ export function Default() {
     </div>
   );
 }
+
+export function Flipped() {
+  const { menuRenderer, toggleMenu, triggerRef } = useDropdownMenu(
+    <ExampleMenu />,
+  );
+
+  return (
+    <div
+      style={{
+        alignItems: 'flex-start',
+        border: '1px #000 solid',
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100vh',
+        justifyContent: 'flex-end',
+        padding: 10,
+      }}
+    >
+      <button onClick={toggleMenu} ref={triggerRef}>
+        Open Menu
+      </button>
+      {menuRenderer}
+    </div>
+  );
+}

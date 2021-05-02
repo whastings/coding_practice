@@ -3,3 +3,9 @@
   border: 1px #000 solid;
   padding: 10px;
 }
+
+.list {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}

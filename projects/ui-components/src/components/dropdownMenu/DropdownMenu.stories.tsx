@@ -3,6 +3,7 @@ import { Meta } from '@storybook/react/types-6-0';
 
 import useDropdownMenu from './useDropdownMenu';
 import DropdownMenu from './DropdownMenu';
+import DropdownMenuItem from './DropdownMenuItem';
 
 export default {
   title: 'Components/DropdownMenu',
@@ -11,11 +12,9 @@ export default {
 function ExampleMenu() {
   return (
     <DropdownMenu>
-      <ul style={{ listStyleType: 'none', margin: 0, padding: 0 }}>
-        <li>Item 1</li>
-        <li>Item 2</li>
-        <li>Item 3</li>
-      </ul>
+      <DropdownMenuItem>Item 1</DropdownMenuItem>
+      <DropdownMenuItem>Item 2</DropdownMenuItem>
+      <DropdownMenuItem>Item 3</DropdownMenuItem>
     </DropdownMenu>
   );
 }

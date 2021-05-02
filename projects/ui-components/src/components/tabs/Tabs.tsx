@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 
 import { TabsListType } from './TabsList';
 import { TabPanelType } from './TabPanel';
@@ -29,40 +29,15 @@ const renderChildren = (children: Child[]) => {
   });
 };
 
-const incrementTabIndex = (
-  activeTabIndex: number,
-  setActiveTabIndex: (index: number) => void,
-  numTabs: number,
-) => (increment: number) => {
-  const newIndex = activeTabIndex + increment;
-  if (newIndex < 0) {
-    setActiveTabIndex(numTabs - 1);
-  } else if (newIndex >= numTabs) {
-    setActiveTabIndex(0);
-  } else {
-    setActiveTabIndex(newIndex);
-  }
-};
-
 const Tabs: React.FC<Props> = ({ children, name }: Props) => {
   const [activeTabIndex, setActiveTabIndex] = useState(0);
-  const numTabs = children.reduce(
-    (count: number, child: Child) =>
-      count + (child.type.displayName === 'TabPanel' ? 1 : 0),
-    0,
-  );
-  const incrementTabIndexFn = useCallback(
-    incrementTabIndex(activeTabIndex, setActiveTabIndex, numTabs),
-    [activeTabIndex, setActiveTabIndex, numTabs],
-  );
   const contextValue = useMemo(
     () => ({
       activeTabIndex,
-      incrementTabIndex: incrementTabIndexFn,
       setActiveTabIndex,
       tabsName: name,
     }),
-    [activeTabIndex, incrementTabIndexFn, setActiveTabIndex, name],
+    [activeTabIndex, setActiveTabIndex, name],
   );
 
   return (

@@ -2,9 +2,17 @@ import React, { useEffect, useRef } from 'react';
 
 interface Props {
   children: React.ReactElement[];
+  direction: 'horizontal' | 'vertical';
+  onNavigate?: (activeItemIndex: number) => void;
+  shouldFocusOnMount?: boolean;
 }
 
-function KeyboardNavigableList({ children }: Props) {
+function KeyboardNavigableList({
+  children,
+  direction,
+  onNavigate,
+  shouldFocusOnMount = false,
+}: Props) {
   const hasMountedRef = useRef(false);
   const listItemsRef = useRef<HTMLElement[]>([]);
 
@@ -13,7 +21,9 @@ function KeyboardNavigableList({ children }: Props) {
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
-    if (event.key !== 'ArrowDown' && event.key !== 'ArrowUp') {
+    const nextKey = direction === 'horizontal' ? 'ArrowRight' : 'ArrowDown';
+    const prevKey = direction === 'horizontal' ? 'ArrowLeft' : 'ArrowUp';
+    if (event.key !== nextKey && event.key !== prevKey) {
       return;
     }
 
@@ -24,18 +34,21 @@ function KeyboardNavigableList({ children }: Props) {
 
     if (focusedItemIndex != null) {
       let indexToFocus =
-        event.key === 'ArrowDown' ? focusedItemIndex + 1 : focusedItemIndex - 1;
+        event.key === nextKey ? focusedItemIndex + 1 : focusedItemIndex - 1;
       if (indexToFocus >= listItems.length) {
         indexToFocus = 0;
       } else if (indexToFocus < 0) {
         indexToFocus = listItems.length - 1;
       }
       listItems[indexToFocus].focus();
+      if (onNavigate != null) {
+        onNavigate(indexToFocus);
+      }
     }
   };
 
   useEffect(() => {
-    if (!hasMountedRef.current) {
+    if (!hasMountedRef.current && shouldFocusOnMount) {
       const firstElement = listItemsRef.current[0];
       firstElement.focus();
       hasMountedRef.current = true;
@@ -43,7 +56,7 @@ function KeyboardNavigableList({ children }: Props) {
   });
 
   return (
-    <div onKeyDown={handleKeyDown}>
+    <div onKeyDown={handleKeyDown} style={{ display: 'contents' }}>
       {React.Children.map(children, (child, i) =>
         React.cloneElement(child, {
           ref: (el: HTMLElement) => addItemRef(el, i),

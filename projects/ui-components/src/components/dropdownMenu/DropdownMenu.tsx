@@ -11,7 +11,9 @@ function DropdownMenu({ children }: Props) {
   return (
     <div className={styles.container}>
       <ul className={styles.list}>
-        <KeyboardNavigableList>{children}</KeyboardNavigableList>
+        <KeyboardNavigableList direction="vertical" shouldFocusOnMount={true}>
+          {children}
+        </KeyboardNavigableList>
       </ul>
     </div>
   );

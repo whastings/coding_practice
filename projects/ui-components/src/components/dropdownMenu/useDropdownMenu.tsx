@@ -7,6 +7,7 @@ import React, {
 } from 'react';
 import { createPortal } from 'react-dom';
 
+import { DropdownMenuContextProvider } from './DropdownMenuContext';
 import getDocumentRelativeRect from '../../utils/getDocumentRelativeRect';
 
 type TriggerRef = React.MutableRefObject<HTMLButtonElement | null>;
@@ -59,9 +60,14 @@ function useDropdownMenu(menu: React.ReactElement): Result {
 
   const getRenderedMenu = () => {
     return createPortal(
-      <div ref={containerRef} style={{ ...menuPosition, position: 'absolute' }}>
-        {menu}
-      </div>,
+      <DropdownMenuContextProvider onItemActivate={toggleMenu}>
+        <div
+          ref={containerRef}
+          style={{ ...menuPosition, position: 'absolute' }}
+        >
+          {menu}
+        </div>
+      </DropdownMenuContextProvider>,
       document.body,
     );
   };

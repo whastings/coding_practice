@@ -10,11 +10,21 @@ export default {
 } as Meta;
 
 function ExampleMenu() {
+  const handleItemClick = (index: number) => {
+    window.alert(`Item #${index + 1} activated`);
+  };
+
   return (
     <DropdownMenu>
-      <DropdownMenuItem>Item 1</DropdownMenuItem>
-      <DropdownMenuItem>Item 2</DropdownMenuItem>
-      <DropdownMenuItem>Item 3</DropdownMenuItem>
+      <DropdownMenuItem onActivate={() => handleItemClick(0)}>
+        Item 1
+      </DropdownMenuItem>
+      <DropdownMenuItem onActivate={() => handleItemClick(1)}>
+        Item 2
+      </DropdownMenuItem>
+      <DropdownMenuItem onActivate={() => handleItemClick(2)}>
+        Item 3
+      </DropdownMenuItem>
     </DropdownMenu>
   );
 }

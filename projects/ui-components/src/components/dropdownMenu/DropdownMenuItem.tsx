@@ -17,10 +17,17 @@ const DropdownMenuItem = React.forwardRef<HTMLLIElement, Props>(
       context.onItemActivate();
     };
 
+    const handleKeyDown = (event: React.KeyboardEvent<HTMLLIElement>) => {
+      if (event.key === 'Enter') {
+        handleActivate();
+      }
+    };
+
     return (
       <li
         className={styles.item}
         onClick={handleActivate}
+        onKeyDown={handleKeyDown}
         ref={ref}
         tabIndex={-1}
       >

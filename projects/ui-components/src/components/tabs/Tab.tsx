@@ -28,7 +28,7 @@ const Tab = React.forwardRef<HTMLButtonElement, Props>(
         ref={ref}
         type="button"
         role="tab"
-        tabIndex={-1}
+        tabIndex={isActive ? undefined : -1}
         aria-controls={panelId}
         aria-selected={isActive}
         onClick={() => setActiveTabIndex(index)}

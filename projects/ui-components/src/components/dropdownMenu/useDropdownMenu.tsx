@@ -53,10 +53,18 @@ function getMenuPosition(triggerEl: HTMLButtonElement): MenuPosition {
 function useDropdownMenu(menu: React.ReactElement): Result {
   const triggerRef: TriggerRef = useRef(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const focusTriggerRef = useRef(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [menuPosition, setMenuPosition] = useState<MenuPosition | null>(null);
 
-  const toggleMenu = useCallback(() => setIsMenuOpen((value) => !value), []);
+  const toggleMenu = useCallback(() => {
+    setIsMenuOpen((value) => {
+      if (value) {
+        focusTriggerRef.current = true;
+      }
+      return !value;
+    });
+  }, []);
 
   const getRenderedMenu = () => {
     return createPortal(
@@ -82,6 +90,13 @@ function useDropdownMenu(menu: React.ReactElement): Result {
       setMenuPosition(null);
     }
   }, [isMenuOpen]);
+
+  useEffect(() => {
+    if (focusTriggerRef.current && triggerRef.current) {
+      triggerRef.current.focus();
+      focusTriggerRef.current = false;
+    }
+  });
 
   useLayoutEffect(() => {
     if (menuPosition != null) {

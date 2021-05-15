@@ -17,9 +17,15 @@ interface MenuPosition {
   top: number;
 }
 
+interface TriggerProps {
+  'aria-expanded'?: true;
+  'aria-haspopup': true;
+}
+
 interface Result {
   menuRenderer: React.ReactElement | null;
   toggleMenu: () => void;
+  triggerProps: TriggerProps;
   triggerRef: TriggerRef;
 }
 
@@ -80,6 +86,14 @@ function useDropdownMenu(menu: React.ReactElement): Result {
     );
   };
 
+  const getTriggerProps = () => {
+    const triggerProps: TriggerProps = { 'aria-haspopup': true };
+    if (isMenuOpen) {
+      triggerProps['aria-expanded'] = true;
+    }
+    return triggerProps;
+  };
+
   useEffect(() => {
     if (isMenuOpen) {
       if (triggerRef.current == null) {
@@ -117,7 +131,12 @@ function useDropdownMenu(menu: React.ReactElement): Result {
 
   const menuRenderer = isMenuOpen ? getRenderedMenu() : null;
 
-  return { menuRenderer, toggleMenu, triggerRef };
+  return {
+    menuRenderer,
+    toggleMenu,
+    triggerProps: getTriggerProps(),
+    triggerRef,
+  };
 }
 
 export default useDropdownMenu;

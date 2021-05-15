@@ -30,13 +30,16 @@ function ExampleMenu() {
 }
 
 export function Default() {
-  const { menuRenderer, toggleMenu, triggerRef } = useDropdownMenu(
-    <ExampleMenu />,
-  );
+  const {
+    menuRenderer,
+    toggleMenu,
+    triggerProps,
+    triggerRef,
+  } = useDropdownMenu(<ExampleMenu />);
 
   return (
     <div style={{ border: '1px #000 solid', padding: 10 }}>
-      <button onClick={toggleMenu} ref={triggerRef}>
+      <button {...triggerProps} onClick={toggleMenu} ref={triggerRef}>
         Open Menu
       </button>
       {menuRenderer}
@@ -45,9 +48,12 @@ export function Default() {
 }
 
 export function Flipped() {
-  const { menuRenderer, toggleMenu, triggerRef } = useDropdownMenu(
-    <ExampleMenu />,
-  );
+  const {
+    menuRenderer,
+    toggleMenu,
+    triggerProps,
+    triggerRef,
+  } = useDropdownMenu(<ExampleMenu />);
 
   return (
     <div
@@ -61,7 +67,7 @@ export function Flipped() {
         padding: 10,
       }}
     >
-      <button onClick={toggleMenu} ref={triggerRef}>
+      <button {...triggerProps} onClick={toggleMenu} ref={triggerRef}>
         Open Menu
       </button>
       {menuRenderer}

@@ -9,6 +9,7 @@ import { createPortal } from 'react-dom';
 
 import { DropdownMenuContextProvider } from './DropdownMenuContext';
 import getDocumentRelativeRect from '../../utils/getDocumentRelativeRect';
+import { useUniqueID } from '../../utils/uniqueID/UniqueIDContext';
 
 type TriggerRef = React.MutableRefObject<HTMLButtonElement | null>;
 
@@ -18,8 +19,10 @@ interface MenuPosition {
 }
 
 interface TriggerProps {
+  'aria-controls': string;
   'aria-expanded'?: true;
   'aria-haspopup': true;
+  id: string;
 }
 
 interface Result {
@@ -62,6 +65,8 @@ function useDropdownMenu(menu: React.ReactElement): Result {
   const focusTriggerRef = useRef(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [menuPosition, setMenuPosition] = useState<MenuPosition | null>(null);
+  const triggerID = useUniqueID();
+  const menuID = useUniqueID();
 
   const toggleMenu = useCallback(() => {
     setIsMenuOpen((value) => {
@@ -74,7 +79,11 @@ function useDropdownMenu(menu: React.ReactElement): Result {
 
   const getRenderedMenu = () => {
     return createPortal(
-      <DropdownMenuContextProvider onItemActivate={toggleMenu}>
+      <DropdownMenuContextProvider
+        menuID={menuID}
+        onItemActivate={toggleMenu}
+        triggerID={triggerID}
+      >
         <div
           ref={containerRef}
           style={{ ...menuPosition, position: 'absolute' }}
@@ -87,7 +96,11 @@ function useDropdownMenu(menu: React.ReactElement): Result {
   };
 
   const getTriggerProps = () => {
-    const triggerProps: TriggerProps = { 'aria-haspopup': true };
+    const triggerProps: TriggerProps = {
+      'aria-controls': menuID,
+      'aria-haspopup': true,
+      id: triggerID,
+    };
     if (isMenuOpen) {
       triggerProps['aria-expanded'] = true;
     }

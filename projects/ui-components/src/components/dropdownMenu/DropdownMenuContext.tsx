@@ -1,7 +1,11 @@
 import React, { useContext, useMemo } from 'react';
 
+import { UniqueID } from '../../utils/uniqueID/UniqueIDContext';
+
 interface Context {
   onItemActivate: () => void;
+  menuID: UniqueID;
+  triggerID: UniqueID;
 }
 
 interface ProviderProps extends Context {
@@ -12,9 +16,15 @@ const DropdownMenuContext = React.createContext<Context | null>(null);
 
 export function DropdownMenuContextProvider({
   children,
+  menuID,
   onItemActivate,
+  triggerID,
 }: ProviderProps) {
-  const context = useMemo(() => ({ onItemActivate }), [onItemActivate]);
+  const context = useMemo(() => ({ menuID, onItemActivate, triggerID }), [
+    menuID,
+    onItemActivate,
+    triggerID,
+  ]);
   return (
     <DropdownMenuContext.Provider value={context}>
       {children}

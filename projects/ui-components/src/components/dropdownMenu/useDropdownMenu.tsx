@@ -10,6 +10,8 @@ import { createPortal } from 'react-dom';
 import { DropdownMenuContextProvider } from './DropdownMenuContext';
 import getDocumentRelativeRect from '../../utils/getDocumentRelativeRect';
 import { useUniqueID } from '../../utils/uniqueID/UniqueIDContext';
+import mergeRefs from '../../utils/mergeRefs';
+import useOnOutsideClick from '../../utils/useOnOutsideClick';
 
 type TriggerRef = React.MutableRefObject<HTMLButtonElement | null>;
 
@@ -64,6 +66,9 @@ function useDropdownMenu(menu: React.ReactElement): Result {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const focusTriggerRef = useRef(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const outsideClickRef = useOnOutsideClick(() => {
+    setIsMenuOpen(false);
+  });
   const [menuPosition, setMenuPosition] = useState<MenuPosition | null>(null);
   const triggerID = useUniqueID();
   const menuID = useUniqueID();
@@ -85,7 +90,7 @@ function useDropdownMenu(menu: React.ReactElement): Result {
         triggerID={triggerID}
       >
         <div
-          ref={containerRef}
+          ref={mergeRefs(containerRef, outsideClickRef)}
           style={{ ...menuPosition, position: 'absolute' }}
         >
           {menu}

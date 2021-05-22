@@ -29,6 +29,7 @@ const DropdownMenuItem = React.forwardRef<HTMLLIElement, Props>(
         onClick={handleActivate}
         onKeyDown={handleKeyDown}
         ref={ref}
+        role="menuitem"
         tabIndex={-1}
       >
         {children}

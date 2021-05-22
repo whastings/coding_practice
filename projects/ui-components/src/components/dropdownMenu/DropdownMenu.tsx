@@ -17,6 +17,7 @@ function DropdownMenu({ children }: Props) {
         aria-labelledby={context.triggerID}
         className={styles.list}
         id={context.menuID}
+        role="menu"
       >
         <KeyboardNavigableList direction="vertical" shouldFocusOnMount={true}>
           {children}

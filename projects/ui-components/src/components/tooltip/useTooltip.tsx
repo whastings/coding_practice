@@ -1,5 +1,9 @@
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { createPortal } from 'react-dom';
+
+import useAnchoredPosition, {
+  AnchorPoint,
+} from '../../utils/useAnchoredPosition';
 
 interface EventHandlers {
   onBlur: () => void;
@@ -17,8 +21,13 @@ interface Result {
 }
 
 function useTooltip(contents: React.ReactElement): Result {
-  const triggerRef: TriggerRef = useRef(null);
   const [isVisible, setIsVisible] = useState(false);
+  const { anchorRef, position, positionedRef } = useAnchoredPosition<
+    HTMLButtonElement,
+    HTMLDivElement
+  >({
+    anchorPoint: AnchorPoint.TOP,
+  });
 
   const getRenderedTooltip = () => {
     if (!isVisible) {
@@ -26,7 +35,9 @@ function useTooltip(contents: React.ReactElement): Result {
     }
 
     return createPortal(
-      <div style={{ position: 'absolute' }}>{contents}</div>,
+      <div ref={positionedRef} style={{ ...position, position: 'absolute' }}>
+        {contents}
+      </div>,
       document.body,
     );
   };
@@ -49,7 +60,7 @@ function useTooltip(contents: React.ReactElement): Result {
   return {
     tooltipRenderer: getRenderedTooltip(),
     triggerEventHandlers: eventHandlers,
-    triggerRef,
+    triggerRef: anchorRef,
   };
 }
 

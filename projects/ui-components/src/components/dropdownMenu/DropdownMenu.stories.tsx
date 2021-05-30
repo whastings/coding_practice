@@ -38,7 +38,7 @@ export function Default() {
   } = useDropdownMenu(<ExampleMenu />);
 
   return (
-    <div style={{ border: '1px #000 solid', padding: 10 }}>
+    <div style={{ border: '1px #000 solid', marginBottom: 300, padding: 10 }}>
       <button {...triggerProps} onClick={toggleMenu} ref={triggerRef}>
         Open Menu
       </button>

@@ -1,10 +1,4 @@
-import React, {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 
 import { DropdownMenuContextProvider } from './DropdownMenuContext';
@@ -12,6 +6,9 @@ import getDocumentRelativeRect from '../../utils/getDocumentRelativeRect';
 import { useUniqueID } from '../../utils/uniqueID/UniqueIDContext';
 import mergeRefs from '../../utils/mergeRefs';
 import useOnOutsideClick from '../../utils/useOnOutsideClick';
+import useAnchoredPosition, {
+  AnchorPoint,
+} from '../../utils/useAnchoredPosition';
 
 type TriggerRef = React.MutableRefObject<HTMLButtonElement | null>;
 
@@ -54,22 +51,19 @@ function getFlippedPosition(
   };
 }
 
-function getMenuPosition(triggerEl: HTMLButtonElement): MenuPosition {
-  const triggerRect = getDocumentRelativeRect(
-    triggerEl.getBoundingClientRect(),
-  );
-  return { left: triggerRect.left, top: triggerRect.bottom + MENU_OFFSET };
-}
-
 function useDropdownMenu(menu: React.ReactElement): Result {
-  const triggerRef: TriggerRef = useRef(null);
-  const containerRef = useRef<HTMLDivElement | null>(null);
+  const { anchorRef, position, positionedRef } = useAnchoredPosition<
+    HTMLButtonElement,
+    HTMLDivElement
+  >({
+    anchorPoint: AnchorPoint.BOTTOM,
+    offset: MENU_OFFSET,
+  });
   const focusTriggerRef = useRef(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const outsideClickRef = useOnOutsideClick(() => {
     setIsMenuOpen(false);
   });
-  const [menuPosition, setMenuPosition] = useState<MenuPosition | null>(null);
   const triggerID = useUniqueID();
   const menuID = useUniqueID();
 
@@ -90,8 +84,8 @@ function useDropdownMenu(menu: React.ReactElement): Result {
         triggerID={triggerID}
       >
         <div
-          ref={mergeRefs(containerRef, outsideClickRef)}
-          style={{ ...menuPosition, position: 'absolute' }}
+          ref={mergeRefs(positionedRef, outsideClickRef)}
+          style={{ ...position, position: 'absolute' }}
         >
           {menu}
         </div>
@@ -113,39 +107,11 @@ function useDropdownMenu(menu: React.ReactElement): Result {
   };
 
   useEffect(() => {
-    if (isMenuOpen) {
-      if (triggerRef.current == null) {
-        throw new Error('Trigger ref is not set');
-      }
-      setMenuPosition(getMenuPosition(triggerRef.current));
-    } else {
-      setMenuPosition(null);
-    }
-  }, [isMenuOpen]);
-
-  useEffect(() => {
-    if (focusTriggerRef.current && triggerRef.current) {
-      triggerRef.current.focus();
+    if (focusTriggerRef.current && anchorRef.current) {
+      anchorRef.current.focus();
       focusTriggerRef.current = false;
     }
   });
-
-  useLayoutEffect(() => {
-    if (menuPosition != null) {
-      if (containerRef.current == null || triggerRef.current == null) {
-        throw new Error('Missing container or trigger ref!');
-      }
-
-      const newPosition = getFlippedPosition(
-        containerRef.current,
-        triggerRef.current,
-      );
-
-      if (newPosition != null) {
-        setMenuPosition(newPosition);
-      }
-    }
-  }, [menuPosition]);
 
   const menuRenderer = isMenuOpen ? getRenderedMenu() : null;
 
@@ -153,7 +119,7 @@ function useDropdownMenu(menu: React.ReactElement): Result {
     menuRenderer,
     toggleMenu,
     triggerProps: getTriggerProps(),
-    triggerRef,
+    triggerRef: anchorRef,
   };
 }
 

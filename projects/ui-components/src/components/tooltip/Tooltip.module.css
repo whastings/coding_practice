@@ -1,0 +1,14 @@
+.container {
+  background-color: #000;
+  border-radius: 8px;
+  color: #fff;
+  padding: 10px;
+}
+
+.anchorBottom {
+  margin-top: 10px;
+}
+
+.anchorTop {
+  margin-bottom: 10px;
+}

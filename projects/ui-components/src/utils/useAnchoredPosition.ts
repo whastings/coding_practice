@@ -21,6 +21,7 @@ interface Position {
 }
 
 interface Result<AnchorElement, PositionedElement> {
+  anchorPoint: AnchorPoint;
   anchorRef: React.MutableRefObject<AnchorElement | null>;
   positionedRef: React.MutableRefObject<PositionedElement | null>;
   position: Position | null;
@@ -77,12 +78,12 @@ function isWithinViewport(
   );
 }
 
-function getPosition(
+function getPositionAndAnchorPoint(
   anchorEl: HTMLElement,
   positionedEl: HTMLElement,
   anchorPoint: AnchorPoint,
   offset: number,
-): Position {
+): { position: Position; anchorPoint: AnchorPoint } {
   const anchorRect = getDocumentRelativeRect(anchorEl.getBoundingClientRect());
   const positionedRect = getDocumentRelativeRect(
     positionedEl.getBoundingClientRect(),
@@ -97,15 +98,17 @@ function getPosition(
   if (
     !isWithinViewport(position, positionedRect.width, positionedRect.height)
   ) {
-    return getPositionForAnchorPoint(
+    const oppositeAnchorPoint = ANCHOR_POINT_OPPOSITES[anchorPoint];
+    const flippedPosition = getPositionForAnchorPoint(
       anchorRect,
       positionedRect,
-      ANCHOR_POINT_OPPOSITES[anchorPoint],
+      oppositeAnchorPoint,
       offset,
     );
+    return { anchorPoint: oppositeAnchorPoint, position: flippedPosition };
   }
 
-  return position;
+  return { anchorPoint, position };
 }
 
 function useAnchoredPosition<
@@ -119,6 +122,9 @@ function useAnchoredPosition<
   const anchorRef = useRef<AnchorElement>(null);
   const positionedRef = useRef<PositionedElement>(null);
   const [position, setPosition] = useState<Position | null>(null);
+  const [renderedAnchorPoint, setRenderedAnchorPoint] = useState<AnchorPoint>(
+    anchorPoint,
+  );
 
   useLayoutEffect(() => {
     if (!isRendered) {
@@ -133,17 +139,25 @@ function useAnchoredPosition<
       throw new Error('Positioned ref is not set');
     }
 
-    setPosition(
-      getPosition(
-        anchorRef.current,
-        positionedRef.current,
-        anchorPoint,
-        offset,
-      ),
+    const {
+      anchorPoint: actualAnchorPoint,
+      position,
+    } = getPositionAndAnchorPoint(
+      anchorRef.current,
+      positionedRef.current,
+      anchorPoint,
+      offset,
     );
+    setPosition(position);
+    setRenderedAnchorPoint(actualAnchorPoint);
   }, [anchorPoint, isRendered, offset]);
 
-  return { anchorRef, position, positionedRef };
+  return {
+    anchorPoint: renderedAnchorPoint,
+    anchorRef,
+    position,
+    positionedRef,
+  };
 }
 
 export default useAnchoredPosition;

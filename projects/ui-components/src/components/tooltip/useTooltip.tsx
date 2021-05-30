@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { createPortal } from 'react-dom';
 
+import Tooltip from './Tooltip';
 import useAnchoredPosition, {
   AnchorPoint,
 } from '../../utils/useAnchoredPosition';
@@ -22,10 +23,12 @@ interface Result {
 
 function useTooltip(contents: React.ReactElement): Result {
   const [isVisible, setIsVisible] = useState(false);
-  const { anchorRef, position, positionedRef } = useAnchoredPosition<
-    HTMLButtonElement,
-    HTMLDivElement
-  >({
+  const {
+    anchorPoint,
+    anchorRef,
+    position,
+    positionedRef,
+  } = useAnchoredPosition<HTMLButtonElement, HTMLDivElement>({
     anchorPoint: AnchorPoint.TOP,
     isRendered: isVisible,
   });
@@ -37,7 +40,7 @@ function useTooltip(contents: React.ReactElement): Result {
 
     return createPortal(
       <div ref={positionedRef} style={{ ...position, position: 'absolute' }}>
-        {contents}
+        <Tooltip anchorPoint={anchorPoint}>{contents}</Tooltip>
       </div>,
       document.body,
     );

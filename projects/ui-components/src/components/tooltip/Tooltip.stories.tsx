@@ -6,17 +6,35 @@ export default {
   title: 'Components/Tooltip',
 } as Meta;
 
-export function Vertical() {
+function ButtonWithTooltip() {
   const { tooltipRenderer, triggerEventHandlers, triggerRef } = useTooltip(
     <div>I am a tooltip</div>,
   );
-
   return (
-    <div>
+    <>
       <button {...triggerEventHandlers} ref={triggerRef}>
         Trigger Tooltip
       </button>
       {tooltipRenderer}
+    </>
+  );
+}
+
+export function Vertical() {
+  return (
+    <div
+      style={{
+        display: 'flex',
+        height: 300,
+        justifyContent: 'center',
+      }}
+    >
+      <div style={{ alignSelf: 'flex-end' }}>
+        <ButtonWithTooltip />
+      </div>
+      <div style={{ alignSelf: 'flex-start' }}>
+        <ButtonWithTooltip />
+      </div>
     </div>
   );
 }

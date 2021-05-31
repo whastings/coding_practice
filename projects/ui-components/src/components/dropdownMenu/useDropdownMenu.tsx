@@ -6,6 +6,7 @@ import { useUniqueID } from '../../utils/uniqueID/UniqueIDContext';
 import mergeRefs from '../../utils/mergeRefs';
 import useOnOutsideClick from '../../utils/useOnOutsideClick';
 import useAnchoredPosition, {
+  AnchorAlignment,
   AnchorPoint,
 } from '../../utils/useAnchoredPosition';
 
@@ -33,6 +34,7 @@ function useDropdownMenu(menu: React.ReactElement): Result {
     HTMLButtonElement,
     HTMLDivElement
   >({
+    anchorAlignment: AnchorAlignment.START,
     anchorPoint: AnchorPoint.BOTTOM,
     isRendered: isMenuOpen,
     offset: MENU_OFFSET,

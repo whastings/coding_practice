@@ -9,8 +9,15 @@ export enum AnchorPoint {
   TOP,
 }
 
+export enum AnchorAlignment {
+  CENTER,
+  END,
+  START,
+}
+
 interface Params {
   anchorPoint: AnchorPoint;
+  anchorAlignment: AnchorAlignment;
   isRendered: boolean;
   offset?: number;
 }
@@ -34,21 +41,53 @@ const ANCHOR_POINT_OPPOSITES: Record<AnchorPoint, AnchorPoint> = {
   [AnchorPoint.TOP]: AnchorPoint.BOTTOM,
 };
 
+function getAlignedPosition(
+  anchorPositionStart: number,
+  anchorPositionEnd: number,
+  anchorDimension: number,
+  positionedDimension: number,
+  anchorAlignment: AnchorAlignment,
+): number {
+  switch (anchorAlignment) {
+    case AnchorAlignment.CENTER:
+      return (
+        anchorPositionStart + anchorDimension / 2 - positionedDimension / 2
+      );
+    case AnchorAlignment.END:
+      return anchorPositionEnd;
+    case AnchorAlignment.START:
+      return anchorPositionStart;
+  }
+}
+
 function getPositionForAnchorPoint(
   anchorRect: DOMRect,
   positionedRect: DOMRect,
   anchorPoint: AnchorPoint,
+  anchorAlignment: AnchorAlignment,
   offset: number,
 ): Position {
   switch (anchorPoint) {
     case AnchorPoint.TOP:
       return {
-        left: anchorRect.left,
+        left: getAlignedPosition(
+          anchorRect.left,
+          anchorRect.right,
+          anchorRect.width,
+          positionedRect.width,
+          anchorAlignment,
+        ),
         top: anchorRect.top - offset - positionedRect.height,
       };
     case AnchorPoint.BOTTOM:
       return {
-        left: anchorRect.left,
+        left: getAlignedPosition(
+          anchorRect.left,
+          anchorRect.right,
+          anchorRect.width,
+          positionedRect.width,
+          anchorAlignment,
+        ),
         top: anchorRect.bottom + offset,
       };
     default:
@@ -82,6 +121,7 @@ function getPositionAndAnchorPoint(
   anchorEl: HTMLElement,
   positionedEl: HTMLElement,
   anchorPoint: AnchorPoint,
+  anchorAlignment: AnchorAlignment,
   offset: number,
 ): { position: Position; anchorPoint: AnchorPoint } {
   const anchorRect = getDocumentRelativeRect(anchorEl.getBoundingClientRect());
@@ -92,6 +132,7 @@ function getPositionAndAnchorPoint(
     anchorRect,
     positionedRect,
     anchorPoint,
+    anchorAlignment,
     offset,
   );
 
@@ -103,6 +144,7 @@ function getPositionAndAnchorPoint(
       anchorRect,
       positionedRect,
       oppositeAnchorPoint,
+      anchorAlignment,
       offset,
     );
     return { anchorPoint: oppositeAnchorPoint, position: flippedPosition };
@@ -115,6 +157,7 @@ function useAnchoredPosition<
   AnchorElement extends HTMLElement,
   PositionedElement extends HTMLElement
 >({
+  anchorAlignment,
   anchorPoint,
   isRendered,
   offset = 0,
@@ -146,11 +189,12 @@ function useAnchoredPosition<
       anchorRef.current,
       positionedRef.current,
       anchorPoint,
+      anchorAlignment,
       offset,
     );
     setPosition(position);
     setRenderedAnchorPoint(actualAnchorPoint);
-  }, [anchorPoint, isRendered, offset]);
+  }, [anchorAlignment, anchorPoint, isRendered, offset]);
 
   return {
     anchorPoint: renderedAnchorPoint,

@@ -8,7 +8,7 @@ export default {
 
 function ButtonWithTooltip() {
   const { tooltipRenderer, triggerEventHandlers, triggerRef } = useTooltip(
-    <div>I am a tooltip</div>,
+    <div>I am a tooltip......</div>,
   );
   return (
     <>

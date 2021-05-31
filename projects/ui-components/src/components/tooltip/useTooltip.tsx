@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom';
 
 import Tooltip from './Tooltip';
 import useAnchoredPosition, {
+  AnchorAlignment,
   AnchorPoint,
 } from '../../utils/useAnchoredPosition';
 
@@ -29,6 +30,7 @@ function useTooltip(contents: React.ReactElement): Result {
     position,
     positionedRef,
   } = useAnchoredPosition<HTMLButtonElement, HTMLDivElement>({
+    anchorAlignment: AnchorAlignment.CENTER,
     anchorPoint: AnchorPoint.TOP,
     isRendered: isVisible,
   });

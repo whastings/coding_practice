@@ -27,6 +27,7 @@ export function Vertical() {
         display: 'flex',
         height: 300,
         justifyContent: 'center',
+        marginBottom: '100vh',
       }}
     >
       <div style={{ alignSelf: 'flex-end' }}>

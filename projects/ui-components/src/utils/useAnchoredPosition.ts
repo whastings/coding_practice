@@ -1,6 +1,13 @@
-import { useLayoutEffect, useRef, useState } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react';
 
 import getDocumentRelativeRect from './getDocumentRelativeRect';
+import useThrottled from './useThrottled';
 
 export enum AnchorPoint {
   BOTTOM,
@@ -169,17 +176,9 @@ function useAnchoredPosition<
     anchorPoint,
   );
 
-  useLayoutEffect(() => {
-    if (!isRendered) {
+  const reposition = useCallback(() => {
+    if (anchorRef.current == null || positionedRef.current == null) {
       return;
-    }
-
-    if (anchorRef.current == null) {
-      throw new Error('Anchor ref is not set');
-    }
-
-    if (positionedRef.current == null) {
-      throw new Error('Positioned ref is not set');
     }
 
     const {
@@ -194,7 +193,23 @@ function useAnchoredPosition<
     );
     setPosition(position);
     setRenderedAnchorPoint(actualAnchorPoint);
-  }, [anchorAlignment, anchorPoint, isRendered, offset]);
+  }, [anchorAlignment, anchorPoint, offset]);
+
+  useLayoutEffect(() => {
+    if (!isRendered) {
+      return;
+    }
+
+    reposition();
+  }, [isRendered, reposition]);
+
+  const throttledReposition = useThrottled(reposition, 100);
+  useEffect(() => {
+    window.addEventListener('scroll', throttledReposition, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', throttledReposition);
+    };
+  }, [throttledReposition]);
 
   return {
     anchorPoint: renderedAnchorPoint,

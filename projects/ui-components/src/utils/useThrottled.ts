@@ -20,9 +20,12 @@ function useThrottle<T extends (...args: any) => any>(
     callbackRef.current = callback;
   });
 
-  useEffect(() => () => {
-    throttledRef.current?.cancel();
-  });
+  useEffect(
+    () => () => {
+      throttledRef.current?.cancel();
+    },
+    [],
+  );
 
   return throttledRef.current;
 }

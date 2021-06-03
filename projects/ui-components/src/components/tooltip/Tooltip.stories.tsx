@@ -1,15 +1,19 @@
 import React from 'react';
 import { Meta } from '@storybook/react/types-6-0';
+
 import useTooltip from './useTooltip';
+import { AnchorPoint } from '../../utils/useAnchoredPosition';
 
 export default {
   title: 'Components/Tooltip',
 } as Meta;
 
-function ButtonWithTooltip() {
-  const { tooltipRenderer, triggerEventHandlers, triggerRef } = useTooltip(
-    <div>I am a tooltip......</div>,
-  );
+function ButtonWithTooltip({ anchorPoint }: { anchorPoint?: AnchorPoint }) {
+  const {
+    tooltipRenderer,
+    triggerEventHandlers,
+    triggerRef,
+  } = useTooltip(<div>I am a tooltip......</div>, { anchorPoint });
   return (
     <>
       <button {...triggerEventHandlers} ref={triggerRef}>
@@ -35,6 +39,9 @@ export function Vertical() {
       </div>
       <div style={{ alignSelf: 'flex-start' }}>
         <ButtonWithTooltip />
+      </div>
+      <div style={{ alignSelf: 'flex-end' }}>
+        <ButtonWithTooltip anchorPoint={AnchorPoint.BOTTOM} />
       </div>
     </div>
   );

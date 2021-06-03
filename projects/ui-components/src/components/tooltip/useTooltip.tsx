@@ -7,6 +7,10 @@ import useAnchoredPosition, {
   AnchorPoint,
 } from '../../utils/useAnchoredPosition';
 
+interface Options {
+  anchorPoint?: AnchorPoint;
+}
+
 interface EventHandlers {
   onBlur: () => void;
   onFocus: () => void;
@@ -22,16 +26,19 @@ interface Result {
   triggerRef: TriggerRef;
 }
 
-function useTooltip(contents: React.ReactElement): Result {
+function useTooltip(
+  contents: React.ReactElement,
+  { anchorPoint = AnchorPoint.TOP }: Options = {},
+): Result {
   const [isVisible, setIsVisible] = useState(false);
   const {
-    anchorPoint,
+    anchorPoint: renderedAnchorPoint,
     anchorRef,
     position,
     positionedRef,
   } = useAnchoredPosition<HTMLButtonElement, HTMLDivElement>({
     anchorAlignment: AnchorAlignment.CENTER,
-    anchorPoint: AnchorPoint.TOP,
+    anchorPoint,
     isRendered: isVisible,
   });
 
@@ -42,7 +49,7 @@ function useTooltip(contents: React.ReactElement): Result {
 
     return createPortal(
       <div ref={positionedRef} style={{ ...position, position: 'absolute' }}>
-        <Tooltip anchorPoint={anchorPoint}>{contents}</Tooltip>
+        <Tooltip anchorPoint={renderedAnchorPoint}>{contents}</Tooltip>
       </div>,
       document.body,
     );

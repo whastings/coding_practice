@@ -207,9 +207,11 @@ function useAnchoredPosition<
   useEffect(() => {
     if (isRendered) {
       window.addEventListener('scroll', throttledReposition, { passive: true });
+      window.addEventListener('resize', throttledReposition, { passive: true });
     }
     return () => {
       window.removeEventListener('scroll', throttledReposition);
+      window.removeEventListener('resize', throttledReposition);
     };
   }, [isRendered, throttledReposition]);
 

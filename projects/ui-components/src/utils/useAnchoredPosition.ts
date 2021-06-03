@@ -205,11 +205,13 @@ function useAnchoredPosition<
 
   const throttledReposition = useThrottled(reposition, 100);
   useEffect(() => {
-    window.addEventListener('scroll', throttledReposition, { passive: true });
+    if (isRendered) {
+      window.addEventListener('scroll', throttledReposition, { passive: true });
+    }
     return () => {
       window.removeEventListener('scroll', throttledReposition);
     };
-  }, [throttledReposition]);
+  }, [isRendered, throttledReposition]);
 
   return {
     anchorPoint: renderedAnchorPoint,

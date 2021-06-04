@@ -97,8 +97,28 @@ function getPositionForAnchorPoint(
         ),
         top: anchorRect.bottom + offset,
       };
-    default:
-      throw new Error('Not supported yet');
+    case AnchorPoint.START:
+      return {
+        left: anchorRect.left - offset - positionedRect.width,
+        top: getAlignedPosition(
+          anchorRect.top,
+          anchorRect.bottom,
+          anchorRect.height,
+          positionedRect.height,
+          anchorAlignment,
+        ),
+      };
+    case AnchorPoint.END:
+      return {
+        left: anchorRect.right + offset,
+        top: getAlignedPosition(
+          anchorRect.top,
+          anchorRect.bottom,
+          anchorRect.height,
+          positionedRect.height,
+          anchorAlignment,
+        ),
+      };
   }
 }
 

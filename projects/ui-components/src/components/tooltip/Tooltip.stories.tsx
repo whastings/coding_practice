@@ -24,6 +24,22 @@ function ButtonWithTooltip({ anchorPoint }: { anchorPoint?: AnchorPoint }) {
   );
 }
 
+export function Horizontal() {
+  return (
+    <div
+      style={{
+        alignItems: 'center',
+        display: 'flex',
+        height: '100px',
+        justifyContent: 'space-between',
+      }}
+    >
+      <ButtonWithTooltip anchorPoint={AnchorPoint.END} />
+      <ButtonWithTooltip anchorPoint={AnchorPoint.START} />
+    </div>
+  );
+}
+
 export function Vertical() {
   return (
     <div

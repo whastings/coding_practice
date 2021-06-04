@@ -12,3 +12,11 @@
 .anchorTop {
   margin-bottom: 10px;
 }
+
+.anchorStart {
+  margin-right: 10px;
+}
+
+.anchorEnd {
+  margin-left: 10px;
+}

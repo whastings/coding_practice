@@ -16,8 +16,10 @@ function Tooltip({ anchorPoint, children }: Props) {
         return styles.anchorTop;
       case AnchorPoint.BOTTOM:
         return styles.anchorBottom;
-      default:
-        throw new Error('Not supported yet');
+      case AnchorPoint.START:
+        return styles.anchorStart;
+      case AnchorPoint.END:
+        return styles.anchorEnd;
     }
   };
 

@@ -51,12 +51,12 @@ const ANCHOR_POINT_OPPOSITES: Record<AnchorPoint, AnchorPoint> = {
 function getAlignedPosition(
   anchorPositionStart: number,
   anchorPositionEnd: number,
-  anchorDimension: number,
   positionedDimension: number,
   anchorAlignment: AnchorAlignment,
 ): number {
   switch (anchorAlignment) {
     case AnchorAlignment.CENTER:
+      const anchorDimension = anchorPositionEnd - anchorPositionStart;
       return (
         anchorPositionStart + anchorDimension / 2 - positionedDimension / 2
       );
@@ -65,6 +65,32 @@ function getAlignedPosition(
     case AnchorAlignment.START:
       return anchorPositionStart;
   }
+}
+
+function getHorizontalAlignedPosition(
+  anchorRect: DOMRect,
+  positionedRect: DOMRect,
+  anchorAlignment: AnchorAlignment,
+) {
+  return getAlignedPosition(
+    anchorRect.left,
+    anchorRect.right,
+    positionedRect.width,
+    anchorAlignment,
+  );
+}
+
+function getVerticalAlignedPosition(
+  anchorRect: DOMRect,
+  positionedRect: DOMRect,
+  anchorAlignment: AnchorAlignment,
+) {
+  return getAlignedPosition(
+    anchorRect.top,
+    anchorRect.bottom,
+    positionedRect.height,
+    anchorAlignment,
+  );
 }
 
 function getPositionForAnchorPoint(
@@ -77,22 +103,18 @@ function getPositionForAnchorPoint(
   switch (anchorPoint) {
     case AnchorPoint.TOP:
       return {
-        left: getAlignedPosition(
-          anchorRect.left,
-          anchorRect.right,
-          anchorRect.width,
-          positionedRect.width,
+        left: getHorizontalAlignedPosition(
+          anchorRect,
+          positionedRect,
           anchorAlignment,
         ),
         top: anchorRect.top - offset - positionedRect.height,
       };
     case AnchorPoint.BOTTOM:
       return {
-        left: getAlignedPosition(
-          anchorRect.left,
-          anchorRect.right,
-          anchorRect.width,
-          positionedRect.width,
+        left: getHorizontalAlignedPosition(
+          anchorRect,
+          positionedRect,
           anchorAlignment,
         ),
         top: anchorRect.bottom + offset,
@@ -100,22 +122,18 @@ function getPositionForAnchorPoint(
     case AnchorPoint.START:
       return {
         left: anchorRect.left - offset - positionedRect.width,
-        top: getAlignedPosition(
-          anchorRect.top,
-          anchorRect.bottom,
-          anchorRect.height,
-          positionedRect.height,
+        top: getVerticalAlignedPosition(
+          anchorRect,
+          positionedRect,
           anchorAlignment,
         ),
       };
     case AnchorPoint.END:
       return {
         left: anchorRect.right + offset,
-        top: getAlignedPosition(
-          anchorRect.top,
-          anchorRect.bottom,
-          anchorRect.height,
-          positionedRect.height,
+        top: getVerticalAlignedPosition(
+          anchorRect,
+          positionedRect,
           anchorAlignment,
         ),
       };

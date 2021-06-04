@@ -24,7 +24,13 @@ function Tooltip({ anchorPoint, children }: Props) {
   };
 
   return (
-    <div className={classNames(styles.container, getAnchorPointClass())}>
+    <div
+      className={classNames(
+        styles.container,
+        styles.anchored,
+        getAnchorPointClass(),
+      )}
+    >
       {children}
     </div>
   );

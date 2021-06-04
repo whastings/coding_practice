@@ -1,22 +1,70 @@
 .container {
+  --margin: 12px;
+  --triangle-side-length: 7px;
+  --triangle-main-length: 13px;
   background-color: #000;
   border-radius: 8px;
   color: #fff;
   padding: 10px;
+  position: relative;
+}
+
+.anchored::after {
+  border: 0 solid transparent;
+  content: "";
+  height: 0;
+  position: absolute;
+  width: 0;
 }
 
 .anchorBottom {
-  margin-top: 10px;
+  margin-top: var(--margin);
+}
+
+.anchorBottom::after {
+  border-right-width: var(--triangle-side-length);
+  border-left-width: var(--triangle-side-length);
+  border-bottom: var(--triangle-main-length) solid #000;
+  left: 50%;
+  transform: translate(-50%, -100%);
+  top: 0;
 }
 
 .anchorTop {
-  margin-bottom: 10px;
+  margin-bottom: var(--margin);
+}
+
+.anchorTop::after {
+  border-left-width: var(--triangle-side-length);
+  border-right-width: var(--triangle-side-length);
+  border-top: var(--triangle-main-length) solid #000;
+  bottom: 0;
+  left: 50%;
+  transform: translate(-50%, 100%);
 }
 
 .anchorStart {
-  margin-right: 10px;
+  margin-right: var(--margin);
+}
+
+.anchorStart::after {
+  border-bottom-width: var(--triangle-side-length);
+  border-top-width: var(--triangle-side-length);
+  border-left: var(--triangle-main-length) solid black;
+  right: 0;
+  top: 50%;
+  transform: translate(100%, -50%);
 }
 
 .anchorEnd {
-  margin-left: 10px;
+  margin-left: var(--margin);
+}
+
+.anchorEnd::after {
+  border-top-width: var(--triangle-side-length);
+  border-bottom-width: var(--triangle-side-length);
+  border-right: var(--triangle-main-length) solid black;
+  left: 0;
+  top: 50%;
+  transform: translate(-100%, -50%);
 }

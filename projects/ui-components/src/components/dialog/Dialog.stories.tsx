@@ -12,11 +12,11 @@ function ExampleDialog() {
 }
 
 export function Default() {
-  const { Dialog } = useDialog(<ExampleDialog />);
+  const { Dialog, openDialog } = useDialog(<ExampleDialog />);
 
   return (
     <div>
-      <button>Open Dialog</button>
+      <button onClick={openDialog}>Open Dialog</button>
       <Dialog />
     </div>
   );

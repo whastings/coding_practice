@@ -1,10 +1,26 @@
 .container {
+  bottom: 0;
+  left: 0;
+  position: fixed;
+  right: 0;
+  top: 0;
+}
+
+.backdrop {
+  background-color: rgba(0, 0, 0, 0.3);
+  height: 100%;
+  width: 100%;
+  z-index: 0;
+}
+
+.card {
   background-color: #fff;
   border: 1px #000 solid;
   border-radius: 8px;
   left: 50%;
   padding: 15px;
-  position: fixed;
+  position: absolute;
   top: 50%;
   transform: translate(-50%, -50%);
+  z-index: 1;
 }

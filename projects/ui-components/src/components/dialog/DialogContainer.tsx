@@ -7,7 +7,12 @@ interface Props {
 }
 
 function DialogContainer({ children }: Props) {
-  return <div className={styles.container}>{children}</div>;
+  return (
+    <div className={styles.container}>
+      <div className={styles.backdrop} />
+      <div className={styles.card}>{children}</div>
+    </div>
+  );
 }
 
 export default DialogContainer;

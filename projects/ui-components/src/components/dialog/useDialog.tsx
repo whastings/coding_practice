@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import { createPortal } from 'react-dom';
+
+import DialogContainer from './DialogContainer';
 
 interface Result {
   Dialog: React.FunctionComponent;
@@ -17,7 +20,10 @@ function useDialog(contents: React.ReactElement): Result {
       return null;
     }
 
-    return <div>{contents}</div>;
+    return createPortal(
+      <DialogContainer>{contents}</DialogContainer>,
+      document.body,
+    );
   };
 
   return { Dialog, openDialog };

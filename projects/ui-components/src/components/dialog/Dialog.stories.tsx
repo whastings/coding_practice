@@ -31,7 +31,9 @@ function ExampleDialog() {
 }
 
 export function Default() {
-  const { Dialog, openDialog } = useDialog(<ExampleDialog />);
+  const { Dialog, openDialog } = useDialog(<ExampleDialog />, {
+    title: 'Example Dialog',
+  });
 
   return (
     <div>

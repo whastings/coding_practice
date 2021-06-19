@@ -3,12 +3,16 @@ import { createPortal } from 'react-dom';
 
 import DialogContainer from './DialogContainer';
 
+interface Options {
+  title: string;
+}
+
 interface Result {
   Dialog: React.FunctionComponent;
   openDialog: () => void;
 }
 
-function useDialog(contents: React.ReactElement): Result {
+function useDialog(contents: React.ReactElement, options: Options): Result {
   const [isOpen, setIsOpen] = useState(false);
 
   const openDialog = () => {
@@ -21,7 +25,7 @@ function useDialog(contents: React.ReactElement): Result {
     }
 
     return createPortal(
-      <DialogContainer>{contents}</DialogContainer>,
+      <DialogContainer title={options.title}>{contents}</DialogContainer>,
       document.body,
     );
   };

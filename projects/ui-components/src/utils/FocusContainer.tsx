@@ -1,8 +1,12 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import isNullOrUndefined from '../utils/isNullOrUndefined';
 
+interface ChildArguments {
+  initialFocusRef: React.RefCallback<HTMLElement>;
+}
+
 interface Props {
-  children: React.ReactChild;
+  children: (args: ChildArguments) => React.ReactChild;
 }
 
 const TABBABLE_SELECTOR = `
@@ -31,6 +35,9 @@ function getTabbableElements(containerEl: HTMLElement): HTMLElement[] {
 
 function FocusContainer({ children }: Props) {
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const initialFocusRef = useRef<HTMLElement | null>(null);
+  const hasFocusedRef = useRef(false);
+
   const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
     if (containerRef.current == null) {
       throw new Error('Container ref not set!');
@@ -52,9 +59,23 @@ function FocusContainer({ children }: Props) {
     }
   };
 
+  useEffect(() => {
+    const initialFocusEl = initialFocusRef.current;
+    const hasFocused = hasFocusedRef.current;
+
+    if (initialFocusEl != null && !hasFocused) {
+      initialFocusEl.focus();
+      hasFocusedRef.current = true;
+    }
+  }, []);
+
   return (
     <div onKeyDown={handleKeyDown} ref={containerRef}>
-      {children}
+      {children({
+        initialFocusRef: (el) => {
+          initialFocusRef.current = el;
+        },
+      })}
     </div>
   );
 }

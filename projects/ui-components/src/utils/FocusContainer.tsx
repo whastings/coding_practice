@@ -1,4 +1,5 @@
 import React, { useRef } from 'react';
+import isNullOrUndefined from '../utils/isNullOrUndefined';
 
 interface Props {
   children: React.ReactChild;
@@ -17,11 +18,8 @@ function getTabbableElements(containerEl: HTMLElement): HTMLElement[] {
 
   return tabbableElements
     .map((element) => (element instanceof HTMLElement ? element : null))
+    .filter(isNullOrUndefined)
     .filter((element) => {
-      if (element == null) {
-        return false;
-      }
-
       const tabIndex = element.getAttribute('tabindex');
       if (tabIndex === '-1') {
         return false;
@@ -32,8 +30,11 @@ function getTabbableElements(containerEl: HTMLElement): HTMLElement[] {
 }
 
 function FocusContainer({ children }: Props) {
-  const containerRef = useRef<HTMLDivElement>();
+  const containerRef = useRef<HTMLDivElement | null>(null);
   const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    if (containerRef.current == null) {
+      throw new Error('Container ref not set!');
+    }
     const tabbableElements = getTabbableElements(containerRef.current);
     const { key, target } = event;
     if (key !== 'Tab' || !(target instanceof HTMLElement)) {

@@ -19,13 +19,19 @@ function useDialog(contents: React.ReactElement, options: Options): Result {
     setIsOpen(true);
   };
 
+  const closeDialog = () => {
+    setIsOpen(false);
+  };
+
   const Dialog = () => {
     if (!isOpen) {
       return null;
     }
 
     return createPortal(
-      <DialogContainer title={options.title}>{contents}</DialogContainer>,
+      <DialogContainer onCloseClick={closeDialog} title={options.title}>
+        {contents}
+      </DialogContainer>,
       document.body,
     );
   };

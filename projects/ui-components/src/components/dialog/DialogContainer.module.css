@@ -24,3 +24,18 @@
   transform: translate(-50%, -50%);
   z-index: 1;
 }
+
+.header {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.heading {
+  margin: 0 10px 0 0;
+}
+
+.xIcon {
+  display: block;
+}

@@ -10,6 +10,7 @@
     "@types/node": "^12.19.15",
     "@types/react": "^16.14.2",
     "@types/react-dom": "^16.9.10",
+    "bootstrap-icons": "^1.5.0",
     "lodash.throttle": "^4.1.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
@@ -51,6 +52,7 @@
     "@storybook/node-logger": "^6.1.15",
     "@storybook/preset-create-react-app": "^3.1.5",
     "@storybook/react": "^6.1.15",
+    "@svgr/webpack": "^5.5.0",
     "@types/classnames": "^2.2.11",
     "@types/lodash.throttle": "^4.1.6",
     "prettier": "^2.2.1"

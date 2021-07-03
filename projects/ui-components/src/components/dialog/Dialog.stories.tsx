@@ -31,13 +31,15 @@ function ExampleDialog() {
 }
 
 export function Default() {
-  const { Dialog, openDialog } = useDialog(<ExampleDialog />, {
+  const { Dialog, openDialog, triggerRef } = useDialog(<ExampleDialog />, {
     title: 'Example Dialog',
   });
 
   return (
     <div>
-      <button onClick={openDialog}>Open Dialog</button>
+      <button onClick={openDialog} ref={triggerRef}>
+        Open Dialog
+      </button>
       <Dialog />
     </div>
   );

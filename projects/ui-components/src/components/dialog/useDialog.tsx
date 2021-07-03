@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 
 import DialogContainer from './DialogContainer';
@@ -10,10 +10,12 @@ interface Options {
 interface Result {
   Dialog: React.FunctionComponent;
   openDialog: () => void;
+  triggerRef: React.RefCallback<HTMLElement>;
 }
 
 function useDialog(contents: React.ReactElement, options: Options): Result {
   const [isOpen, setIsOpen] = useState(false);
+  const triggerRef = useRef<HTMLElement | null>(null);
 
   const openDialog = () => {
     setIsOpen(true);
@@ -21,6 +23,9 @@ function useDialog(contents: React.ReactElement, options: Options): Result {
 
   const closeDialog = () => {
     setIsOpen(false);
+    if (triggerRef.current != null) {
+      triggerRef.current.focus();
+    }
   };
 
   const Dialog = () => {
@@ -36,7 +41,13 @@ function useDialog(contents: React.ReactElement, options: Options): Result {
     );
   };
 
-  return { Dialog, openDialog };
+  return {
+    Dialog,
+    openDialog,
+    triggerRef: (el) => {
+      triggerRef.current = el;
+    },
+  };
 }
 
 export default useDialog;

@@ -1,48 +1,36 @@
-import React, { useRef, useState } from 'react';
-import { createPortal } from 'react-dom';
+import React, { useContext, useRef } from 'react';
 
-import DialogContainer from './DialogContainer';
-
-interface Options {
-  title: string;
-}
+import DialogContext, { DialogConfigFn } from './DialogContext';
 
 interface Result {
-  Dialog: React.FunctionComponent;
-  openDialog: () => void;
+  openDialog: DialogConfigFn;
   triggerRef: React.RefCallback<HTMLElement>;
 }
 
-function useDialog(contents: React.ReactElement, options: Options): Result {
-  const [isOpen, setIsOpen] = useState(false);
+function useDialog(): Result {
+  const dialogContext = useContext(DialogContext);
   const triggerRef = useRef<HTMLElement | null>(null);
 
-  const openDialog = () => {
-    setIsOpen(true);
-  };
+  if (dialogContext == null) {
+    throw new Error('No dialog context available!');
+  }
 
-  const closeDialog = () => {
-    setIsOpen(false);
-    if (triggerRef.current != null) {
-      triggerRef.current.focus();
-    }
-  };
-
-  const Dialog = () => {
-    if (!isOpen) {
-      return null;
-    }
-
-    return createPortal(
-      <DialogContainer onCloseClick={closeDialog} title={options.title}>
-        {contents}
-      </DialogContainer>,
-      document.body,
-    );
+  const openDialog: DialogConfigFn = (config) => {
+    const { renderDialog } = dialogContext;
+    renderDialog({
+      ...config,
+      onClose() {
+        if (triggerRef.current != null) {
+          triggerRef.current.focus();
+        }
+        if (config.onClose != null) {
+          config.onClose();
+        }
+      },
+    });
   };
 
   return {
-    Dialog,
     openDialog,
     triggerRef: (el) => {
       triggerRef.current = el;

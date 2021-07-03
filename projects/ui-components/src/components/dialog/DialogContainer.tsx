@@ -13,32 +13,26 @@ interface Props {
 
 function DialogContainer({ children, onCloseClick, title }: Props) {
   return (
-    <div className={styles.container}>
-      <div className={styles.backdrop} />
-      <div className={styles.card}>
-        <FocusContainer>
-          {({ initialFocusRef }) => (
-            <>
-              <div className={styles.header}>
-                <h2
-                  className={styles.heading}
-                  ref={initialFocusRef}
-                  tabIndex={-1}
-                >
-                  {title}
-                </h2>
-                <UnstyledButton
-                  aria-label="Close dialog"
-                  onClick={onCloseClick}
-                >
-                  <XIcon className={styles.xIcon} />
-                </UnstyledButton>
-              </div>
-              {children}
-            </>
-          )}
-        </FocusContainer>
-      </div>
+    <div className={styles.card}>
+      <FocusContainer>
+        {({ initialFocusRef }) => (
+          <>
+            <div className={styles.header}>
+              <h2
+                className={styles.heading}
+                ref={initialFocusRef}
+                tabIndex={-1}
+              >
+                {title}
+              </h2>
+              <UnstyledButton aria-label="Close dialog" onClick={onCloseClick}>
+                <XIcon className={styles.xIcon} />
+              </UnstyledButton>
+            </div>
+            {children}
+          </>
+        )}
+      </FocusContainer>
     </div>
   );
 }

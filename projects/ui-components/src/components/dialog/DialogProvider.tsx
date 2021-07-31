@@ -20,6 +20,10 @@ function DialogProvider({ children }: Props) {
     );
   };
 
+  const removeAllDialogs = () => {
+    setRenderedDialogs([]);
+  };
+
   const renderDialog = useCallback(
     (config: AbstractDialogConfig) => {
       setRenderedDialogs((configs) => [...configs, config]);
@@ -63,11 +67,10 @@ function DialogProvider({ children }: Props) {
       {renderedDialogs.length > 0 &&
         createPortal(
           <div className={styles.container}>
-            <div className={styles.backdrop}>
-              {renderedDialogs.map((config, i) =>
-                renderDialogFromConfig(config, i),
-              )}
-            </div>
+            <div className={styles.backdrop} onClick={removeAllDialogs} />
+            {renderedDialogs.map((config, i) =>
+              renderDialogFromConfig(config, i),
+            )}
           </div>,
           document.body,
         )}

@@ -1,5 +1,7 @@
 import React, { useEffect, useRef } from 'react';
-import isNullOrUndefined from '../utils/isNullOrUndefined';
+
+import isNullOrUndefined from './isNullOrUndefined';
+import useKeyboardEvent from './keyboardEvents/useKeyboardEvent';
 
 interface ChildArguments {
   initialFocusRef: React.RefCallback<HTMLElement>;
@@ -34,30 +36,29 @@ function getTabbableElements(containerEl: HTMLElement): HTMLElement[] {
 }
 
 function FocusContainer({ children }: Props) {
-  const containerRef = useRef<HTMLDivElement | null>(null);
   const initialFocusRef = useRef<HTMLElement | null>(null);
   const hasFocusedRef = useRef(false);
 
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
-    if (containerRef.current == null) {
-      throw new Error('Container ref not set!');
-    }
-    const tabbableElements = getTabbableElements(containerRef.current);
-    const { key, target } = event;
-    if (key !== 'Tab' || !(target instanceof HTMLElement)) {
-      return;
-    }
+  useKeyboardEvent({
+    callback: (event, container) => {
+      const { target } = event;
+      if (!(target instanceof HTMLElement)) {
+        return;
+      }
 
-    const lastTabbableElement = tabbableElements[tabbableElements.length - 1];
-    const firstTabbableElement = tabbableElements[0];
-    if (!event.shiftKey && target === lastTabbableElement) {
-      event.preventDefault();
-      firstTabbableElement.focus();
-    } else if (event.shiftKey && target === firstTabbableElement) {
-      event.preventDefault();
-      lastTabbableElement.focus();
-    }
-  };
+      const tabbableElements = getTabbableElements(container);
+      const lastTabbableElement = tabbableElements[tabbableElements.length - 1];
+      const firstTabbableElement = tabbableElements[0];
+      if (!event.shiftKey && target === lastTabbableElement) {
+        event.preventDefault();
+        firstTabbableElement.focus();
+      } else if (event.shiftKey && target === firstTabbableElement) {
+        event.preventDefault();
+        lastTabbableElement.focus();
+      }
+    },
+    key: 'Tab',
+  });
 
   useEffect(() => {
     const initialFocusEl = initialFocusRef.current;
@@ -70,13 +71,13 @@ function FocusContainer({ children }: Props) {
   }, []);
 
   return (
-    <div onKeyDown={handleKeyDown} ref={containerRef}>
+    <>
       {children({
         initialFocusRef: (el) => {
           initialFocusRef.current = el;
         },
       })}
-    </div>
+    </>
   );
 }
 

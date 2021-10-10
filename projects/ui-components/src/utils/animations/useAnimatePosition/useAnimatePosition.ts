@@ -5,13 +5,22 @@ function useAnimatePosition<TElement extends HTMLElement>(
 ): MutableRefObject<TElement> {
   const elementRef = useRef<TElement>();
   const lastPositionRef = useRef<DOMRect | void>();
+  const lastDepValueRef = useRef<unknown>(dependency);
   const shouldPlayRef = useRef(false);
+  const isAnimatingRef = useRef(false);
+
+  if (dependency !== lastDepValueRef.current && isAnimatingRef.current) {
+    lastPositionRef.current = elementRef.current.getBoundingClientRect();
+  }
+  lastDepValueRef.current = dependency;
 
   useLayoutEffect(() => {
     const element = elementRef.current;
     if (element == null) {
       throw new Error('Missing element ref!');
     }
+    element.style.removeProperty('transition');
+    element.style.removeProperty('transform');
 
     const currentPosition = element.getBoundingClientRect();
     const lastPosition = lastPositionRef.current;
@@ -26,7 +35,6 @@ function useAnimatePosition<TElement extends HTMLElement>(
       y: lastPosition.y - currentPosition.y,
     };
 
-    element.style.removeProperty('transition');
     element.style.setProperty(
       'transform',
       `translate(${positionDiff.x}px, ${positionDiff.y}px)`,
@@ -41,9 +49,15 @@ function useAnimatePosition<TElement extends HTMLElement>(
     }
 
     if (shouldPlayRef.current) {
-      element.style.setProperty('transition', 'transform .5s linear');
+      element.style.setProperty('transition', 'transform 2s linear');
       element.style.setProperty('transform', 'translate(0px, 0px)');
       shouldPlayRef.current = false;
+      isAnimatingRef.current = true;
+      const animationEndCallback = () => {
+        isAnimatingRef.current = false;
+        element.removeEventListener('transitionend', animationEndCallback);
+      };
+      element.addEventListener('transitionend', animationEndCallback);
     }
   });
 

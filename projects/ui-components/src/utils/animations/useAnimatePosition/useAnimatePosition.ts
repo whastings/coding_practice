@@ -2,14 +2,18 @@ import { MutableRefObject, useEffect, useLayoutEffect, useRef } from 'react';
 
 function useAnimatePosition<TElement extends HTMLElement>(
   dependency: unknown,
-): MutableRefObject<TElement> {
-  const elementRef = useRef<TElement>();
+): MutableRefObject<TElement | null> {
+  const elementRef = useRef<TElement>(null);
   const lastPositionRef = useRef<DOMRect | void>();
   const lastDepValueRef = useRef<unknown>(dependency);
   const shouldPlayRef = useRef(false);
   const isAnimatingRef = useRef(false);
 
-  if (dependency !== lastDepValueRef.current && isAnimatingRef.current) {
+  if (
+    dependency !== lastDepValueRef.current &&
+    isAnimatingRef.current &&
+    elementRef.current != null
+  ) {
     lastPositionRef.current = elementRef.current.getBoundingClientRect();
   }
   lastDepValueRef.current = dependency;

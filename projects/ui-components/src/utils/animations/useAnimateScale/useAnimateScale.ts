@@ -22,24 +22,42 @@ interface Animation {
   contentKeyframes: Keyframe[];
 }
 
+function getScaleTransforms(
+  collapsedRect: DOMRect,
+  expandedRect: DOMRect,
+  increment: number,
+) {
+  const xDiff = expandedRect.width - collapsedRect.width;
+  const yDiff = expandedRect.height - collapsedRect.height;
+  const xAmount = xDiff * increment;
+  const yAmount = yDiff * increment;
+  const xSize = xAmount + collapsedRect.width;
+  const ySize = yAmount + collapsedRect.height;
+  const xScale = xSize / expandedRect.width;
+  const yScale = ySize / expandedRect.height;
+  const xInvertScale = 1 / xScale;
+  const yInvertScale = 1 / yScale;
+  return {
+    containerTransform: { transform: `scale(${xScale}, ${yScale})` },
+    contentTransform: { transform: `scale(${xInvertScale}, ${yInvertScale})` },
+  };
+}
+
 function createScaleUpAnimation(
   collapsedRect: DOMRect,
   expandedRect: DOMRect,
 ): Animation {
-  const xDiff = expandedRect.width - collapsedRect.width;
-  const yDiff = expandedRect.height - collapsedRect.height;
   const containerKeyframes = [];
   const contentKeyframes = [];
 
   for (let i = 0.01; i <= 1; i += 0.01) {
-    const xAmount = xDiff * i;
-    const yAmount = yDiff * i;
-    const xSize = xAmount + collapsedRect.width;
-    const ySize = yAmount + collapsedRect.height;
-    const xScale = xSize / expandedRect.width;
-    const yScale = ySize / expandedRect.height;
-    containerKeyframes.push({ transform: `scale(${xScale}, ${yScale})` });
-    contentKeyframes.push({ transform: `scale(${1 / xScale}, ${1 / yScale})` });
+    const { containerTransform, contentTransform } = getScaleTransforms(
+      collapsedRect,
+      expandedRect,
+      i,
+    );
+    containerKeyframes.push(containerTransform);
+    contentKeyframes.push(contentTransform);
   }
 
   return { containerKeyframes, contentKeyframes };
@@ -49,20 +67,17 @@ function createScaleDownAnimation(
   collapsedRect: DOMRect,
   expandedRect: DOMRect,
 ): Animation {
-  const xDiff = expandedRect.width - collapsedRect.width;
-  const yDiff = expandedRect.height - collapsedRect.height;
   const containerKeyframes = [];
   const contentKeyframes = [];
 
   for (let i = 1; i >= 0; i -= 0.01) {
-    const xAmount = xDiff * i;
-    const yAmount = yDiff * i;
-    const xSize = xAmount + collapsedRect.width;
-    const ySize = yAmount + collapsedRect.height;
-    const xScale = xSize / expandedRect.width;
-    const yScale = ySize / expandedRect.height;
-    containerKeyframes.push({ transform: `scale(${xScale}, ${yScale})` });
-    contentKeyframes.push({ transform: `scale(${1 / xScale}, ${1 / yScale})` });
+    const { containerTransform, contentTransform } = getScaleTransforms(
+      collapsedRect,
+      expandedRect,
+      i,
+    );
+    containerKeyframes.push(containerTransform);
+    contentKeyframes.push(contentTransform);
   }
 
   return { containerKeyframes, contentKeyframes };
@@ -99,24 +114,22 @@ function useAnimateScale<
     expandedContentElement.style.removeProperty('display');
     expandedRectRef.current = expandedRect;
     collapsedRectRef.current = collapsedRect;
+    const { containerTransform, contentTransform } = getScaleTransforms(
+      collapsedRect,
+      expandedRect,
+      0,
+    );
 
-    const xScaleContainer = collapsedRect.width / expandedRect.width;
-    const yScaleContainer = collapsedRect.height / expandedRect.height;
     containerElement.style.setProperty('will-change', 'transform');
     containerElement.style.setProperty('transform-origin', 'top left');
     containerElement.style.setProperty(
       'transform',
-      `scale(${xScaleContainer}, ${yScaleContainer})`,
+      containerTransform.transform,
     );
 
-    const xScaleContent = 1 / xScaleContainer;
-    const yScaleContent = 1 / yScaleContainer;
     contentElement.style.setProperty('will-change', 'transform');
     contentElement.style.setProperty('transform-origin', 'top left');
-    contentElement.style.setProperty(
-      'transform',
-      `scale(${xScaleContent}, ${yScaleContent})`,
-    );
+    contentElement.style.setProperty('transform', contentTransform.transform);
   }, []);
 
   const toggle = useCallback(() => {
@@ -135,23 +148,21 @@ function useAnimateScale<
     }
 
     if (isExpandedRef.current) {
+      const { containerTransform, contentTransform } = getScaleTransforms(
+        collapsedRect,
+        expandedRect,
+        0,
+      );
       const { containerKeyframes, contentKeyframes } = createScaleDownAnimation(
         collapsedRect,
         expandedRect,
       );
-      const xScaleContainer = collapsedRect.width / expandedRect.width;
-      const yScaleContainer = collapsedRect.height / expandedRect.height;
-      const xScaleContent = 1 / xScaleContainer;
-      const yScaleContent = 1 / yScaleContainer;
       containerElement.style.setProperty(
         'transform',
-        `scale(${xScaleContainer}, ${yScaleContainer})`,
+        containerTransform.transform,
       );
+      contentElement.style.setProperty('transform', contentTransform.transform);
       containerElement.animate(containerKeyframes, 1000);
-      contentElement.style.setProperty(
-        'transform',
-        `scale(${xScaleContent}, ${yScaleContent})`,
-      );
       contentElement.animate(contentKeyframes, 1000);
     } else {
       const { containerKeyframes, contentKeyframes } = createScaleUpAnimation(
@@ -159,8 +170,8 @@ function useAnimateScale<
         expandedRect,
       );
       containerElement.style.setProperty('transform', 'scale(1, 1)');
-      containerElement.animate(containerKeyframes, 1000);
       contentElement.style.setProperty('transform', 'scale(1, 1)');
+      containerElement.animate(containerKeyframes, 1000);
       contentElement.animate(contentKeyframes, 1000);
     }
     isExpandedRef.current = !isExpandedRef.current;

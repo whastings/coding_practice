@@ -4,7 +4,6 @@ import useAnimateScale from './useAnimateScale';
 
 const ExampleStyles: { [name: string]: CSSProperties } = {
   container: {
-    border: '1px #000 solid',
     display: 'inline-block',
     maxWidth: 350,
     overflow: 'hidden',

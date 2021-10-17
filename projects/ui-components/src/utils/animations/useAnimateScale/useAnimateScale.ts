@@ -17,9 +17,16 @@ interface Result<
   toggle: () => void;
 }
 
-interface Animation {
+interface ScaleAnimation {
   containerKeyframes: Keyframe[];
   contentKeyframes: Keyframe[];
+}
+
+interface AnimationCache {
+  collapsedRect: DOMRect;
+  expandedRect: DOMRect;
+  scaleDownAnimation: ScaleAnimation;
+  scaleUpAnimation: ScaleAnimation;
 }
 
 function getScaleTransforms(
@@ -44,13 +51,19 @@ function getScaleTransforms(
 }
 
 function createScaleUpAnimation(
+  startRect: DOMRect,
   collapsedRect: DOMRect,
   expandedRect: DOMRect,
-): Animation {
+): ScaleAnimation {
   const containerKeyframes = [];
   const contentKeyframes = [];
+  const startingPoint =
+    ((startRect.width - collapsedRect.width) *
+      (startRect.height - collapsedRect.height)) /
+    ((expandedRect.width - collapsedRect.width) *
+      (expandedRect.height - collapsedRect.height));
 
-  for (let i = 0.01; i <= 1; i += 0.01) {
+  for (let i = startingPoint; i <= 1; i += 0.01) {
     const { containerTransform, contentTransform } = getScaleTransforms(
       collapsedRect,
       expandedRect,
@@ -64,13 +77,19 @@ function createScaleUpAnimation(
 }
 
 function createScaleDownAnimation(
+  startRect: DOMRect,
   collapsedRect: DOMRect,
   expandedRect: DOMRect,
-): Animation {
+): ScaleAnimation {
   const containerKeyframes = [];
   const contentKeyframes = [];
+  const startingPoint =
+    ((startRect.width - collapsedRect.width) *
+      (startRect.height - collapsedRect.height)) /
+    ((expandedRect.width - collapsedRect.width) *
+      (expandedRect.height - collapsedRect.height));
 
-  for (let i = 1; i >= 0; i -= 0.01) {
+  for (let i = startingPoint; i >= 0; i -= 0.01) {
     const { containerTransform, contentTransform } = getScaleTransforms(
       collapsedRect,
       expandedRect,
@@ -81,6 +100,10 @@ function createScaleDownAnimation(
   }
 
   return { containerKeyframes, contentKeyframes };
+}
+
+function areRectsEqual(rect1: DOMRect, rect2: DOMRect): boolean {
+  return rect1.height === rect2.height && rect1.width === rect2.width;
 }
 
 function useAnimateScale<
@@ -94,8 +117,9 @@ function useAnimateScale<
   const collapsedRectRef = useRef<DOMRect>(null);
   const expandedRectRef = useRef<DOMRect>(null);
   const isExpandedRef = useRef(false);
-  const scaleUpAnimationRef = useRef<Animation>(null);
-  const scaleDownAnimationRef = useRef<Animation>(null);
+  const animationCacheRef = useRef<AnimationCache>(null);
+  const currentContainerAnimationRef = useRef<Animation>(null);
+  const currentContentAnimationRef = useRef<Animation>(null);
 
   useLayoutEffect(() => {
     const containerElement = containerRef.current;
@@ -135,28 +159,51 @@ function useAnimateScale<
   }, []);
 
   const getAnimations = useCallback(
-    (collapsedRect: DOMRect, expandedRect: DOMRect) => {
-      const cachedScaleUpAnimation = scaleUpAnimationRef.current;
-      const cachedScaleDownAnimation = scaleDownAnimationRef.current;
+    (startRect: DOMRect, collapsedRect: DOMRect, expandedRect: DOMRect) => {
+      let animationCache = animationCacheRef.current;
 
-      if (cachedScaleUpAnimation != null && cachedScaleDownAnimation != null) {
+      if (
+        !areRectsEqual(startRect, collapsedRect) &&
+        !areRectsEqual(startRect, expandedRect)
+      ) {
         return {
-          scaleDownAnimation: cachedScaleDownAnimation,
-          scaleUpAnimation: cachedScaleUpAnimation,
+          scaleUpAnimation: createScaleUpAnimation(
+            startRect,
+            collapsedRect,
+            expandedRect,
+          ),
+          scaleDownAnimation: createScaleDownAnimation(
+            startRect,
+            collapsedRect,
+            expandedRect,
+          ),
         };
       }
 
-      scaleUpAnimationRef.current = createScaleUpAnimation(
-        collapsedRect,
-        expandedRect,
-      );
-      scaleDownAnimationRef.current = createScaleDownAnimation(
-        collapsedRect,
-        expandedRect,
-      );
+      if (
+        animationCache == null ||
+        !areRectsEqual(collapsedRect, animationCache.collapsedRect) ||
+        !areRectsEqual(expandedRect, animationCache.expandedRect)
+      ) {
+        animationCache = {
+          collapsedRect,
+          expandedRect,
+          scaleUpAnimation: createScaleUpAnimation(
+            startRect,
+            collapsedRect,
+            expandedRect,
+          ),
+          scaleDownAnimation: createScaleDownAnimation(
+            startRect,
+            collapsedRect,
+            expandedRect,
+          ),
+        };
+      }
+
       return {
-        scaleDownAnimation: scaleDownAnimationRef.current,
-        scaleUpAnimation: scaleUpAnimationRef.current,
+        scaleDownAnimation: animationCache.scaleDownAnimation,
+        scaleUpAnimation: animationCache.scaleUpAnimation,
       };
     },
     [],
@@ -177,11 +224,24 @@ function useAnimateScale<
       return;
     }
 
+    let startRect = isExpandedRef.current ? expandedRect : collapsedRect;
+    if (
+      currentContainerAnimationRef.current != null ||
+      currentContentAnimationRef.current != null
+    ) {
+      startRect = containerElement.getBoundingClientRect();
+      currentContainerAnimationRef.current?.cancel();
+      currentContentAnimationRef.current?.cancel();
+    }
+
     const { scaleDownAnimation, scaleUpAnimation } = getAnimations(
+      startRect,
       collapsedRect,
       expandedRect,
     );
 
+    let containerAnimation: Animation;
+    let contentAnimation: Animation;
     if (isExpandedRef.current) {
       const { containerTransform, contentTransform } = getScaleTransforms(
         collapsedRect,
@@ -194,16 +254,25 @@ function useAnimateScale<
         containerTransform.transform,
       );
       contentElement.style.setProperty('transform', contentTransform.transform);
-      containerElement.animate(containerKeyframes, 1000);
-      contentElement.animate(contentKeyframes, 1000);
+      containerAnimation = containerElement.animate(containerKeyframes, 1000);
+      contentAnimation = contentElement.animate(contentKeyframes, 1000);
     } else {
       const { containerKeyframes, contentKeyframes } = scaleUpAnimation;
       containerElement.style.setProperty('transform', 'scale(1, 1)');
       contentElement.style.setProperty('transform', 'scale(1, 1)');
-      containerElement.animate(containerKeyframes, 1000);
-      contentElement.animate(contentKeyframes, 1000);
+      containerAnimation = containerElement.animate(containerKeyframes, 1000);
+      contentAnimation = contentElement.animate(contentKeyframes, 1000);
     }
+
     isExpandedRef.current = !isExpandedRef.current;
+    currentContainerAnimationRef.current = containerAnimation;
+    containerAnimation.onfinish = () => {
+      currentContainerAnimationRef.current = null;
+    };
+    currentContentAnimationRef.current = contentAnimation;
+    contentAnimation.onfinish = () => {
+      currentContentAnimationRef.current = null;
+    };
   }, [getAnimations]);
 
   return useMemo(

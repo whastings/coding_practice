@@ -22,11 +22,18 @@ interface Animation {
   contentKeyframes: Keyframe[];
 }
 
+interface ScaleTransforms {
+  containerTransform: { transform: string };
+  contentTransform: { transform: string };
+}
+
+const DURATION = 1000;
+
 function getScaleTransforms(
   collapsedRect: DOMRect,
   expandedRect: DOMRect,
   increment: number,
-) {
+): ScaleTransforms {
   const collapsedXScale = collapsedRect.width / expandedRect.width;
   const collapsedYScale = collapsedRect.height / expandedRect.height;
   const xScale = collapsedXScale + (1 - collapsedXScale) * increment;
@@ -179,27 +186,31 @@ function useAnimateScale<
       expandedRect,
     );
 
+    let animation: Animation;
+    let scaleTransforms: ScaleTransforms;
+
     if (isExpandedRef.current) {
-      const { containerTransform, contentTransform } = getScaleTransforms(
-        collapsedRect,
-        expandedRect,
-        0,
-      );
-      const { containerKeyframes, contentKeyframes } = scaleDownAnimation;
-      containerElement.style.setProperty(
-        'transform',
-        containerTransform.transform,
-      );
-      contentElement.style.setProperty('transform', contentTransform.transform);
-      containerElement.animate(containerKeyframes, 1000);
-      contentElement.animate(contentKeyframes, 1000);
+      scaleTransforms = getScaleTransforms(collapsedRect, expandedRect, 0);
+      animation = scaleDownAnimation;
     } else {
-      const { containerKeyframes, contentKeyframes } = scaleUpAnimation;
-      containerElement.style.setProperty('transform', 'scale(1, 1)');
-      contentElement.style.setProperty('transform', 'scale(1, 1)');
-      containerElement.animate(containerKeyframes, 1000);
-      contentElement.animate(contentKeyframes, 1000);
+      scaleTransforms = {
+        containerTransform: { transform: 'scale(1, 1)' },
+        contentTransform: { transform: 'scale(1, 1)' },
+      };
+      animation = scaleUpAnimation;
     }
+
+    containerElement.style.setProperty(
+      'transform',
+      scaleTransforms.containerTransform.transform,
+    );
+    contentElement.style.setProperty(
+      'transform',
+      scaleTransforms.contentTransform.transform,
+    );
+    const { containerKeyframes, contentKeyframes } = animation;
+    containerElement.animate(containerKeyframes, DURATION);
+    contentElement.animate(contentKeyframes, DURATION);
     isExpandedRef.current = !isExpandedRef.current;
   }, [getAnimations]);
 

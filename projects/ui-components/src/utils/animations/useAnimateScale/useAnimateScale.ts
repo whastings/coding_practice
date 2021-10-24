@@ -27,7 +27,7 @@ interface ScaleTransforms {
   contentTransform: { transform: string };
 }
 
-const DURATION = 1000;
+const DURATION = 2000;
 
 function getScaleTransforms(
   collapsedRect: DOMRect,
@@ -47,44 +47,48 @@ function getScaleTransforms(
   };
 }
 
-function createScaleUpAnimation(
+function createAnimations(
   collapsedRect: DOMRect,
   expandedRect: DOMRect,
-): Animation {
-  const containerKeyframes = [];
-  const contentKeyframes = [];
+): [Animation, Animation] {
+  const scaleUpAnimation: Animation = {
+    containerKeyframes: [],
+    contentKeyframes: [],
+  };
+  const scaleDownAnimation: Animation = {
+    containerKeyframes: [],
+    contentKeyframes: [],
+  };
+  const numFrames = 60 * (DURATION / 1000);
 
-  for (let i = 0.01; i <= 1; i += 0.01) {
-    const { containerTransform, contentTransform } = getScaleTransforms(
+  for (let i = 1; i <= numFrames; i++) {
+    const scaleUpIncrement = i / numFrames;
+    const scaleDownIncrement = (numFrames + 1 - i) / numFrames;
+    const scaleUpTransforms = getScaleTransforms(
       collapsedRect,
       expandedRect,
-      i,
+      scaleUpIncrement,
     );
-    containerKeyframes.push(containerTransform);
-    contentKeyframes.push(contentTransform);
-  }
-
-  return { containerKeyframes, contentKeyframes };
-}
-
-function createScaleDownAnimation(
-  collapsedRect: DOMRect,
-  expandedRect: DOMRect,
-): Animation {
-  const containerKeyframes = [];
-  const contentKeyframes = [];
-
-  for (let i = 1; i >= 0; i -= 0.01) {
-    const { containerTransform, contentTransform } = getScaleTransforms(
+    const scaleDownTransforms = getScaleTransforms(
       collapsedRect,
       expandedRect,
-      i,
+      scaleDownIncrement,
     );
-    containerKeyframes.push(containerTransform);
-    contentKeyframes.push(contentTransform);
+
+    scaleUpAnimation.containerKeyframes.push(
+      scaleUpTransforms.containerTransform,
+    );
+    scaleUpAnimation.contentKeyframes.push(scaleUpTransforms.contentTransform);
+
+    scaleDownAnimation.containerKeyframes.push(
+      scaleDownTransforms.containerTransform,
+    );
+    scaleDownAnimation.contentKeyframes.push(
+      scaleDownTransforms.contentTransform,
+    );
   }
 
-  return { containerKeyframes, contentKeyframes };
+  return [scaleUpAnimation, scaleDownAnimation];
 }
 
 function useAnimateScale<
@@ -150,17 +154,16 @@ function useAnimateScale<
         };
       }
 
-      scaleUpAnimationRef.current = createScaleUpAnimation(
+      const [scaleUpAnimation, scaleDownAnimation] = createAnimations(
         collapsedRect,
         expandedRect,
       );
-      scaleDownAnimationRef.current = createScaleDownAnimation(
-        collapsedRect,
-        expandedRect,
-      );
+      scaleUpAnimationRef.current = scaleUpAnimation;
+      scaleDownAnimationRef.current = scaleDownAnimation;
+
       return {
-        scaleDownAnimation: scaleDownAnimationRef.current,
-        scaleUpAnimation: scaleUpAnimationRef.current,
+        scaleDownAnimation,
+        scaleUpAnimation,
       };
     },
     [],

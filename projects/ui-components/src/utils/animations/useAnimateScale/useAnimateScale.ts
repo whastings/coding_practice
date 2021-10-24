@@ -27,16 +27,13 @@ function getScaleTransforms(
   expandedRect: DOMRect,
   increment: number,
 ) {
-  const xDiff = expandedRect.width - collapsedRect.width;
-  const yDiff = expandedRect.height - collapsedRect.height;
-  const xAmount = xDiff * increment;
-  const yAmount = yDiff * increment;
-  const xSize = xAmount + collapsedRect.width;
-  const ySize = yAmount + collapsedRect.height;
-  const xScale = xSize / expandedRect.width;
-  const yScale = ySize / expandedRect.height;
+  const collapsedXScale = collapsedRect.width / expandedRect.width;
+  const collapsedYScale = collapsedRect.height / expandedRect.height;
+  const xScale = collapsedXScale + (1 - collapsedXScale) * increment;
+  const yScale = collapsedYScale + (1 - collapsedYScale) * increment;
   const xInvertScale = 1 / xScale;
   const yInvertScale = 1 / yScale;
+
   return {
     containerTransform: { transform: `scale(${xScale}, ${yScale})` },
     contentTransform: { transform: `scale(${xInvertScale}, ${yInvertScale})` },

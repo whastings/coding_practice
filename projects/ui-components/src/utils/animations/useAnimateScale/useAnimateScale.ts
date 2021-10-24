@@ -91,11 +91,11 @@ function useAnimateScale<
   const containerRef = useRef<TContainerElement>(null);
   const contentRef = useRef<TContentElement>(null);
   const expandedContentRef = useRef<TExpandedElement>(null);
-  const collapsedRectRef = useRef<DOMRect>(null);
-  const expandedRectRef = useRef<DOMRect>(null);
+  const collapsedRectRef = useRef<DOMRect | null>(null);
+  const expandedRectRef = useRef<DOMRect | null>(null);
   const isExpandedRef = useRef(false);
-  const scaleUpAnimationRef = useRef<Animation>(null);
-  const scaleDownAnimationRef = useRef<Animation>(null);
+  const scaleUpAnimationRef = useRef<Animation | null>(null);
+  const scaleDownAnimationRef = useRef<Animation | null>(null);
 
   useLayoutEffect(() => {
     const containerElement = containerRef.current;

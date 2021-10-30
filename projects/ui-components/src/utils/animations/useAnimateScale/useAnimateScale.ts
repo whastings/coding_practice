@@ -17,7 +17,7 @@ interface Result<
   toggle: () => void;
 }
 
-interface Animation {
+interface ScaleKeyframes {
   containerKeyframes: Keyframe[];
   contentKeyframes: Keyframe[];
 }
@@ -51,15 +51,15 @@ function getScaleTransforms(
   };
 }
 
-function createAnimations(
+function createKeyframes(
   collapsedRect: DOMRect,
   expandedRect: DOMRect,
-): [Animation, Animation] {
-  const scaleUpAnimation: Animation = {
+): [ScaleKeyframes, ScaleKeyframes] {
+  const scaleUpKeyframes: ScaleKeyframes = {
     containerKeyframes: [],
     contentKeyframes: [],
   };
-  const scaleDownAnimation: Animation = {
+  const scaleDownKeyframes: ScaleKeyframes = {
     containerKeyframes: [],
     contentKeyframes: [],
   };
@@ -79,20 +79,20 @@ function createAnimations(
       scaleDownIncrement,
     );
 
-    scaleUpAnimation.containerKeyframes.push(
+    scaleUpKeyframes.containerKeyframes.push(
       scaleUpTransforms.containerTransform,
     );
-    scaleUpAnimation.contentKeyframes.push(scaleUpTransforms.contentTransform);
+    scaleUpKeyframes.contentKeyframes.push(scaleUpTransforms.contentTransform);
 
-    scaleDownAnimation.containerKeyframes.push(
+    scaleDownKeyframes.containerKeyframes.push(
       scaleDownTransforms.containerTransform,
     );
-    scaleDownAnimation.contentKeyframes.push(
+    scaleDownKeyframes.contentKeyframes.push(
       scaleDownTransforms.contentTransform,
     );
   }
 
-  return [scaleUpAnimation, scaleDownAnimation];
+  return [scaleUpKeyframes, scaleDownKeyframes];
 }
 
 function useAnimateScale<
@@ -106,8 +106,8 @@ function useAnimateScale<
   const collapsedRectRef = useRef<DOMRect | null>(null);
   const expandedRectRef = useRef<DOMRect | null>(null);
   const isExpandedRef = useRef(false);
-  const scaleUpAnimationRef = useRef<Animation | null>(null);
-  const scaleDownAnimationRef = useRef<Animation | null>(null);
+  const scaleUpKeyframesRef = useRef<ScaleKeyframes | null>(null);
+  const scaleDownKeyframesRef = useRef<ScaleKeyframes | null>(null);
 
   useLayoutEffect(() => {
     const containerElement = containerRef.current;
@@ -146,28 +146,28 @@ function useAnimateScale<
     contentElement.style.setProperty('transform', contentTransform.transform);
   }, []);
 
-  const getAnimations = useCallback(
+  const getKeyframes = useCallback(
     (collapsedRect: DOMRect, expandedRect: DOMRect) => {
-      const cachedScaleUpAnimation = scaleUpAnimationRef.current;
-      const cachedScaleDownAnimation = scaleDownAnimationRef.current;
+      const cachedScaleUpKeyframes = scaleUpKeyframesRef.current;
+      const cachedScaleDownKeyframes = scaleDownKeyframesRef.current;
 
-      if (cachedScaleUpAnimation != null && cachedScaleDownAnimation != null) {
+      if (cachedScaleUpKeyframes != null && cachedScaleDownKeyframes != null) {
         return {
-          scaleDownAnimation: cachedScaleDownAnimation,
-          scaleUpAnimation: cachedScaleUpAnimation,
+          scaleDownKeyframes: cachedScaleDownKeyframes,
+          scaleUpKeyframes: cachedScaleUpKeyframes,
         };
       }
 
-      const [scaleUpAnimation, scaleDownAnimation] = createAnimations(
+      const [scaleUpKeyframes, scaleDownKeyframes] = createKeyframes(
         collapsedRect,
         expandedRect,
       );
-      scaleUpAnimationRef.current = scaleUpAnimation;
-      scaleDownAnimationRef.current = scaleDownAnimation;
+      scaleUpKeyframesRef.current = scaleUpKeyframes;
+      scaleDownKeyframesRef.current = scaleDownKeyframes;
 
       return {
-        scaleDownAnimation,
-        scaleUpAnimation,
+        scaleDownKeyframes,
+        scaleUpKeyframes,
       };
     },
     [],
@@ -188,23 +188,23 @@ function useAnimateScale<
       return;
     }
 
-    const { scaleDownAnimation, scaleUpAnimation } = getAnimations(
+    const { scaleDownKeyframes, scaleUpKeyframes } = getKeyframes(
       collapsedRect,
       expandedRect,
     );
 
-    let animation: Animation;
+    let keyframes: ScaleKeyframes;
     let scaleTransforms: ScaleTransforms;
 
     if (isExpandedRef.current) {
       scaleTransforms = getScaleTransforms(collapsedRect, expandedRect, 0);
-      animation = scaleDownAnimation;
+      keyframes = scaleDownKeyframes;
     } else {
       scaleTransforms = {
         containerTransform: { transform: 'scale(1, 1)' },
         contentTransform: { transform: 'scale(1, 1)' },
       };
-      animation = scaleUpAnimation;
+      keyframes = scaleUpKeyframes;
     }
 
     containerElement.style.setProperty(
@@ -215,11 +215,11 @@ function useAnimateScale<
       'transform',
       scaleTransforms.contentTransform.transform,
     );
-    const { containerKeyframes, contentKeyframes } = animation;
+    const { containerKeyframes, contentKeyframes } = keyframes;
     containerElement.animate(containerKeyframes, DURATION);
     contentElement.animate(contentKeyframes, DURATION);
     isExpandedRef.current = !isExpandedRef.current;
-  }, [getAnimations]);
+  }, [getKeyframes]);
 
   return useMemo(
     () => ({

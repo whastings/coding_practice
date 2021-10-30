@@ -108,6 +108,8 @@ function useAnimateScale<
   const isExpandedRef = useRef(false);
   const scaleUpKeyframesRef = useRef<ScaleKeyframes | null>(null);
   const scaleDownKeyframesRef = useRef<ScaleKeyframes | null>(null);
+  const containerAnimationRef = useRef<Animation | null>(null);
+  const contentAnimationRef = useRef<Animation | null>(null);
 
   useLayoutEffect(() => {
     const containerElement = containerRef.current;
@@ -173,6 +175,16 @@ function useAnimateScale<
     [],
   );
 
+  const storeAnimation = useCallback(
+    (animation: Animation, ref: MutableRefObject<Animation | null>) => {
+      ref.current = animation;
+      animation.onfinish = () => {
+        ref.current = null;
+      };
+    },
+    [],
+  );
+
   const toggle = useCallback(() => {
     const collapsedRect = collapsedRectRef.current;
     const expandedRect = expandedRectRef.current;
@@ -215,11 +227,31 @@ function useAnimateScale<
       'transform',
       scaleTransforms.contentTransform.transform,
     );
-    const { containerKeyframes, contentKeyframes } = keyframes;
-    containerElement.animate(containerKeyframes, DURATION);
-    contentElement.animate(contentKeyframes, DURATION);
+
+    const existingContainerAnimation = containerAnimationRef.current;
+    const existingContentAnimation = contentAnimationRef.current;
+    if (
+      existingContainerAnimation != null &&
+      existingContentAnimation != null
+    ) {
+      existingContainerAnimation.reverse();
+      existingContentAnimation.reverse();
+    } else {
+      const { containerKeyframes, contentKeyframes } = keyframes;
+      const containerAnimation = containerElement.animate(
+        containerKeyframes,
+        DURATION,
+      );
+      const contentAnimation = contentElement.animate(
+        contentKeyframes,
+        DURATION,
+      );
+      storeAnimation(containerAnimation, containerAnimationRef);
+      storeAnimation(contentAnimation, contentAnimationRef);
+    }
+
     isExpandedRef.current = !isExpandedRef.current;
-  }, [getKeyframes]);
+  }, [getKeyframes, storeAnimation]);
 
   return useMemo(
     () => ({

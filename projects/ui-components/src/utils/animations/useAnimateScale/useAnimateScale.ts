@@ -29,6 +29,10 @@ interface ScaleTransforms {
 
 const DURATION = 2000;
 
+function ease(increment: number): number {
+  return increment * increment * increment;
+}
+
 function getScaleTransforms(
   collapsedRect: DOMRect,
   expandedRect: DOMRect,
@@ -59,11 +63,11 @@ function createAnimations(
     containerKeyframes: [],
     contentKeyframes: [],
   };
-  const numFrames = 60 * (DURATION / 1000);
+  const numFrames = Math.round(60 * (DURATION / 1000));
 
   for (let i = 1; i <= numFrames; i++) {
-    const scaleUpIncrement = i / numFrames;
-    const scaleDownIncrement = (numFrames + 1 - i) / numFrames;
+    const scaleUpIncrement = ease(i / numFrames);
+    const scaleDownIncrement = ease((numFrames + 1 - i) / numFrames);
     const scaleUpTransforms = getScaleTransforms(
       collapsedRect,
       expandedRect,

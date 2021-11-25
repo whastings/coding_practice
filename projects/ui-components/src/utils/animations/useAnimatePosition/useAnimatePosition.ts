@@ -1,4 +1,4 @@
-import { MutableRefObject, useEffect, useLayoutEffect, useRef } from 'react';
+import { MutableRefObject, useLayoutEffect, useRef } from 'react';
 
 function useAnimatePosition<TElement extends HTMLElement>(
   dependency: unknown,
@@ -6,15 +6,16 @@ function useAnimatePosition<TElement extends HTMLElement>(
   const elementRef = useRef<TElement>(null);
   const lastPositionRef = useRef<DOMRect | void>();
   const lastDepValueRef = useRef<unknown>(dependency);
-  const shouldPlayRef = useRef(false);
-  const isAnimatingRef = useRef(false);
+  const animationRef = useRef<Animation | null>(null);
 
+  // TODO: Handle interruption in a less hacky/flaky way.
   if (
     dependency !== lastDepValueRef.current &&
-    isAnimatingRef.current &&
+    animationRef.current != null &&
     elementRef.current != null
   ) {
     lastPositionRef.current = elementRef.current.getBoundingClientRect();
+    animationRef.current.cancel();
   }
   lastDepValueRef.current = dependency;
 
@@ -23,8 +24,6 @@ function useAnimatePosition<TElement extends HTMLElement>(
     if (element == null) {
       throw new Error('Missing element ref!');
     }
-    element.style.removeProperty('transition');
-    element.style.removeProperty('transform');
 
     const currentPosition = element.getBoundingClientRect();
     const lastPosition = lastPositionRef.current;
@@ -39,31 +38,24 @@ function useAnimatePosition<TElement extends HTMLElement>(
       y: lastPosition.y - currentPosition.y,
     };
 
-    element.style.setProperty(
-      'transform',
-      `translate(${positionDiff.x}px, ${positionDiff.y}px)`,
+    const animation = element.animate(
+      [
+        {
+          transform: new DOMMatrix()
+            .translateSelf(positionDiff.x, positionDiff.y)
+            .toString(),
+        },
+        { transform: new DOMMatrix().translateSelf(0, 0).toString() },
+      ],
+      2000,
     );
-    shouldPlayRef.current = true;
+    animationRef.current = animation;
+    const animationEndCallback = () => {
+      animationRef.current = null;
+    };
+    animation.addEventListener('finish', animationEndCallback);
+    animation.addEventListener('cancel', animationEndCallback);
   }, [dependency]);
-
-  useEffect(() => {
-    const element = elementRef.current;
-    if (element == null) {
-      throw new Error('Missing element ref!');
-    }
-
-    if (shouldPlayRef.current) {
-      element.style.setProperty('transition', 'transform 2s linear');
-      element.style.setProperty('transform', 'translate(0px, 0px)');
-      shouldPlayRef.current = false;
-      isAnimatingRef.current = true;
-      const animationEndCallback = () => {
-        isAnimatingRef.current = false;
-        element.removeEventListener('transitionend', animationEndCallback);
-      };
-      element.addEventListener('transitionend', animationEndCallback);
-    }
-  });
 
   return elementRef;
 }

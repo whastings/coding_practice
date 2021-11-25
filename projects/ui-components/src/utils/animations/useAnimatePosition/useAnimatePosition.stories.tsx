@@ -1,6 +1,7 @@
 import React, { CSSProperties, useState } from 'react';
 import { Meta } from '@storybook/react/types-6-0';
 import useAnimatePosition from './useAnimatePosition';
+import useLinearKeyframesGenerator from '../useLinearKeyframesGenerator';
 
 const ExampleStyles: { [name: string]: CSSProperties } = {
   box: {
@@ -29,7 +30,10 @@ const ExampleStyles: { [name: string]: CSSProperties } = {
 
 function Example() {
   const [position, setPosition] = useState<number>(0);
-  const boxRef = useAnimatePosition<HTMLDivElement>(position);
+  const keyframesGenerator = useLinearKeyframesGenerator();
+  const boxRef = useAnimatePosition<HTMLDivElement>(position, {
+    keyframesGenerator,
+  });
 
   const getPositionStyle = () => {
     switch (position) {

@@ -1,12 +1,20 @@
 import { MutableRefObject, useLayoutEffect, useRef } from 'react';
 
+import { KeyframesGenerator } from '../AnimationTypes';
+
+interface Options {
+  keyframesGenerator: KeyframesGenerator;
+}
+
 function useAnimatePosition<TElement extends HTMLElement>(
   dependency: unknown,
+  options: Options,
 ): MutableRefObject<TElement | null> {
   const elementRef = useRef<TElement>(null);
   const lastPositionRef = useRef<DOMRect | void>();
   const lastDepValueRef = useRef<unknown>(dependency);
   const animationRef = useRef<Animation | null>(null);
+  const { keyframesGenerator } = options;
 
   // TODO: Handle interruption in a less hacky/flaky way.
   if (
@@ -37,25 +45,18 @@ function useAnimatePosition<TElement extends HTMLElement>(
       x: lastPosition.x - currentPosition.x,
       y: lastPosition.y - currentPosition.y,
     };
-
-    const animation = element.animate(
-      [
-        {
-          transform: new DOMMatrix()
-            .translateSelf(positionDiff.x, positionDiff.y)
-            .toString(),
-        },
-        { transform: new DOMMatrix().translateSelf(0, 0).toString() },
-      ],
-      2000,
+    const keyframes = keyframesGenerator(
+      new DOMRect(positionDiff.x, positionDiff.y),
+      new DOMRect(0, 0),
     );
+    const animation = element.animate(keyframes, 2000);
     animationRef.current = animation;
     const animationEndCallback = () => {
       animationRef.current = null;
     };
     animation.addEventListener('finish', animationEndCallback);
     animation.addEventListener('cancel', animationEndCallback);
-  }, [dependency]);
+  }, [dependency, keyframesGenerator]);
 
   return elementRef;
 }

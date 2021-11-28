@@ -1,13 +1,15 @@
 import React, { CSSProperties, useState } from 'react';
 import { Meta } from '@storybook/react/types-6-0';
+import { KeyframesGenerator } from '../AnimationTypes';
 import useAnimatePosition from './useAnimatePosition';
 import useLinearKeyframesGenerator from '../useLinearKeyframesGenerator';
+import useSpringKeyframesGenerator from '../useSpringKeyframesGenerator';
 
 const ExampleStyles: { [name: string]: CSSProperties } = {
   box: {
     backgroundColor: 'red',
     height: 100,
-    position: 'fixed',
+    position: 'absolute',
     width: 100,
   },
   boxPosition1: {
@@ -26,11 +28,19 @@ const ExampleStyles: { [name: string]: CSSProperties } = {
     bottom: 10,
     left: 10,
   },
+  container: {
+    height: 'calc(100vh - 32px)',
+    position: 'relative',
+    width: 'calc(100vw - 32px)',
+  },
 };
 
-function Example() {
+function Example({
+  keyframesGenerator,
+}: {
+  keyframesGenerator: KeyframesGenerator;
+}) {
   const [position, setPosition] = useState<number>(0);
-  const keyframesGenerator = useLinearKeyframesGenerator();
   const boxRef = useAnimatePosition<HTMLDivElement>(position, {
     keyframesGenerator,
   });
@@ -51,9 +61,13 @@ function Example() {
   return (
     <div
       onClick={() => setPosition((position + 1) % 4)}
-      ref={boxRef}
-      style={{ ...ExampleStyles.box, ...getPositionStyle() }}
-    />
+      style={ExampleStyles.container}
+    >
+      <div
+        ref={boxRef}
+        style={{ ...ExampleStyles.box, ...getPositionStyle() }}
+      />
+    </div>
   );
 }
 
@@ -62,6 +76,17 @@ export default {
   component: Example,
 } as Meta;
 
-export function Default() {
-  return <Example />;
+export function Linear() {
+  const keyframesGenerator = useLinearKeyframesGenerator(2000);
+  return <Example keyframesGenerator={keyframesGenerator} />;
+}
+
+export function Spring() {
+  const keyframesGenerator = useSpringKeyframesGenerator({
+    friction: 10,
+    mass: 1,
+    precision: 2,
+    tension: 100,
+  });
+  return <Example keyframesGenerator={keyframesGenerator} />;
 }

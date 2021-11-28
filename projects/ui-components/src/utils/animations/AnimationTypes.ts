@@ -1,4 +1,4 @@
 export type KeyframesGenerator = (
   startRect: DOMRect,
   endRect: DOMRect,
-) => Keyframe[];
+) => { keyframes: Keyframe[]; options: { duration: number } };

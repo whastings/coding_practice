@@ -1,0 +1,21 @@
+.container {
+  position: relative;
+}
+
+.track {
+  box-sizing: border-box;
+  background-color: #f4f4f4;
+  border: 1px rgba(0, 0, 0, 0.5) solid;
+  border-radius: 8px;
+  height: 10px;
+}
+
+.thumb {
+  background-color: #0033cc;
+  border-radius: 50%;
+  height: 20px;
+  left: 0;
+  position: absolute;
+  width: 20px;
+  top: -5px;
+}

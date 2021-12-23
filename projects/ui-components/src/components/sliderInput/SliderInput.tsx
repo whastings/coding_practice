@@ -1,10 +1,11 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 import styles from './SliderInput.module.css';
 
-interface Props {
+export interface Props {
   max: number;
   min: number;
+  onChange: (newValue: number) => void;
   value: number;
 }
 
@@ -18,37 +19,72 @@ function validateProps(value: number, min: number, max: number) {
   }
 }
 
-function SliderInput({ min, max, value }: Props) {
+function SliderInput({ min, max, onChange, value }: Props) {
   validateProps(value, min, max);
-  const [trackSize, setTrackSize] = useState<number | null>(null);
+  const [trackRect, setTrackRect] = useState<DOMRect | null>(null);
   const trackRef = useRef<HTMLDivElement>(null);
+  const onChangeRef = useRef(onChange);
+  onChangeRef.current = onChange;
+  const valueRef = useRef(value);
+  valueRef.current = value;
 
   useEffect(() => {
     if (trackRef.current == null) {
       throw new Error('trackRef not set');
     }
 
-    if (trackSize == null) {
-      setTrackSize(trackRef.current.getBoundingClientRect().width);
+    if (trackRect == null) {
+      setTrackRect(trackRef.current.getBoundingClientRect());
     }
-  }, [trackSize]);
+  }, [trackRect]);
 
   const numSteps = max - min;
-  const pixelsPerStep = trackSize != null ? trackSize / numSteps : null;
+  const pixelsPerStep = trackRect != null ? trackRect.width / numSteps : null;
   const thumbPosition = pixelsPerStep != null ? value * pixelsPerStep : null;
+
+  const handleMouseMove = useCallback(
+    (event: MouseEvent) => {
+      if (trackRect == null || pixelsPerStep == null) {
+        throw new Error('trackRef or pixelsPerStep is null');
+      }
+
+      const relativeMousePosition = event.clientX - trackRect.left;
+      const clampedPosition = Math.min(
+        Math.max(relativeMousePosition, 0),
+        trackRect.width,
+      );
+      const newValue = Math.round(clampedPosition / pixelsPerStep);
+
+      if (newValue !== valueRef.current) {
+        onChangeRef.current(newValue);
+      }
+    },
+    [pixelsPerStep, trackRect],
+  );
+
+  const handleMouseUp = useCallback(() => {
+    window.removeEventListener('mousemove', handleMouseMove);
+    window.removeEventListener('mouseup', handleMouseUp);
+  }, [handleMouseMove]);
+
+  const handleThumbMouseDown = () => {
+    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mouseup', handleMouseUp);
+  };
 
   return (
     <div className={styles.container}>
       <div className={styles.track} ref={trackRef} />
-      {thumbPosition != null && (
+      {trackRect != null && thumbPosition != null && (
         <div
           className={styles.thumb}
+          onMouseDown={handleThumbMouseDown}
           style={{
             transform: `translateX(
               clamp(
                 0px,
                 calc(${thumbPosition}px - 50%),
-                calc(${trackSize}px - 100%)
+                calc(${trackRect.width}px - 100%)
               )
             )`,
           }}

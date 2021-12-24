@@ -40,7 +40,8 @@ function SliderInput({ min, max, onChange, value }: Props) {
 
   const numSteps = max - min;
   const pixelsPerStep = trackRect != null ? trackRect.width / numSteps : null;
-  const thumbPosition = pixelsPerStep != null ? value * pixelsPerStep : null;
+  const thumbPosition =
+    pixelsPerStep != null ? (value - min) * pixelsPerStep : null;
 
   const handleMouseMove = useCallback(
     (event: MouseEvent) => {
@@ -53,13 +54,13 @@ function SliderInput({ min, max, onChange, value }: Props) {
         Math.max(relativeMousePosition, 0),
         trackRect.width,
       );
-      const newValue = Math.round(clampedPosition / pixelsPerStep);
+      const newValue = Math.round(clampedPosition / pixelsPerStep) + min;
 
       if (newValue !== valueRef.current) {
         onChangeRef.current(newValue);
       }
     },
-    [pixelsPerStep, trackRect],
+    [min, pixelsPerStep, trackRect],
   );
 
   const handleMouseUp = useCallback(() => {

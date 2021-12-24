@@ -13,7 +13,7 @@ const Template: Story<SliderInputProps> = (props) => {
 
   useEffect(() => {
     setValue(props.min);
-  }, [props.max, props.min]);
+  }, [props.max, props.min, props.step]);
 
   return (
     <div style={{ maxWidth: 500 }}>
@@ -27,4 +27,5 @@ export const SingleValue = Template.bind({});
 SingleValue.args = {
   max: 10,
   min: 0,
+  step: 1,
 };

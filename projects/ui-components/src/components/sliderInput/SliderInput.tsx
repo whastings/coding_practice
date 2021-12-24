@@ -7,10 +7,11 @@ export interface Props {
   max: number;
   min: number;
   onChange: (newValue: number) => void;
+  step?: number;
   value: number;
 }
 
-function validateProps(value: number, min: number, max: number) {
+function validateProps(value: number, min: number, max: number, step: number) {
   if (value < min || value > max) {
     throw new Error('value out of range');
   }
@@ -18,17 +19,21 @@ function validateProps(value: number, min: number, max: number) {
   if (max <= min) {
     throw new Error('max is not greater than min');
   }
+
+  if (step >= max - min) {
+    throw new Error('step is too large');
+  }
 }
 
-function SliderInput({ min, max, onChange, value }: Props) {
-  validateProps(value, min, max);
+function SliderInput({ min, max, onChange, step = 1, value }: Props) {
+  validateProps(value, min, max, step);
   const [trackRect, setTrackRect] = useState<DOMRect | null>(null);
   const trackRef = useRef<HTMLDivElement>(null);
 
-  const numSteps = max - min;
+  const numSteps = (max - min) / step;
   const pixelsPerStep = trackRect != null ? trackRect.width / numSteps : null;
   const thumbPosition =
-    pixelsPerStep != null ? (value - min) * pixelsPerStep : null;
+    pixelsPerStep != null ? ((value - min) / step) * pixelsPerStep : null;
 
   const updateValue = (eventPosition: { x: number; y: number }) => {
     if (trackRect == null || pixelsPerStep == null) {
@@ -40,7 +45,7 @@ function SliderInput({ min, max, onChange, value }: Props) {
       Math.max(relativeMousePosition, 0),
       trackRect.width,
     );
-    const newValue = Math.round(clampedPosition / pixelsPerStep) + min;
+    const newValue = Math.round(clampedPosition / pixelsPerStep) * step + min;
 
     if (newValue !== value) {
       onChange(newValue);

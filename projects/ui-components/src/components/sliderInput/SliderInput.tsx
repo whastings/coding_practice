@@ -76,19 +76,22 @@ function SliderInput({ min, max, onChange, value }: Props) {
     <div className={styles.container}>
       <div className={styles.track} ref={trackRef} />
       {trackRect != null && thumbPosition != null && (
-        <div
-          className={styles.thumb}
-          onMouseDown={handleThumbMouseDown}
-          style={{
-            transform: `translateX(
+        <>
+          <div className={styles.fill} style={{ width: thumbPosition }} />
+          <div
+            className={styles.thumb}
+            onMouseDown={handleThumbMouseDown}
+            style={{
+              transform: `translateX(
               clamp(
                 0px,
                 calc(${thumbPosition}px - 50%),
                 calc(${trackRect.width}px - 100%)
               )
             )`,
-          }}
-        />
+            }}
+          />
+        </>
       )}
     </div>
   );

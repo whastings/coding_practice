@@ -1,4 +1,7 @@
 .container {
+  --thumb-border-radius: 8px;
+  --thumb-color: #0033cc;
+  --track-height: 10px;
   position: relative;
 }
 
@@ -6,12 +9,21 @@
   box-sizing: border-box;
   background-color: #f4f4f4;
   border: 1px rgba(0, 0, 0, 0.5) solid;
-  border-radius: 8px;
-  height: 10px;
+  border-radius: var(--thumb-border-radius);
+  height: var(--track-height);
+}
+
+.fill {
+  background-color: var(--thumb-color);
+  border-radius: var(--thumb-border-radius);
+  height: var(--track-height);
+  left: 0;
+  position: absolute;
+  top: 0;
 }
 
 .thumb {
-  background-color: #0033cc;
+  background-color: var(--thumb-color);
   border-radius: 50%;
   cursor: pointer;
   height: 20px;

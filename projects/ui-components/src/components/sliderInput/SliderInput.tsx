@@ -1,6 +1,7 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import styles from './SliderInput.module.css';
+import useSliderEventHandlers from './useSliderEventHandlers';
 
 export interface Props {
   max: number;
@@ -23,10 +24,28 @@ function SliderInput({ min, max, onChange, value }: Props) {
   validateProps(value, min, max);
   const [trackRect, setTrackRect] = useState<DOMRect | null>(null);
   const trackRef = useRef<HTMLDivElement>(null);
-  const onChangeRef = useRef(onChange);
-  onChangeRef.current = onChange;
-  const valueRef = useRef(value);
-  valueRef.current = value;
+
+  const numSteps = max - min;
+  const pixelsPerStep = trackRect != null ? trackRect.width / numSteps : null;
+  const thumbPosition =
+    pixelsPerStep != null ? (value - min) * pixelsPerStep : null;
+
+  const eventHandlers = useSliderEventHandlers((mousePosition) => {
+    if (trackRect == null || pixelsPerStep == null) {
+      throw new Error('trackRef or pixelsPerStep is null');
+    }
+
+    const relativeMousePosition = mousePosition.x - trackRect.left;
+    const clampedPosition = Math.min(
+      Math.max(relativeMousePosition, 0),
+      trackRect.width,
+    );
+    const newValue = Math.round(clampedPosition / pixelsPerStep) + min;
+
+    if (newValue !== value) {
+      onChange(newValue);
+    }
+  });
 
   useEffect(() => {
     if (trackRef.current == null) {
@@ -38,42 +57,6 @@ function SliderInput({ min, max, onChange, value }: Props) {
     }
   }, [trackRect]);
 
-  const numSteps = max - min;
-  const pixelsPerStep = trackRect != null ? trackRect.width / numSteps : null;
-  const thumbPosition =
-    pixelsPerStep != null ? (value - min) * pixelsPerStep : null;
-
-  const handleMouseMove = useCallback(
-    (event: MouseEvent) => {
-      if (trackRect == null || pixelsPerStep == null) {
-        throw new Error('trackRef or pixelsPerStep is null');
-      }
-      event.preventDefault();
-
-      const relativeMousePosition = event.clientX - trackRect.left;
-      const clampedPosition = Math.min(
-        Math.max(relativeMousePosition, 0),
-        trackRect.width,
-      );
-      const newValue = Math.round(clampedPosition / pixelsPerStep) + min;
-
-      if (newValue !== valueRef.current) {
-        onChangeRef.current(newValue);
-      }
-    },
-    [min, pixelsPerStep, trackRect],
-  );
-
-  const handleMouseUp = useCallback(() => {
-    window.removeEventListener('mousemove', handleMouseMove);
-    window.removeEventListener('mouseup', handleMouseUp);
-  }, [handleMouseMove]);
-
-  const handleThumbMouseDown = () => {
-    window.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('mouseup', handleMouseUp);
-  };
-
   return (
     <div className={styles.container}>
       <div className={styles.track} ref={trackRef} />
@@ -82,16 +65,16 @@ function SliderInput({ min, max, onChange, value }: Props) {
           <div className={styles.fill} style={{ width: thumbPosition }} />
           <div
             className={styles.thumb}
-            onMouseDown={handleThumbMouseDown}
             style={{
               transform: `translateX(
-              clamp(
-                0px,
-                calc(${thumbPosition}px - 50%),
-                calc(${trackRect.width}px - 100%)
-              )
-            )`,
+                clamp(
+                  0px,
+                  calc(${thumbPosition}px - 50%),
+                  calc(${trackRect.width}px - 100%)
+                )
+              )`,
             }}
+            {...eventHandlers}
           />
         </>
       )}

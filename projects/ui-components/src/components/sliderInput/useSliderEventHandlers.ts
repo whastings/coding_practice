@@ -1,15 +1,24 @@
-import { MouseEventHandler, TouchEventHandler, useCallback } from 'react';
+import {
+  MouseEventHandler,
+  PointerEventHandler,
+  TouchEventHandler,
+  useCallback,
+} from 'react';
 
 import useCallbackRef from '../../utils/useCallbackRef';
 
-interface Result<T extends HTMLElement> {
+interface NonPointerHandlers<T extends HTMLElement> {
   onMouseDown: MouseEventHandler<T>;
   onTouchStart: TouchEventHandler<T>;
 }
 
+interface PointerHandlers<T extends HTMLElement> {
+  onPointerDown: PointerEventHandler<T>;
+}
+
 function useSliderEventHandlers<T extends HTMLElement>(
   callback: (pointerPosition: { x: number; y: number }) => void,
-): Result<T> {
+): NonPointerHandlers<T> | PointerHandlers<T> {
   const callbackRef = useCallbackRef(callback);
 
   const handleMouseMove = useCallback(
@@ -50,7 +59,34 @@ function useSliderEventHandlers<T extends HTMLElement>(
     window.addEventListener('touchcancel', handleTouchEnd);
   }, [handleTouchEnd, handleTouchMove]);
 
-  return { onMouseDown: handleMouseDown, onTouchStart: handleTouchStart };
+  const handlePointerMove = useCallback(
+    (event: PointerEvent) => {
+      event.preventDefault();
+      callbackRef.current({ x: event.clientX, y: event.clientY });
+    },
+    [callbackRef],
+  );
+
+  const handlePointerUp = useCallback(() => {
+    window.removeEventListener('pointermove', handlePointerMove);
+    window.removeEventListener('pointerup', handlePointerUp);
+    window.removeEventListener('pointercancel', handlePointerUp);
+  }, [handlePointerMove]);
+
+  const handlePointerDown = useCallback(() => {
+    window.addEventListener('pointermove', handlePointerMove);
+    window.addEventListener('pointerup', handlePointerUp);
+    window.addEventListener('pointercancel', handlePointerUp);
+  }, [handlePointerMove, handlePointerUp]);
+
+  if (window.PointerEvent != null) {
+    return { onPointerDown: handlePointerDown };
+  }
+
+  return {
+    onMouseDown: handleMouseDown,
+    onTouchStart: handleTouchStart,
+  };
 }
 
 export default useSliderEventHandlers;

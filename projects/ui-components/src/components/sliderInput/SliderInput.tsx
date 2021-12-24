@@ -48,6 +48,7 @@ function SliderInput({ min, max, onChange, value }: Props) {
       if (trackRect == null || pixelsPerStep == null) {
         throw new Error('trackRef or pixelsPerStep is null');
       }
+      event.preventDefault();
 
       const relativeMousePosition = event.clientX - trackRect.left;
       const clampedPosition = Math.min(

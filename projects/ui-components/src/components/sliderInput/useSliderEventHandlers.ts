@@ -1,13 +1,14 @@
-import { MouseEventHandler, useCallback } from 'react';
+import { MouseEventHandler, TouchEventHandler, useCallback } from 'react';
 
 import useCallbackRef from '../../utils/useCallbackRef';
 
 interface Result<T extends HTMLElement> {
   onMouseDown: MouseEventHandler<T>;
+  onTouchStart: TouchEventHandler<T>;
 }
 
 function useSliderEventHandlers<T extends HTMLElement>(
-  callback: (mousePosition: { x: number; y: number }) => void,
+  callback: (pointerPosition: { x: number; y: number }) => void,
 ): Result<T> {
   const callbackRef = useCallbackRef(callback);
 
@@ -29,7 +30,27 @@ function useSliderEventHandlers<T extends HTMLElement>(
     window.addEventListener('mouseup', handleMouseUp);
   }, [handleMouseMove, handleMouseUp]);
 
-  return { onMouseDown: handleMouseDown };
+  const handleTouchMove = useCallback(
+    (event: TouchEvent) => {
+      const touch = event.touches[0];
+      callbackRef.current({ x: touch.clientX, y: touch.clientY });
+    },
+    [callbackRef],
+  );
+
+  const handleTouchEnd = useCallback(() => {
+    window.addEventListener('touchmove', handleTouchMove);
+    window.addEventListener('touchend', handleTouchEnd);
+    window.addEventListener('touchcancel', handleTouchEnd);
+  }, [handleTouchMove]);
+
+  const handleTouchStart = useCallback(() => {
+    window.addEventListener('touchmove', handleTouchMove);
+    window.addEventListener('touchend', handleTouchEnd);
+    window.addEventListener('touchcancel', handleTouchEnd);
+  }, [handleTouchEnd, handleTouchMove]);
+
+  return { onMouseDown: handleMouseDown, onTouchStart: handleTouchStart };
 }
 
 export default useSliderEventHandlers;

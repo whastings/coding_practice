@@ -30,12 +30,12 @@ function SliderInput({ min, max, onChange, value }: Props) {
   const thumbPosition =
     pixelsPerStep != null ? (value - min) * pixelsPerStep : null;
 
-  const eventHandlers = useSliderEventHandlers((mousePosition) => {
+  const eventHandlers = useSliderEventHandlers((pointerPosition) => {
     if (trackRect == null || pixelsPerStep == null) {
       throw new Error('trackRef or pixelsPerStep is null');
     }
 
-    const relativeMousePosition = mousePosition.x - trackRect.left;
+    const relativeMousePosition = pointerPosition.x - trackRect.left;
     const clampedPosition = Math.min(
       Math.max(relativeMousePosition, 0),
       trackRect.width,

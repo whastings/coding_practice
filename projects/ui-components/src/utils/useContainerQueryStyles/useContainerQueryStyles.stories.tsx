@@ -8,7 +8,10 @@ export default {
 } as Meta;
 
 export function Default() {
-  const styles = useContainerQueryStyles({ value: 300, width: 100 });
+  const styles = useContainerQueryStyles(
+    { value: 200, width: 100 },
+    { value: 300, width: 200 },
+  );
 
   return (
     <div

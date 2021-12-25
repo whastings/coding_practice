@@ -8,10 +8,11 @@ export default {
 } as Meta;
 
 export function Default() {
-  const styles = useContainerQueryStyles(
+  const styles = useContainerQueryStyles([
     { value: 200, width: 100 },
     { value: 300, width: 200 },
-  );
+    { value: 400, width: 300 },
+  ]);
 
   return (
     <div
@@ -19,7 +20,7 @@ export function Default() {
         border: '1px #000 solid',
         boxSizing: 'border-box',
         height: 50,
-        maxWidth: 400,
+        maxWidth: 500,
         width: '100%',
       }}
     >

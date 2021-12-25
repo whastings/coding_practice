@@ -3,20 +3,18 @@ interface MaxWidthBreakpoint {
   width: number;
 }
 
-function useContainerQueryStyles(
-  breakpoint1: MaxWidthBreakpoint,
-  breakpoint2: MaxWidthBreakpoint,
-) {
+function useContainerQueryStyles(breakpoints: MaxWidthBreakpoint[]) {
+  const breakpointStrings = breakpoints.map(
+    (breakpoint) => `
+    max(
+      ${breakpoint.width}px,
+      calc((100% - ${breakpoint.value}px) * 9999)
+    )
+  `,
+  );
   return {
     width: `min(
-      max(
-        ${breakpoint1.width}px,
-        calc((100% - ${breakpoint1.value}px) * 9999)
-      ),
-      max(
-        ${breakpoint2.width}px,
-        calc((100% - ${breakpoint2.value}px) * 9999)
-      ),
+      ${breakpointStrings.join(',')},
       100%
     )`,
   };

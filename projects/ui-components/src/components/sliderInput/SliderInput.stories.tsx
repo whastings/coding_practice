@@ -15,10 +15,21 @@ const Template: Story<SliderInputProps> = (props) => {
     setValue(props.min);
   }, [props.max, props.min, props.step]);
 
+  const printedValue = (
+    <div style={{ marginBottom: 10, marginTop: 10 }}>Value: {value}</div>
+  );
+
   return (
-    <div style={{ maxWidth: 500 }}>
+    <div
+      style={{
+        height: props.vertical ? '100vh' : 'auto',
+        maxHeight: props.vertical ? 500 : 100,
+        maxWidth: props.vertical ? 100 : 500,
+      }}
+    >
+      {props.vertical && printedValue}
       <SliderInput {...props} onChange={setValue} value={value} />
-      <div style={{ marginTop: 10 }}>Value: {value}</div>
+      {!props.vertical && printedValue}
     </div>
   );
 };
@@ -28,4 +39,12 @@ SingleValue.args = {
   max: 10,
   min: 0,
   step: 1,
+};
+
+export const Vertical = Template.bind({});
+Vertical.args = {
+  max: 10,
+  min: 0,
+  step: 1,
+  vertical: true,
 };

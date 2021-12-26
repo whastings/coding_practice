@@ -1,4 +1,5 @@
 import React, { MouseEventHandler, useEffect, useRef, useState } from 'react';
+import classNames from '../../utils/classNames';
 
 import styles from './SliderInput.module.css';
 import useSliderEventHandlers from './useSliderEventHandlers';
@@ -9,6 +10,7 @@ export interface Props {
   onChange: (newValue: number) => void;
   step?: number;
   value: number;
+  vertical?: boolean;
 }
 
 function validateProps(value: number, min: number, max: number, step: number) {
@@ -25,13 +27,22 @@ function validateProps(value: number, min: number, max: number, step: number) {
   }
 }
 
-function SliderInput({ min, max, onChange, step = 1, value }: Props) {
+function SliderInput({
+  min,
+  max,
+  onChange,
+  step = 1,
+  value,
+  vertical = false,
+}: Props) {
   validateProps(value, min, max, step);
   const [trackRect, setTrackRect] = useState<DOMRect | null>(null);
   const trackRef = useRef<HTMLDivElement>(null);
 
+  const dimension = vertical ? 'height' : 'width';
   const numSteps = (max - min) / step;
-  const pixelsPerStep = trackRect != null ? trackRect.width / numSteps : null;
+  const pixelsPerStep =
+    trackRect != null ? trackRect[dimension] / numSteps : null;
   const thumbPosition =
     pixelsPerStep != null ? ((value - min) / step) * pixelsPerStep : null;
 
@@ -40,10 +51,14 @@ function SliderInput({ min, max, onChange, step = 1, value }: Props) {
       throw new Error('trackRef or pixelsPerStep is null');
     }
 
-    const relativeMousePosition = eventPosition.x - trackRect.left;
+    const coord = vertical ? 'y' : 'x';
+    const side = vertical ? 'bottom' : 'left';
+    const relativeMousePosition = Math.abs(
+      eventPosition[coord] - trackRect[side],
+    );
     const clampedPosition = Math.min(
       Math.max(relativeMousePosition, 0),
-      trackRect.width,
+      trackRect[dimension],
     );
     const newValue = Math.round(clampedPosition / pixelsPerStep) * step + min;
 
@@ -54,6 +69,34 @@ function SliderInput({ min, max, onChange, step = 1, value }: Props) {
 
   const handleTrackClick: MouseEventHandler<HTMLDivElement> = (event) => {
     updateValue({ x: event.clientX, y: event.clientY });
+  };
+
+  const getTransform = () => {
+    if (trackRect == null) {
+      throw new Error('trackRect is null');
+    }
+
+    if (vertical) {
+      return `
+        translateY(
+          clamp(
+            calc(-${trackRect.height}px + 100%),
+            calc(-${thumbPosition}px + 50%),
+            0px
+          )
+        )
+      `;
+    }
+
+    return `
+      translateX(
+        clamp(
+          0px,
+          calc(${thumbPosition}px - 50%),
+          calc(${trackRect.width}px - 100%)
+        )
+      )
+    `;
   };
 
   const eventHandlers = useSliderEventHandlers(updateValue);
@@ -69,21 +112,20 @@ function SliderInput({ min, max, onChange, step = 1, value }: Props) {
   }, [trackRect]);
 
   return (
-    <div className={styles.container}>
+    <div
+      className={classNames(
+        styles.container,
+        vertical && styles.containerVertical,
+      )}
+    >
       <div className={styles.track} onClick={handleTrackClick} ref={trackRef} />
       {trackRect != null && thumbPosition != null && (
         <>
-          <div className={styles.fill} style={{ width: thumbPosition }} />
+          <div className={styles.fill} style={{ [dimension]: thumbPosition }} />
           <div
             className={styles.thumb}
             style={{
-              transform: `translateX(
-                clamp(
-                  0px,
-                  calc(${thumbPosition}px - 50%),
-                  calc(${trackRect.width}px - 100%)
-                )
-              )`,
+              transform: getTransform(),
             }}
             {...eventHandlers}
           />

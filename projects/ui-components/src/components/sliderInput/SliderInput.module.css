@@ -1,8 +1,25 @@
 .container {
+  --fill-bottom: auto;
+  --fill-top: 0;
   --thumb-border-radius: 8px;
   --thumb-color: #0033cc;
+  --thumb-left: 0;
+  --thumb-bottom: auto;
+  --thumb-top: -5px;
   --track-height: 10px;
+  --track-width: auto;
+  height: var(--track-height);
   position: relative;
+}
+
+.containerVertical {
+  --fill-bottom: 0;
+  --fill-top: auto;
+  --thumb-left: -5px;
+  --thumb-bottom: 0;
+  --thumb-top: auto;
+  --track-height: 100%;
+  --track-width: 10px;
 }
 
 .track {
@@ -11,25 +28,29 @@
   border: 1px rgba(0, 0, 0, 0.5) solid;
   border-radius: var(--thumb-border-radius);
   height: var(--track-height);
+  width: var(--track-width);
 }
 
 .fill {
   background-color: var(--thumb-color);
   border-radius: var(--thumb-border-radius);
+  bottom: var(--fill-bottom);
   height: var(--track-height);
   left: 0;
   pointer-events: none;
   position: absolute;
-  top: 0;
+  top: var(--fill-top);
+  width: var(--track-width);
 }
 
 .thumb {
   background-color: var(--thumb-color);
   border-radius: 50%;
+  bottom: var(--thumb-bottom);
   cursor: pointer;
   height: 20px;
-  left: 0;
+  left: var(--thumb-left);
   position: absolute;
   width: 20px;
-  top: -5px;
+  top: var(--thumb-top);
 }

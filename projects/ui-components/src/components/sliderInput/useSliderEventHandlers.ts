@@ -3,6 +3,7 @@ import {
   PointerEventHandler,
   TouchEventHandler,
   useCallback,
+  useRef,
 } from 'react';
 
 import useCallbackRef from '../../utils/useCallbackRef';
@@ -20,6 +21,7 @@ function useSliderEventHandlers<T extends HTMLElement>(
   callback: (pointerPosition: { x: number; y: number }) => void,
 ): NonPointerHandlers<T> | PointerHandlers<T> {
   const callbackRef = useCallbackRef(callback);
+  const eventIDRef = useRef<number | null>(null);
 
   const handleMouseMove = useCallback(
     (event: MouseEvent) => {
@@ -41,23 +43,41 @@ function useSliderEventHandlers<T extends HTMLElement>(
 
   const handleTouchMove = useCallback(
     (event: TouchEvent) => {
-      const touch = event.touches[0];
-      callbackRef.current({ x: touch.clientX, y: touch.clientY });
+      const touch = event.changedTouches[0];
+      if (touch.identifier === eventIDRef.current) {
+        callbackRef.current({ x: touch.clientX, y: touch.clientY });
+      }
     },
     [callbackRef],
   );
 
-  const handleTouchEnd = useCallback(() => {
-    window.addEventListener('touchmove', handleTouchMove);
-    window.addEventListener('touchend', handleTouchEnd);
-    window.addEventListener('touchcancel', handleTouchEnd);
-  }, [handleTouchMove]);
+  const handleTouchEnd = useCallback(
+    (event: TouchEvent) => {
+      if (event.changedTouches[0].identifier !== eventIDRef.current) {
+        return;
+      }
 
-  const handleTouchStart = useCallback(() => {
-    window.addEventListener('touchmove', handleTouchMove);
-    window.addEventListener('touchend', handleTouchEnd);
-    window.addEventListener('touchcancel', handleTouchEnd);
-  }, [handleTouchEnd, handleTouchMove]);
+      eventIDRef.current = null;
+      window.removeEventListener('touchmove', handleTouchMove);
+      window.removeEventListener('touchend', handleTouchEnd);
+      window.removeEventListener('touchcancel', handleTouchEnd);
+    },
+    [handleTouchMove],
+  );
+
+  const handleTouchStart: TouchEventHandler<T> = useCallback(
+    (event) => {
+      if (eventIDRef.current != null) {
+        return;
+      }
+
+      eventIDRef.current = event.changedTouches[0].identifier;
+      window.addEventListener('touchmove', handleTouchMove);
+      window.addEventListener('touchend', handleTouchEnd);
+      window.addEventListener('touchcancel', handleTouchEnd);
+    },
+    [handleTouchEnd, handleTouchMove],
+  );
 
   const handlePointerMove = useCallback(
     (event: PointerEvent) => {

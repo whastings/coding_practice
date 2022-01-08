@@ -92,23 +92,39 @@ function useSliderEventHandlers<T extends HTMLElement>(
 
   const handlePointerMove = useCallback(
     (event: PointerEvent) => {
-      event.preventDefault();
-      callbackRef.current({ x: event.clientX, y: event.clientY });
+      if (event.pointerId === eventIDRef.current) {
+        event.preventDefault();
+        callbackRef.current({ x: event.clientX, y: event.clientY });
+      }
     },
     [callbackRef],
   );
 
-  const handlePointerUp = useCallback(() => {
-    window.removeEventListener('pointermove', handlePointerMove);
-    window.removeEventListener('pointerup', handlePointerUp);
-    window.removeEventListener('pointercancel', handlePointerUp);
-  }, [handlePointerMove]);
+  const handlePointerUp = useCallback(
+    (event: PointerEvent) => {
+      if (event.pointerId === eventIDRef.current) {
+        eventIDRef.current = null;
+        window.removeEventListener('pointermove', handlePointerMove);
+        window.removeEventListener('pointerup', handlePointerUp);
+        window.removeEventListener('pointercancel', handlePointerUp);
+      }
+    },
+    [handlePointerMove],
+  );
 
-  const handlePointerDown = useCallback(() => {
-    window.addEventListener('pointermove', handlePointerMove);
-    window.addEventListener('pointerup', handlePointerUp);
-    window.addEventListener('pointercancel', handlePointerUp);
-  }, [handlePointerMove, handlePointerUp]);
+  const handlePointerDown: PointerEventHandler<T> = useCallback(
+    (event) => {
+      if (eventIDRef.current != null) {
+        return;
+      }
+
+      eventIDRef.current = event.pointerId;
+      window.addEventListener('pointermove', handlePointerMove);
+      window.addEventListener('pointerup', handlePointerUp);
+      window.addEventListener('pointercancel', handlePointerUp);
+    },
+    [handlePointerMove, handlePointerUp],
+  );
 
   if (window.PointerEvent != null) {
     return { onPointerDown: handlePointerDown };

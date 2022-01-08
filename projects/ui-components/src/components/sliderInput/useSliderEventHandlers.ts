@@ -17,6 +17,10 @@ interface PointerHandlers<T extends HTMLElement> {
   onPointerDown: PointerEventHandler<T>;
 }
 
+function findMatchingTouch(touches: TouchList, id: number): Touch | null {
+  return Array.from(touches).find((touch) => touch.identifier === id) || null;
+}
+
 function useSliderEventHandlers<T extends HTMLElement>(
   callback: (pointerPosition: { x: number; y: number }) => void,
 ): NonPointerHandlers<T> | PointerHandlers<T> {
@@ -43,8 +47,12 @@ function useSliderEventHandlers<T extends HTMLElement>(
 
   const handleTouchMove = useCallback(
     (event: TouchEvent) => {
-      const touch = event.changedTouches[0];
-      if (touch.identifier === eventIDRef.current) {
+      if (eventIDRef.current == null) {
+        return;
+      }
+
+      const touch = findMatchingTouch(event.changedTouches, eventIDRef.current);
+      if (touch != null) {
         callbackRef.current({ x: touch.clientX, y: touch.clientY });
       }
     },
@@ -53,7 +61,10 @@ function useSliderEventHandlers<T extends HTMLElement>(
 
   const handleTouchEnd = useCallback(
     (event: TouchEvent) => {
-      if (event.changedTouches[0].identifier !== eventIDRef.current) {
+      if (
+        eventIDRef.current == null ||
+        findMatchingTouch(event.changedTouches, eventIDRef.current) == null
+      ) {
         return;
       }
 

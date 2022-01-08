@@ -53,4 +53,10 @@
   position: absolute;
   width: 20px;
   top: var(--thumb-top);
+  /*
+   * Prevent pointer cancel event from firing and breaking
+   * thumb drag.
+   * https://developer.mozilla.org/en-US/docs/Web/CSS/touch-action
+   */
+  touch-action: none;
 }

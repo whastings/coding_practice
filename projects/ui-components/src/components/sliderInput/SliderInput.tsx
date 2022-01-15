@@ -67,10 +67,6 @@ function SliderInput({
     }
   };
 
-  const handleTrackClick: MouseEventHandler<HTMLDivElement> = (event) => {
-    updateValue({ x: event.clientX, y: event.clientY });
-  };
-
   const getTransform = () => {
     if (trackRect == null) {
       throw new Error('trackRect is null');
@@ -118,7 +114,7 @@ function SliderInput({
         vertical && styles.containerVertical,
       )}
     >
-      <div className={styles.track} onClick={handleTrackClick} ref={trackRef} />
+      <div className={styles.track} ref={trackRef} {...eventHandlers} />
       {trackRect != null && thumbPosition != null && (
         <>
           <div className={styles.fill} style={{ [dimension]: thumbPosition }} />
@@ -127,7 +123,6 @@ function SliderInput({
             style={{
               transform: getTransform(),
             }}
-            {...eventHandlers}
           />
         </>
       )}

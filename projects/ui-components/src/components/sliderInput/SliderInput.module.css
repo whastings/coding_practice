@@ -28,6 +28,12 @@
   border: 1px rgba(0, 0, 0, 0.5) solid;
   border-radius: var(--thumb-border-radius);
   height: var(--track-height);
+  /*
+   * Prevent pointer cancel event from firing and breaking
+   * thumb drag.
+   * https://developer.mozilla.org/en-US/docs/Web/CSS/touch-action
+   */
+  touch-action: none;
   width: var(--track-width);
 }
 
@@ -50,13 +56,8 @@
   cursor: pointer;
   height: 20px;
   left: var(--thumb-left);
+  pointer-events: none;
   position: absolute;
   width: 20px;
   top: var(--thumb-top);
-  /*
-   * Prevent pointer cancel event from firing and breaking
-   * thumb drag.
-   * https://developer.mozilla.org/en-US/docs/Web/CSS/touch-action
-   */
-  touch-action: none;
 }

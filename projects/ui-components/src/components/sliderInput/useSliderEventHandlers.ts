@@ -35,10 +35,14 @@ function useSliderEventHandlers<T extends HTMLElement>(
     [callbackRef],
   );
 
-  const handleMouseUp = useCallback(() => {
-    window.removeEventListener('mousemove', handleMouseMove);
-    window.removeEventListener('mouseup', handleMouseUp);
-  }, [handleMouseMove]);
+  const handleMouseUp = useCallback(
+    (event: MouseEvent) => {
+      callbackRef.current({ x: event.clientX, y: event.clientY });
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseup', handleMouseUp);
+    },
+    [callbackRef, handleMouseMove],
+  );
 
   const handleMouseDown = useCallback(() => {
     window.addEventListener('mousemove', handleMouseMove);
@@ -103,13 +107,14 @@ function useSliderEventHandlers<T extends HTMLElement>(
   const handlePointerUp = useCallback(
     (event: PointerEvent) => {
       if (event.pointerId === eventIDRef.current) {
+        callbackRef.current({ x: event.clientX, y: event.clientY });
         eventIDRef.current = null;
         window.removeEventListener('pointermove', handlePointerMove);
         window.removeEventListener('pointerup', handlePointerUp);
         window.removeEventListener('pointercancel', handlePointerUp);
       }
     },
-    [handlePointerMove],
+    [callbackRef, handlePointerMove],
   );
 
   const handlePointerDown: PointerEventHandler<T> = useCallback(

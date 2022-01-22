@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {StyleSheet, View} from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 interface Props {
   children: React.ReactNode;
@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
   },
 });
 
-function CenterView({children}: Props) {
+function CenterView({ children }: Props) {
   return <View style={styles.root}>{children}</View>;
 }
 

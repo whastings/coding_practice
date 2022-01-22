@@ -11,7 +11,6 @@ addDecorator(withKnobs);
 
 // import stories
 configure(() => {
-  require('./stories');
   require('../src/components/Tabs/Tabs.stories');
 }, module);
 

@@ -17,13 +17,14 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   tab: {
-    alignItems: 'center',
     flexGrow: 1,
+  },
+  tabInner: {
+    alignItems: 'center',
     padding: 8,
   },
   tabContent: {
-    paddingBottom: 16,
-    paddingHorizontal: 16,
+    padding: 16,
   },
   tabList: {
     flexDirection: 'row',
@@ -33,6 +34,14 @@ const styles = StyleSheet.create({
   },
   tabTextActive: {
     fontWeight: 'bold',
+  },
+  tabUnderline: {
+    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+    bottom: 0,
+    height: 2,
+    left: 0,
+    position: 'absolute',
+    width: '100%',
   },
 });
 
@@ -57,11 +66,14 @@ function Tabs({ activeTabIndex, onActiveTabChange, tabs }: Props) {
               onPress={() => onActiveTabChange(i)}
               style={styles.tab}
             >
-              <Text
-                style={[styles.tabText, isActiveTab && styles.tabTextActive]}
-              >
-                {tab.label}
-              </Text>
+              <View style={styles.tabInner}>
+                <Text
+                  style={[styles.tabText, isActiveTab && styles.tabTextActive]}
+                >
+                  {tab.label}
+                </Text>
+              </View>
+              {isActiveTab && <View style={styles.tabUnderline} />}
             </Pressable>
           );
         })}

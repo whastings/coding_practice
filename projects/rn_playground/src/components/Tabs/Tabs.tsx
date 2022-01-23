@@ -1,5 +1,12 @@
-import React from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import { Animated, Pressable, StyleSheet, Text, View } from 'react-native';
+
+interface Rect {
+  height: number;
+  width: number;
+  x: number;
+  y: number;
+}
 
 interface TabConfig {
   content: () => React.ReactNode;
@@ -47,6 +54,34 @@ const styles = StyleSheet.create({
 
 function Tabs({ activeTabIndex, onActiveTabChange, tabs }: Props) {
   const activeTab = tabs[activeTabIndex];
+  const underlineRef = useRef<View | null>(null);
+  const underlineRectRef = useRef<Rect | null>(null);
+  const underlineTransformAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    const underline = underlineRef.current;
+    if (underline == null) {
+      throw new Error('Underline ref not set');
+    }
+
+    underline.measureInWindow((x, y, width, height) => {
+      const rect = { x, y, width, height };
+      const prevRect = underlineRectRef.current;
+      underlineRectRef.current = rect;
+
+      if (prevRect == null) {
+        return;
+      }
+
+      const xDiff = prevRect.x - rect.x;
+      underlineTransformAnim.setValue(xDiff);
+      Animated.timing(underlineTransformAnim, {
+        duration: 200,
+        toValue: 0,
+        useNativeDriver: true,
+      }).start();
+    });
+  }, [activeTabIndex, underlineTransformAnim]);
 
   return (
     <View style={styles.root}>
@@ -73,7 +108,15 @@ function Tabs({ activeTabIndex, onActiveTabChange, tabs }: Props) {
                   {tab.label}
                 </Text>
               </View>
-              {isActiveTab && <View style={styles.tabUnderline} />}
+              {isActiveTab && (
+                <Animated.View
+                  ref={underlineRef}
+                  style={[
+                    styles.tabUnderline,
+                    { transform: [{ translateX: underlineTransformAnim }] },
+                  ]}
+                />
+              )}
             </Pressable>
           );
         })}

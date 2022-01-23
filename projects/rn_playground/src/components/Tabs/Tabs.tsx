@@ -52,11 +52,14 @@ const styles = StyleSheet.create({
   },
 });
 
+const ANIM_DURATION = 200;
+
 function Tabs({ activeTabIndex, onActiveTabChange, tabs }: Props) {
   const activeTab = tabs[activeTabIndex];
   const underlineRef = useRef<View | null>(null);
   const underlineRectRef = useRef<Rect | null>(null);
-  const underlineTransformAnim = useRef(new Animated.Value(0)).current;
+  const underlineTranslateAnim = useRef(new Animated.Value(0)).current;
+  const underlineScaleAnim = useRef(new Animated.Value(1)).current;
 
   useEffect(() => {
     const underline = underlineRef.current;
@@ -74,14 +77,23 @@ function Tabs({ activeTabIndex, onActiveTabChange, tabs }: Props) {
       }
 
       const xDiff = prevRect.x - rect.x;
-      underlineTransformAnim.setValue(xDiff);
-      Animated.timing(underlineTransformAnim, {
-        duration: 200,
-        toValue: 0,
-        useNativeDriver: true,
-      }).start();
+      const xScale = prevRect.width / rect.width;
+      underlineTranslateAnim.setValue(xDiff);
+      underlineScaleAnim.setValue(xScale);
+      Animated.parallel([
+        Animated.timing(underlineTranslateAnim, {
+          duration: ANIM_DURATION,
+          toValue: 0,
+          useNativeDriver: true,
+        }),
+        Animated.timing(underlineScaleAnim, {
+          duration: ANIM_DURATION,
+          toValue: 1,
+          useNativeDriver: true,
+        }),
+      ]).start();
     });
-  }, [activeTabIndex, underlineTransformAnim]);
+  }, [activeTabIndex, underlineScaleAnim, underlineTranslateAnim]);
 
   return (
     <View style={styles.root}>
@@ -113,7 +125,12 @@ function Tabs({ activeTabIndex, onActiveTabChange, tabs }: Props) {
                   ref={underlineRef}
                   style={[
                     styles.tabUnderline,
-                    { transform: [{ translateX: underlineTransformAnim }] },
+                    {
+                      transform: [
+                        { translateX: underlineTranslateAnim },
+                        { scaleX: underlineScaleAnim },
+                      ],
+                    },
                   ]}
                 />
               )}

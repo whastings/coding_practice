@@ -16,6 +16,7 @@ addDecorator(withKnobs);
 // import stories
 configure(() => {
   require('../src/components/Tabs/Tabs.stories');
+  require('../src/components/Tooltip/Tooltip.stories');
 }, module);
 
 // Refer to https://github.com/storybookjs/react-native/tree/master/app/react-native#getstorybookui-options

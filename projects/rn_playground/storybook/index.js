@@ -15,6 +15,7 @@ addDecorator(withKnobs);
 
 // import stories
 configure(() => {
+  require('../src/components/Dialog/Dialog.stories');
   require('../src/components/Tabs/Tabs.stories');
   require('../src/components/Tooltip/Tooltip.stories');
 }, module);

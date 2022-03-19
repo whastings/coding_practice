@@ -23,6 +23,7 @@ export type DialogConfigFn = <
 ) => void;
 
 interface Context {
+  isDialogOpen: boolean;
   renderDialog: DialogConfigFn;
 }
 

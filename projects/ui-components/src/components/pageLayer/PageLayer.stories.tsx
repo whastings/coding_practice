@@ -1,12 +1,46 @@
-import React, { useState } from 'react';
+import React, { useContext, useLayoutEffect, useState } from 'react';
 import { Meta } from '@storybook/react/types-6-0';
 
+import DialogContext from '../dialog/DialogContext';
+import DialogProvider from '../dialog/DialogProvider';
 import PageLayer from './PageLayer';
+import useDialog from '../dialog/useDialog';
+
+function StoryWrapper({ children }: { children: React.ReactChild }) {
+  useLayoutEffect(() => {
+    document.body.style.padding = '0';
+  }, []);
+
+  return <DialogProvider>{children}</DialogProvider>;
+}
 
 export default {
+  decorators: [
+    (Story) => (
+      <StoryWrapper>
+        <Story />
+      </StoryWrapper>
+    ),
+  ],
   title: 'Components/PageLayer',
   component: PageLayer,
 } as Meta;
+
+const layerStyle: React.CSSProperties = {
+  backgroundColor: '#fff',
+  padding: 16,
+};
+
+const controlsStyle: React.CSSProperties = {
+  backgroundColor: '#fff',
+  border: '1px #000 solid',
+  display: 'flex',
+  gap: 10,
+  left: 20,
+  padding: 10,
+  position: 'fixed',
+  top: 20,
+};
 
 function LayerOneContent() {
   const getIpsum = (i: number) => (
@@ -22,7 +56,11 @@ function LayerOneContent() {
     </p>
   );
 
-  return <div>{new Array(30).fill(null).map((_, i) => getIpsum(i))}</div>;
+  return (
+    <div style={layerStyle}>
+      {new Array(30).fill(null).map((_, i) => getIpsum(i))}
+    </div>
+  );
 }
 
 function LayerTwoContent() {
@@ -43,7 +81,11 @@ function LayerTwoContent() {
     </p>
   );
 
-  return <div>{new Array(30).fill(null).map((_, i) => getIpsum(i))}</div>;
+  return (
+    <div style={layerStyle}>
+      {new Array(30).fill(null).map((_, i) => getIpsum(i))}
+    </div>
+  );
 }
 
 function LayerThreeContent() {
@@ -58,7 +100,11 @@ function LayerThreeContent() {
     </p>
   );
 
-  return <div>{new Array(30).fill(null).map((_, i) => getIpsum(i))}</div>;
+  return (
+    <div style={layerStyle}>
+      {new Array(30).fill(null).map((_, i) => getIpsum(i))}
+    </div>
+  );
 }
 
 export function Default() {
@@ -87,23 +133,42 @@ export function Default() {
           <LayerThreeContent />
         </PageLayer>
       )}
-      <div
-        style={{
-          backgroundColor: '#fff',
-          border: '1px #000 solid',
-          display: 'flex',
-          gap: 10,
-          left: 20,
-          padding: 10,
-          position: 'fixed',
-          top: 20,
-        }}
-      >
+      <div style={controlsStyle}>
         <button disabled={activeLayer === 1} onClick={decrementActiveLayer}>
           Decrement active layer
         </button>
         <button disabled={activeLayer === 3} onClick={incrementActiveLayer}>
           Increment active layer
+        </button>
+      </div>
+    </>
+  );
+}
+
+function ExampleDialog() {
+  return <div>Example</div>;
+}
+
+export function WithDialog() {
+  const { openDialog, triggerRef } = useDialog();
+  const dialogContext = useContext(DialogContext);
+
+  const handleDialogOpen = () => {
+    openDialog({
+      component: ExampleDialog,
+      props: {},
+      title: 'Example Dialog',
+    });
+  };
+
+  return (
+    <>
+      <PageLayer isActive={dialogContext?.isDialogOpen !== true}>
+        <LayerOneContent />
+      </PageLayer>
+      <div style={controlsStyle}>
+        <button onClick={handleDialogOpen} ref={triggerRef}>
+          Open Dialog
         </button>
       </div>
     </>

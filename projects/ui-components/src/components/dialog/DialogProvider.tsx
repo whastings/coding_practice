@@ -56,9 +56,10 @@ function DialogProvider({ children }: Props) {
 
   const contextValue = useMemo(
     () => ({
+      isDialogOpen: renderedDialogs.length > 0,
       renderDialog,
     }),
-    [renderDialog],
+    [renderDialog, renderedDialogs.length],
   );
 
   return (

@@ -1,0 +1,6 @@
+.root {
+  /* Trigger a block formatting context */
+  overflow: hidden;
+  position: sticky;
+  top: 0;
+}

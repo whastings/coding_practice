@@ -9,6 +9,9 @@ function Home() {
           <li>
             <Link to="/react-19-forms">React 19 Forms</Link>
           </li>
+          <li>
+            <Link to="/useDeferredValue">useDeferredValue</Link>
+          </li>
         </ul>
       </nav>
     </main>

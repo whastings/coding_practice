@@ -12,6 +12,9 @@ function Home() {
           <li>
             <Link to="/useDeferredValue">useDeferredValue</Link>
           </li>
+          <li>
+            <Link to="/useOptimistic">useOptimistic</Link>
+          </li>
         </ul>
       </nav>
     </main>

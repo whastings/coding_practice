@@ -3,6 +3,7 @@ import Home from "./routes/home/Home";
 import React19Forms from "./routes/react-19-forms/React19Forms";
 import UseDeferredValue from "./routes/useDeferredValue/UseDeferredValue";
 import UseOptimistic from "./routes/UseOptimistic/UseOptimistic";
+import UseTransition from "./routes/UseTransition/UseTransition";
 
 const router = createBrowserRouter([
   {
@@ -20,6 +21,10 @@ const router = createBrowserRouter([
   {
     Component: UseOptimistic,
     path: "/useOptimistic",
+  },
+  {
+    Component: UseTransition,
+    path: "/useTransition",
   },
 ]);
 

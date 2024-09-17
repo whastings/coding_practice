@@ -15,6 +15,9 @@ function Home() {
           <li>
             <Link to="/useOptimistic">useOptimistic</Link>
           </li>
+          <li>
+            <Link to="/useTransition">useTransition</Link>
+          </li>
         </ul>
       </nav>
     </main>
